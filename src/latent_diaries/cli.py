@@ -40,7 +40,21 @@ def main():
     qwen = sub.add_parser("qwen-baseline")
     qwen.add_argument("--output", type=Path, default=Path("artifacts/m0_italian.wav"))
     qwen.add_argument("--text", default=None)
-    for name in ("train-soft-prefix", "train-reader", "narrate-image", "evaluate-grounding"):
+    inversion = sub.add_parser("train-soft-prefix")
+    inversion.add_argument("--target-audio", type=Path, default=Path("artifacts/m0_italian.wav"))
+    inversion.add_argument("--run-dir", type=Path, default=Path("artifacts/m1-inversion"))
+    inversion.add_argument("--steps", type=int, default=200)
+    inversion.add_argument("--tokens", type=int, default=16)
+    inversion.add_argument("--learning-rate", type=float, default=.03)
+    inversion.add_argument("--seed", type=int, default=42)
+    inversion.add_argument("--resume", action="store_true")
+    inversion.add_argument("--residual-loss-weight", type=float, default=0.)
+    prefix = sub.add_parser("infer-soft-prefix")
+    prefix.add_argument("--run-dir", type=Path, required=True)
+    prefix.add_argument("--output", type=Path, required=True)
+    prefix.add_argument("--max-frames", type=int, default=120)
+    prefix.add_argument("--seed", type=int, default=42)
+    for name in ("train-reader", "narrate-image", "evaluate-grounding"):
         sub.add_parser(name)
     args = parser.parse_args()
     db_path = Path(os.environ.get("REVIEW_DB", "run-data/reviews.sqlite3"))
@@ -57,6 +71,13 @@ def main():
     elif args.command == "qwen-baseline":
         from .qwen_baseline import run, DEFAULT_TEXT
         run(args.output, text=args.text or DEFAULT_TEXT)
+    elif args.command == "train-soft-prefix":
+        from .inversion import train
+        train(args.target_audio, args.run_dir, args.steps, args.tokens, args.learning_rate,
+              args.seed, args.resume, args.residual_loss_weight)
+    elif args.command == "infer-soft-prefix":
+        from .inversion import infer
+        infer(args.run_dir, args.output, args.max_frames, args.seed)
     else:
         not_ready(args.command)
 

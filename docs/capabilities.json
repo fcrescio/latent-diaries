@@ -1,6 +1,10 @@
 {
   "continuous_conditioning_assembly_implemented": true,
   "tiny_qwen_cpu_cuda_integration_tested": true,
+  "qwen_baseline_and_codec_exercised": true,
+  "pretrained_qwen_fp32_assembly_tested": true,
+  "soft_prefix_inversion_training_exercised": true,
+  "soft_prefix_checkpoint_inference_exercised": true,
   "qwen_baseline_entrypoint": true,
   "textless_inference_implemented": false,
   "textless_training_implemented": false,

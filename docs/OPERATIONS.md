@@ -52,6 +52,50 @@ After supplying a consented `run-data/voices/reference.wav` and setting
 LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" make DOCKER=.cache/tools/docker m0-gpu
 ```
 
+`LD_REF_AUDIO` is the path inside the container: for host file
+`run-data/voices/test.wav`, use `/workspace/run-data/voices/test.wav`.
+`LD_REF_TEXT` contains that recording's exact transcript. Both stay in ignored
+`.env`; the transcript is used only by the separate text-conditioned baseline.
+
+After M0, run the pretrained assembly/cache controls against the cached snapshot:
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -v "$PWD/scripts:/workspace/scripts:ro" experiment-gpu python scripts/validate_qwen_pretrained.py --dtype float32
+```
+
+Results go to `artifacts/qwen-pretrained-validation.json`. A BF16 run currently
+exceeds the cache comparison tolerance; FP32 is the verified mechanical control.
+These controls use projected teacher text to compare stock assembly, and do not
+constitute learned textless narration or image conditioning.
+
+### M1 single-utterance inversion control
+
+This trains only 16 continuous tokens against the M0 audio, with Qwen frozen.
+The verified first experiment uses FP32 and explicit same-position loss for the
+15 residual codebooks. Its waveform is an utterance memorization control, not
+image-conditioned narration or generalization evidence.
+
+```bash
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm experiment-gpu latent-diaries train-soft-prefix --steps 200 --run-dir artifacts/m1-new-run --residual-loss-weight 1
+# Increase total steps while preserving the exact source/lock/config:
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm experiment-gpu latent-diaries train-soft-prefix --steps 400 --run-dir artifacts/m1-new-run --residual-loss-weight 1 --resume
+# Fresh-worker inference accepts a checkpoint, speaker reference and duration.
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu latent-diaries infer-soft-prefix --run-dir artifacts/m1-new-run --output artifacts/m1-new-run/reloaded.wav --max-frames 92 --seed 42
+```
+
+Before rebuilding the worker during development, bind the current source with
+`-v "$PWD/src:/workspace/src:ro"` before the service name. Checkpoints contain
+prefix safetensors, AdamW/RNG state, config and hashes; they reject mismatched
+source/configuration and inconsistent prefix/state pairs. Gold codec targets
+and logs remain local. Transcript-free inference does not read the target audio
+or `LD_REF_TEXT`. The reloaded run-002 waveform exactly matches its original
+generated waveform. No inference text is taken from checkpoint metadata.
+
+The codec-0-only run-001 is a documented negative control: teacher-forced CE
+became tiny but autoregressive output collapsed to 13 frames. Do not equate
+training CE with intelligible speech. Run-002 added residual loss after diagnosis
+and produced 50 frames; listening is pending. Details are in DECISIONS.
+
 Set `HF_NAMESPACE=fcrescio` and a strong `REVIEW_PASSWORD` locally before Hub
 commands and listening review respectively. Keep secrets out of chat.
 
