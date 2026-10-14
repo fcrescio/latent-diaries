@@ -8,8 +8,10 @@ checkpoint inference are exercised. M1.1 remains **failed for intelligibility**:
 the user rejected both sampled and fully greedy run-002 audio despite acceptable
 voice/prosody. Matched-target CE, teacher-distribution KL, generated-history
 supervision and a 32-token capacity control are documented experiments, not
-speech-quality successes. Low teacher-forced loss does not survive generated
-histories. The stock teacher-derived prefix reproduces its baseline exactly but
+full speech-quality successes. User subsequently reports run-006 is substantially
+better, with intelligible Italian opening/ending but a partly unintelligible
+middle. This is a partial improvement, not full M1 acceptance. Generated-history
+disagreement is concentrated in the middle third of this sample. The stock teacher-derived prefix reproduces its baseline exactly but
 is only a positive protocol control. M1.2 and M2–M5 remain unachieved. BF16 cache
 parity and EmbeddingGemma 2 compatibility remain open technical questions.
 

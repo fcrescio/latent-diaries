@@ -166,3 +166,16 @@ can have different prefix lengths; codec-0 alignment includes EOS, residual
 alignment uses same-frame heads. KL is diagnostic, never a human quality score.
 Local Whisper is auxiliary only, uploads no audio, and never feeds a transcript
 back into synthesis. None of these ablations has established M1 acceptance.
+
+
+To repeat decoding controls on the unchanged 32-token candidate:
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/probe_autoregression.py --run-dir artifacts/m1-inversion-006
+```
+
+`probe_sampled.wav` is an exact replay of the original. `probe_codec0_greedy.wav`
+removes first-codebook sampling; `probe_greedy.wav` removes sampling in all
+codebooks. Oracle residual injection writes diagnostic numbers only, never audio.
+The user's partial acceptance applies to the original sampled run-006 waveform;
+new decoding controls need separate listening.
