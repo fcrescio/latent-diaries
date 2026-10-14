@@ -10,7 +10,10 @@ seed 42. Fresh CLI inference reproduces that accepted waveform exactly without
 reading text or teacher targets. The original fully sampled run-006 has an
 unclear middle; run-002 sampled/greedy outputs were rejected. Acceptance is
 specific to the successful decoding control, not all checkpoints/settings.
-M1 is incomplete: distinct utterances and generalization remain unverified.
+The user also finds run-007 fully sampled speech almost good, with only half a
+word unintelligible. This is a second distinct, mostly intelligible memorization
+control; its greedy version has no listening acceptance. M1 remains incomplete:
+full clarity across utterances and unseen-input generalization are unverified.
 The stock teacher-derived prefix is a separate positive protocol control.
 M1.2 and M2–M5 remain unachieved; BF16 cache parity and EmbeddingGemma 2
 compatibility remain open technical questions.
