@@ -48,6 +48,7 @@ def main():
     inversion.add_argument("--learning-rate", type=float, default=.03)
     inversion.add_argument("--seed", type=int, default=42)
     inversion.add_argument("--resume", action="store_true")
+    inversion.add_argument("--residual-loss-weight", type=float, default=0.)
     prefix = sub.add_parser("infer-soft-prefix")
     prefix.add_argument("--run-dir", type=Path, required=True)
     prefix.add_argument("--output", type=Path, required=True)
@@ -73,7 +74,7 @@ def main():
     elif args.command == "train-soft-prefix":
         from .inversion import train
         train(args.target_audio, args.run_dir, args.steps, args.tokens, args.learning_rate,
-              args.seed, args.resume)
+              args.seed, args.resume, args.residual_loss_weight)
     elif args.command == "infer-soft-prefix":
         from .inversion import infer
         infer(args.run_dir, args.output, args.max_frames, args.seed)

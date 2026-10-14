@@ -4,9 +4,9 @@
 
 Implementation has started: `uv.lock` pins the dependency set. Continuous Qwen
 conditioning, teacher forcing and code generation pass tests using tiny real
-Qwen classes on CPU and CUDA (14 tests pass in the GPU worker). M0 has generated
-an Italian baseline and genuine-speech codec round-trip locally; listening
-assessment is pending. Pretrained FP32 assembly and cache controls also pass.
+Qwen classes on CPU and CUDA (15 tests pass in the GPU worker). M0 has generated
+an Italian baseline and genuine-speech codec round-trip locally; the user
+confirmed clear Italian and an acceptable voice. Pretrained FP32 assembly and cache controls also pass.
 No trained image-to-speech checkpoint exists. See `docs/DECISIONS.md` for evidence.
 
 ## Artistic brief
@@ -68,9 +68,10 @@ The agent can implement, test, debug and publish code, while you retain control 
 | Synthetic demo, validated media importer, SQLite ratings, auth, CSV export | Implemented |
 | HF private repositories | Created under `fcrescio`; no data or checkpoint uploaded |
 | Checkpoint upload, guarded HF Jobs launcher | Entrypoints provided; **not exercised** with real checkpoint/jobs |
-| Official Qwen Italian TTS baseline | GPU run produced 5.44 s audio and codec round-trip; listening pending |
+| Official Qwen Italian TTS baseline | GPU run produced 5.44 s audio and codec round-trip; user accepted speech/voice |
 | Continuous Qwen prefix / teacher-forced assembly / code generation | Tiny CPU/CUDA and pretrained FP32 mechanical controls pass; learned textless speech pending |
-| Soft-prefix inversion trainer, visual reader | **Not implemented yet** |
+| Single-utterance soft-prefix inversion | Resumable prefix-only training and transcript-free checkpoint inference exercised; memorization control, not generalization |
+| Visual reader / image-conditioned training | **Not implemented yet** |
 | Genuine Italian image-to-speech checkpoint / wearable experience | **Not yet achieved** |
 
 Use `docs/capabilities.json` for machine-readable safety flags. Never flip flags without tests.

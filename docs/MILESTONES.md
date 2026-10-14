@@ -9,7 +9,11 @@ gold-code label alignment and cache/generation parity with tiny random Qwen
 weights on CPU/CUDA; pretrained parity and audible M1.1/M1.2 evidence remain
 pending at bootstrap. Pretrained FP32 stock-prefill, gradient and cache controls
 have since passed; BF16 cache differences need precision-aware investigation.
-No research milestone is marked complete; M1.1/M1.2 still lack learned speech.
+User has now accepted M0's Italian speech and voice; M0 baseline/codec acceptance
+is satisfied. M1.1 has a resumable single-utterance inversion control and a
+4-second transcript-free checkpoint output awaiting listening. Codec-0-only
+training collapsed; residual-codebook supervision improved duration. M1 is not
+complete: distinct utterances, intelligibility and generalization remain unproven.
 
 | Milestone | Tasks | Evidence / exit gate |
 |---|---|---|

@@ -10,6 +10,7 @@ from qwen_tts.core.models.configuration_qwen3_tts import Qwen3TTSTalkerConfig
 from qwen_tts.core.models.modeling_qwen3_tts import Qwen3TTSTalkerForConditionalGeneration
 
 from latent_diaries.conditioning import SoftConditioningBuilder, VisualCondition
+from latent_diaries.inversion import aligned_residual_logits
 
 
 @pytest.mark.parametrize("device", ["cpu", "cuda"])
@@ -65,6 +66,23 @@ def test_pinned_talker_gradient_and_cache_parity(device):
     assert torch.isfinite(output.loss)
     output.loss.backward()
     assert soft.grad.abs().sum() > 0
+    assert all(p.grad is None for p in talker.parameters())
+    # Verify every residual head against generation's gold-previous-code prefix.
+    frame_hidden = torch.randn(2, 16, device=device, requires_grad=True)
+    frame_gold = torch.randint(0, 4, (2, 16), device=device)
+    residual = aligned_residual_logits(talker, frame_hidden, frame_gold)
+    inputs = [frame_hidden[:, None], talker.get_input_embeddings()(frame_gold[:, :1])]
+    for j in range(1, 15):
+        inputs.append(talker.code_predictor.get_input_embeddings()[j - 1](frame_gold[:, j : j + 1]))
+    all_inputs = torch.cat(inputs, dim=1)
+    for j in range(15):
+        generated = talker.code_predictor(inputs_embeds=all_inputs[:, : j + 2], use_cache=False)
+        torch.testing.assert_close(residual[:, j], generated.logits[:, -1], rtol=1e-4, atol=1e-5)
+    residual_loss = torch.nn.functional.cross_entropy(
+        residual.reshape(-1, 64), frame_gold[:, 1:].reshape(-1)
+    )
+    residual_loss.backward()
+    assert frame_hidden.grad.abs().sum() > 0
     assert all(p.grad is None for p in talker.parameters())
     prefix = builder.build_prefill(condition)
     prefilled = talker(**prefix, use_cache=True, output_hidden_states=True)

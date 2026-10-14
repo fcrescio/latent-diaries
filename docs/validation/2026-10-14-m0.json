@@ -25,8 +25,13 @@
       "qwen-tts": "0.1.1",
       "huggingface-hub": "0.36.2"
     },
-    "human_listening_status": "pending",
-    "text_conditioned_baseline": true
+    "human_listening_status": "accepted",
+    "text_conditioned_baseline": true,
+    "human_assessment": {
+      "clear_italian": true,
+      "voice_acceptable": true,
+      "basis": "Explicit user listening reply on 2026-10-14"
+    }
   },
   "pretrained_fp32_control": {
     "scope": "Pretrained Qwen mechanics; not visual speech or learned inversion",

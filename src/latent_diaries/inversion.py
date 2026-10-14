@@ -55,6 +55,18 @@ def condition(prefix, speaker):
     )
 
 
+def aligned_residual_logits(talker, frame_hidden, gold):
+    """Predict codebook j from hidden and gold codebooks <j, without label shift."""
+    if gold.ndim != 2 or frame_hidden.ndim != 2 or gold.shape[0] != frame_hidden.shape[0]:
+        raise ValueError("Expected frame-aligned [frames, codebooks] and [frames, hidden]")
+    if gold.shape[1] != talker.config.num_code_groups:
+        raise ValueError("Gold codebook count differs from pinned Talker config")
+    inputs = [frame_hidden[:, None], talker.get_input_embeddings()(gold[:, :1])]
+    embeddings = talker.code_predictor.get_input_embeddings()
+    inputs.extend(embeddings[j - 1](gold[:, j : j + 1]) for j in range(1, gold.shape[1] - 1))
+    return talker.code_predictor.forward_finetune(inputs_embeds=torch.cat(inputs, dim=1)).logits
+
+
 @torch.no_grad()
 def render(builder, wrapper, prefix, speaker, out: Path, max_frames: int, seed: int):
     import soundfile as sf
@@ -95,9 +107,16 @@ def save_checkpoint(folder, prefix, optimizer, step, metadata):
 
 
 def train(
-    target: Path, folder: Path, steps: int, tokens: int, learning_rate: float, seed: int, resume: bool
+    target: Path,
+    folder: Path,
+    steps: int,
+    tokens: int,
+    learning_rate: float,
+    seed: int,
+    resume: bool,
+    residual_loss_weight: float = 0.0,
 ):
-    if steps < 1 or tokens < 1 or learning_rate <= 0:
+    if steps < 1 or tokens < 1 or learning_rate <= 0 or residual_loss_weight < 0:
         raise ValueError("steps, tokens and learning rate must be positive")
     baseline = json.loads(Path("artifacts/m0_italian.json").read_text())
     metadata = {
@@ -108,6 +127,7 @@ def train(
         "tokens": tokens,
         "learning_rate": learning_rate,
         "precision": "float32",
+        "residual_loss_weight": residual_loss_weight,
         "target_sha256": digest(target),
         "lock_sha256": digest(Path("uv.lock")),
         "source_revision": os.environ.get("LD_CODE_REVISION"),
@@ -128,6 +148,7 @@ def train(
             "tokens",
             "learning_rate",
             "precision",
+            "residual_loss_weight",
             "target_sha256",
             "lock_sha256",
             "source_sha256",
@@ -169,17 +190,33 @@ def train(
         for step in range(start, steps):
             optimizer.zero_grad(set_to_none=True)
             batch = builder.build_teacher_forced(condition(prefix, speaker), gold)
-            output = wrapper.model.talker(**batch)
-            if not torch.isfinite(output.loss):
+            output = wrapper.model.talker(**batch, output_hidden_states=residual_loss_weight > 0)
+            loss = output.loss
+            residual_loss = torch.zeros((), device=device)
+            if residual_loss_weight:
+                prefix_length = builder.build_prefill(condition(prefix, speaker))["inputs_embeds"].shape[
+                    1
+                ]
+                hidden = output.hidden_states[0][-1][
+                    0, prefix_length - 1 : prefix_length - 1 + gold.shape[1]
+                ]
+                residual_logits = aligned_residual_logits(wrapper.model.talker, hidden, gold[0])
+                residual_loss = torch.nn.functional.cross_entropy(
+                    residual_logits.reshape(-1, residual_logits.shape[-1]), gold[0, :, 1:].reshape(-1)
+                )
+                loss = loss + residual_loss_weight * residual_loss
+            if not torch.isfinite(loss):
                 raise RuntimeError("Nonfinite loss: inspect the run before retrying")
-            output.loss.backward()
+            loss.backward()
             if prefix.grad is None or not torch.isfinite(prefix.grad).all():
                 raise RuntimeError("Missing/nonfinite continuous-token gradients")
             grad_norm = float(torch.nn.utils.clip_grad_norm_([prefix], 1.0))
             optimizer.step()
             metrics = {
                 "step": step + 1,
-                "loss": float(output.loss.detach()),
+                "loss": float(loss.detach()),
+                "codec0_loss": float(output.loss.detach()),
+                "residual_loss": float(residual_loss.detach()),
                 "gradient_norm": grad_norm,
                 "elapsed_seconds": time.perf_counter() - started,
             }
