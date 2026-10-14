@@ -193,3 +193,16 @@ The flag disables sampling only for codec-0; all 15 residual codebooks retain
 sampling. Omit it to preserve the earlier inference default. The output manifest
 records this setting, seed and duration cap. Human acceptance is specific to the
 accepted waveform/checkpoint/settings, not arbitrary seeds or novel utterances.
+
+
+Distinct-utterance repetition (separate learned prefix; not unseen-utterance
+generalization):
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/cache_inversion_teacher.py --output-dir artifacts/m1-teacher-002 --text "Sotto la pioggia, una finestra illuminata sembrava custodire un segreto."
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu latent-diaries train-soft-prefix --steps 200 --tokens 32 --run-dir artifacts/m1-inversion-007 --target-audio artifacts/m1-teacher-002/teacher.wav --residual-loss-weight 1 --teacher-cache-dir artifacts/m1-teacher-002
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu latent-diaries infer-soft-prefix --run-dir artifacts/m1-inversion-007 --output artifacts/m1-inversion-007/codec0-greedy.wav --max-frames 105 --seed 42 --codec0-greedy
+```
+
+Use fresh directories when repeating training/teacher caching. Sentence text is
+used only for teacher supervision; the final command reads no transcript.

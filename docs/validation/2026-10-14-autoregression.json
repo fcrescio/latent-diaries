@@ -234,6 +234,34 @@
         "reference_transcript_empty": true,
         "teacher_or_gold_codes_used": false
       }
+    },
+    "run007": {
+      "tokens": 32,
+      "objective": "teacher_distribution_kl",
+      "learning_rate": 0.03,
+      "completed_steps": 200,
+      "source_revision": "7758e0923db4a1ce0260421ba4c649420aa7db97",
+      "source_sha256": "afa0d67740f7e40b245105f5c2d3627e2db01102a65bc08e7c2510514631965c",
+      "lock_sha256": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+      "trainable_parameters": 32768,
+      "peak_allocated_vram_bytes": 5348864000,
+      "frozen_model_gradients_absent": true,
+      "inference_uses_utterance_text": false,
+      "human_listening_status": "pending",
+      "initial_loss": 1.2434539794921875,
+      "final_loss": 0.0037264428101480007,
+      "target_frames": 81,
+      "distinct_training_utterance": true,
+      "generalization_evidence": false,
+      "codec0_greedy_output": {
+        "frames": 105,
+        "seconds": 8.4,
+        "codec0_greedy": true,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105,
+        "human_listening_status": "pending"
+      }
     }
   },
   "m1_complete": false,
