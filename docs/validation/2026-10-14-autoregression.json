@@ -126,7 +126,7 @@
       "peak_allocated_vram_bytes": 5287823360,
       "frozen_model_gradients_absent": true,
       "inference_uses_utterance_text": false,
-      "human_listening_status": "pending",
+      "human_listening_status": "partial_intelligibility_improvement",
       "rollout_every": 0,
       "source_revision_note": "Base commit plus source overlay; exact inversion module fingerprint retained in subsequent source commit",
       "initial_loss": 1.6880770921707153,
@@ -148,9 +148,79 @@
         "student_history": {
           "frames": 82,
           "codec0_kl": 0.9401979446411133,
-          "residual_kl": 0.20334623754024506
+          "residual_kl": 0.20334623754024506,
+          "codec0_kl_relative_thirds": [
+            0.03706475675533983,
+            2.7353121041918973,
+            0.015962127016142143
+          ],
+          "relative_thirds_note": "Equal codec-frame thirds, not transcript-forced word alignment; diagnostic disagreement is not intelligibility"
         }
-      }
+      },
+      "human_assessment": {
+        "source": "Explicit user listening feedback",
+        "substantially_better_than_previous": true,
+        "italian_opening_and_ending_understood": true,
+        "unintelligible_middle_remains": true,
+        "fully_intelligible": false
+      },
+      "decoding_controls": {
+        "sampled": {
+          "frames": 82,
+          "target_frames": 75,
+          "aligned_codec0_accuracy": 0.13333334028720856,
+          "aligned_residual_accuracy": 0.13066667318344116,
+          "first_codec0_difference_frame": 9,
+          "codec0_sampled": true,
+          "residuals_sampled": true,
+          "gold_residuals_injected": false,
+          "seed": 42,
+          "sample_rate": 24000,
+          "seconds": 6.56
+        },
+        "codec0_greedy": {
+          "frames": 86,
+          "target_frames": 75,
+          "aligned_codec0_accuracy": 0.2133333384990692,
+          "aligned_residual_accuracy": 0.06311111152172089,
+          "first_codec0_difference_frame": 10,
+          "codec0_sampled": false,
+          "residuals_sampled": true,
+          "gold_residuals_injected": false,
+          "seed": 42,
+          "sample_rate": 24000,
+          "seconds": 6.88
+        },
+        "greedy": {
+          "frames": 99,
+          "target_frames": 75,
+          "aligned_codec0_accuracy": 0.12000000476837158,
+          "aligned_residual_accuracy": 0.12888889014720917,
+          "first_codec0_difference_frame": 9,
+          "codec0_sampled": false,
+          "residuals_sampled": false,
+          "gold_residuals_injected": false,
+          "seed": 42,
+          "sample_rate": 24000,
+          "seconds": 7.92
+        },
+        "oracle_residuals": {
+          "frames": 76,
+          "target_frames": 75,
+          "aligned_codec0_accuracy": 0.8133333325386047,
+          "aligned_residual_accuracy": 1.0,
+          "first_codec0_difference_frame": 9,
+          "codec0_sampled": false,
+          "residuals_sampled": false,
+          "gold_residuals_injected": true,
+          "seed": 42
+        },
+        "teacher_forced": {
+          "codec0_loss": 0.6243686676025391,
+          "codec0_accuracy": 0.7599999904632568
+        }
+      },
+      "sampled_replay_exact_waveform_match": true
     }
   },
   "m1_complete": false,
