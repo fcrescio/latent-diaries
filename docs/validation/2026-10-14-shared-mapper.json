@@ -1,0 +1,360 @@
+{
+  "scope": "Shared authored numeric-factor compositional probe; not image conditioning or unseen vocabulary",
+  "design": "configs/research/compositions-v1.json",
+  "design_sha256": "4397f2d4f71089287fa7a8c78ecb0a6ea20b6b80bc286e7266aa0c32dd379c6f",
+  "model_id": "Qwen/Qwen3-TTS-12Hz-0.6B-Base",
+  "model_revision": "5d83992436eae1d760afd27aff78a71d676296fc",
+  "source_revision": "9515006c8aeecbc965091376dbdfab4e594e6e2c",
+  "source_sha256": "da18705bf4fc06da1190e5a1f566f273d3b76b906d9c175e31e053fd6932b14c",
+  "mapper_source_sha256": "a50c4edba467b14591b7583aaba4b7fb6fcabb44d775235b2cf7034487323200",
+  "conditioning_source_sha256": "db424a2b7255fa2f21887bd9c822d00b55c80dcbb42c322ed6d05bcbe79b6c07",
+  "inversion_source_sha256": "afa0d67740f7e40b245105f5c2d3627e2db01102a65bc08e7c2510514631965c",
+  "lock_sha256": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+  "worker_image": "sha256:728288af723609d921e01ca585db91a03df30a1ebfc99b2baccf3e62c4b0e570",
+  "source_and_scripts_readonly_overlay": true,
+  "hardware": "Local RTX 4090",
+  "precision": "float32",
+  "train_ids": [
+    "c01",
+    "c02",
+    "c03",
+    "c04",
+    "c05",
+    "c06"
+  ],
+  "heldout_ids": [
+    "c00",
+    "c07"
+  ],
+  "teacher_rows": 8,
+  "trainable_parameters": 4227584,
+  "input_dim": 3,
+  "tokens": 32,
+  "width": 128,
+  "seed": 42,
+  "learning_rate": 0.001,
+  "completed_steps": 1200,
+  "actual_checkpoint_resume": {
+    "from_step": 600,
+    "to_step": 1200,
+    "checksums_and_optimizer_restored": true
+  },
+  "first_train_cycle_mean_kl": 1.5665688316027324,
+  "last_train_cycle_mean_kl": 0.005851072142831981,
+  "frozen_model_gradients_absent": true,
+  "peak_allocated_vram_bytes": 5322196480,
+  "teacher_forced_diagnostic": {
+    "scope": "Post-training teacher-forced diagnostic, not autoregressive speech quality",
+    "weights_updated": false,
+    "results": [
+      {
+        "id": "c00",
+        "split": "heldout",
+        "condition": "conditioned",
+        "codec0_kl": 0.5819951891899109,
+        "residual_kl": 0.21328790485858917
+      },
+      {
+        "id": "c00",
+        "split": "heldout",
+        "condition": "null",
+        "codec0_kl": 0.831839382648468,
+        "residual_kl": 0.2834642231464386
+      },
+      {
+        "id": "c01",
+        "split": "train",
+        "condition": "conditioned",
+        "codec0_kl": 0.0016067423857748508,
+        "residual_kl": 0.004757496993988752
+      },
+      {
+        "id": "c01",
+        "split": "train",
+        "condition": "null",
+        "codec0_kl": 0.8928759694099426,
+        "residual_kl": 0.3073810935020447
+      },
+      {
+        "id": "c02",
+        "split": "train",
+        "condition": "conditioned",
+        "codec0_kl": 0.002125202212482691,
+        "residual_kl": 0.005191240459680557
+      },
+      {
+        "id": "c02",
+        "split": "train",
+        "condition": "null",
+        "codec0_kl": 0.6189132928848267,
+        "residual_kl": 0.24026687443256378
+      },
+      {
+        "id": "c03",
+        "split": "train",
+        "condition": "conditioned",
+        "codec0_kl": 0.00047931293374858797,
+        "residual_kl": 0.0022845256607979536
+      },
+      {
+        "id": "c03",
+        "split": "train",
+        "condition": "null",
+        "codec0_kl": 0.6198412179946899,
+        "residual_kl": 0.2644909620285034
+      },
+      {
+        "id": "c04",
+        "split": "train",
+        "condition": "conditioned",
+        "codec0_kl": 0.0013902724022045732,
+        "residual_kl": 0.005205816589295864
+      },
+      {
+        "id": "c04",
+        "split": "train",
+        "condition": "null",
+        "codec0_kl": 0.7227315306663513,
+        "residual_kl": 0.2400985062122345
+      },
+      {
+        "id": "c05",
+        "split": "train",
+        "condition": "conditioned",
+        "codec0_kl": 0.00034340613638050854,
+        "residual_kl": 0.0023688063956797123
+      },
+      {
+        "id": "c05",
+        "split": "train",
+        "condition": "null",
+        "codec0_kl": 1.0062661170959473,
+        "residual_kl": 0.28047552704811096
+      },
+      {
+        "id": "c06",
+        "split": "train",
+        "condition": "conditioned",
+        "codec0_kl": 0.0014739277539774776,
+        "residual_kl": 0.005338944960385561
+      },
+      {
+        "id": "c06",
+        "split": "train",
+        "condition": "null",
+        "codec0_kl": 0.36763623356819153,
+        "residual_kl": 0.16379962861537933
+      },
+      {
+        "id": "c07",
+        "split": "heldout",
+        "condition": "conditioned",
+        "codec0_kl": 0.9797613620758057,
+        "residual_kl": 0.3180010914802551
+      },
+      {
+        "id": "c07",
+        "split": "heldout",
+        "condition": "null",
+        "codec0_kl": 0.671688437461853,
+        "residual_kl": 0.2740107476711273
+      }
+    ]
+  },
+  "autoregressive_evaluation": {
+    "text_used": false,
+    "teacher_files_read": false,
+    "results": [
+      {
+        "id": "c00",
+        "split": "heldout",
+        "condition": "conditioned",
+        "human_listening_status": "pending",
+        "frames": 105,
+        "sample_rate": 24000,
+        "seconds": 8.4,
+        "codebook_count": 16,
+        "codec0_greedy": false,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "c00",
+        "split": "heldout",
+        "condition": "conditioned",
+        "human_listening_status": "pending",
+        "frames": 105,
+        "sample_rate": 24000,
+        "seconds": 8.4,
+        "codebook_count": 16,
+        "codec0_greedy": true,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "c00",
+        "split": "heldout",
+        "condition": "null",
+        "human_listening_status": "pending",
+        "frames": 105,
+        "sample_rate": 24000,
+        "seconds": 8.4,
+        "codebook_count": 16,
+        "codec0_greedy": false,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "c00",
+        "split": "heldout",
+        "condition": "null",
+        "human_listening_status": "pending",
+        "frames": 105,
+        "sample_rate": 24000,
+        "seconds": 8.4,
+        "codebook_count": 16,
+        "codec0_greedy": true,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "c01",
+        "split": "train",
+        "condition": "conditioned",
+        "human_listening_status": "pending",
+        "frames": 69,
+        "sample_rate": 24000,
+        "seconds": 5.52,
+        "codebook_count": 16,
+        "codec0_greedy": false,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "c01",
+        "split": "train",
+        "condition": "conditioned",
+        "human_listening_status": "pending",
+        "frames": 105,
+        "sample_rate": 24000,
+        "seconds": 8.4,
+        "codebook_count": 16,
+        "codec0_greedy": true,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "c01",
+        "split": "train",
+        "condition": "null",
+        "human_listening_status": "pending",
+        "frames": 105,
+        "sample_rate": 24000,
+        "seconds": 8.4,
+        "codebook_count": 16,
+        "codec0_greedy": false,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "c01",
+        "split": "train",
+        "condition": "null",
+        "human_listening_status": "pending",
+        "frames": 105,
+        "sample_rate": 24000,
+        "seconds": 8.4,
+        "codebook_count": 16,
+        "codec0_greedy": true,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "c07",
+        "split": "heldout",
+        "condition": "conditioned",
+        "human_listening_status": "pending",
+        "frames": 105,
+        "sample_rate": 24000,
+        "seconds": 8.4,
+        "codebook_count": 16,
+        "codec0_greedy": false,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "c07",
+        "split": "heldout",
+        "condition": "conditioned",
+        "human_listening_status": "pending",
+        "frames": 105,
+        "sample_rate": 24000,
+        "seconds": 8.4,
+        "codebook_count": 16,
+        "codec0_greedy": true,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "c07",
+        "split": "heldout",
+        "condition": "null",
+        "human_listening_status": "pending",
+        "frames": 105,
+        "sample_rate": 24000,
+        "seconds": 8.4,
+        "codebook_count": 16,
+        "codec0_greedy": false,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "c07",
+        "split": "heldout",
+        "condition": "null",
+        "human_listening_status": "pending",
+        "frames": 105,
+        "sample_rate": 24000,
+        "seconds": 8.4,
+        "codebook_count": 16,
+        "codec0_greedy": true,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      }
+    ]
+  },
+  "unique_blinded_audio_clips": 8,
+  "human_listening_status": "pending",
+  "shared_generalization_verified": false,
+  "image_conditioned": false,
+  "m1_complete": false,
+  "tests": {
+    "host_passed": 7,
+    "host_ml_modules_skipped": 4,
+    "worker_cpu_passed": 17,
+    "worker_cuda_skipped": 1,
+    "gpu_passed": 18
+  },
+  "paid_jobs": false,
+  "media_or_weights_uploaded": false,
+  "diagnostic_source_sha256": "783559b6ae35972d56ac1f99cea3830dd2d174a3b991ecfaa05c4805fae54168",
+  "blinding_source_sha256": "76f5f5e6a438507f27ee82ff33d1183fd1d87a7345313edf4ec17422fdd5afd4",
+  "auxiliary_asr": {
+    "scope": "Local diagnostic only, not a human assessment or training objective",
+    "model_id": "openai/whisper-tiny",
+    "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+    "raw_transcripts_published": false
+  }
+}

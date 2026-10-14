@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "scope": "Authored numeric factors, not image features or text embeddings",
+  "factor_order": [
+    "weather",
+    "opening",
+    "memory"
+  ],
+  "rows": [
+    {
+      "id": "c00",
+      "split": "heldout",
+      "features": [
+        -1.0,
+        -1.0,
+        -1.0
+      ],
+      "teacher_text": "Sotto la pioggia, la finestra sembrava custodire un segreto."
+    },
+    {
+      "id": "c01",
+      "split": "train",
+      "features": [
+        -1.0,
+        -1.0,
+        1.0
+      ],
+      "teacher_text": "Sotto la pioggia, la finestra sembrava ricordare una promessa."
+    },
+    {
+      "id": "c02",
+      "split": "train",
+      "features": [
+        -1.0,
+        1.0,
+        -1.0
+      ],
+      "teacher_text": "Sotto la pioggia, la porta sembrava custodire un segreto."
+    },
+    {
+      "id": "c03",
+      "split": "train",
+      "features": [
+        -1.0,
+        1.0,
+        1.0
+      ],
+      "teacher_text": "Sotto la pioggia, la porta sembrava ricordare una promessa."
+    },
+    {
+      "id": "c04",
+      "split": "train",
+      "features": [
+        1.0,
+        -1.0,
+        -1.0
+      ],
+      "teacher_text": "Alla luce del sole, la finestra sembrava custodire un segreto."
+    },
+    {
+      "id": "c05",
+      "split": "train",
+      "features": [
+        1.0,
+        -1.0,
+        1.0
+      ],
+      "teacher_text": "Alla luce del sole, la finestra sembrava ricordare una promessa."
+    },
+    {
+      "id": "c06",
+      "split": "train",
+      "features": [
+        1.0,
+        1.0,
+        -1.0
+      ],
+      "teacher_text": "Alla luce del sole, la porta sembrava custodire un segreto."
+    },
+    {
+      "id": "c07",
+      "split": "heldout",
+      "features": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "teacher_text": "Alla luce del sole, la porta sembrava ricordare una promessa."
+    }
+  ]
+}

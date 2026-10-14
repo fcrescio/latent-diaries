@@ -206,3 +206,48 @@ DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile 
 
 Use fresh directories when repeating training/teacher caching. Sentence text is
 used only for teacher supervision; the final command reads no transcript.
+
+
+## Shared numeric-factor probe (research, no images)
+
+The design `configs/research/compositions-v1.json` fixes six training combinations
+and two held-out combinations before any optimization. Its three numeric factors
+are authored semantic inputs. Teacher strings are used only to cache supervision;
+this experiment does not use text embeddings as inference inputs and does not
+establish image grounding. All artifacts stay local.
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/prepare_shared_probe.py --design configs/research/compositions-v1.json --output-dir artifacts/shared-corpus-001
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/shared_probe.py train --dataset artifacts/shared-corpus-001/dataset.json --run-dir artifacts/shared-mapper-001 --steps 600
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/shared_probe.py train --dataset artifacts/shared-corpus-001/dataset.json --run-dir artifacts/shared-mapper-001 --steps 1200 --resume
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/shared_probe.py evaluate --inputs artifacts/shared-corpus-001/eval-inputs.json --run-dir artifacts/shared-mapper-001 --output-dir artifacts/shared-eval-001 --ids c01 c00 c07
+```
+
+Rebuild the worker before these commands, or bind current `src` and `scripts`
+read-only before the service name. Fresh directories prevent overwriting previous
+runs. Preparation can reuse complete teacher caches after verifying their text
+fingerprints. Training opens only train-split teacher tensors, freezes the Qwen
+backbone and logs per-example KL. Checkpoint resume validates source/config/weights
+and restores AdamW; example order is deterministic and contains no dropout or
+sampling. Evaluation opens only shared mapper tensors, numeric inputs and frozen
+backbone/speaker; its spec rejects text/teacher paths. The zero-input waveform is
+reused across cases, so repeated null entries are not independent samples.
+
+The evaluator compares both decoding modes at seed 42 with the same 105-frame
+cap. Results need human listening; low training KL, duration and auxiliary ASR
+cannot establish intelligibility or generalization.
+
+
+Post-training diagnostic and private audio-only listening page:
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= -v "$PWD/scripts:/workspace/scripts:ro" experiment-gpu python scripts/diagnose_shared_probe.py --dataset artifacts/shared-corpus-001/dataset.json --run-dir artifacts/shared-mapper-001 --output artifacts/shared-mapper-001/teacher-forced-diagnostic.json
+.venv/bin/python scripts/blind_audio_probe.py --results artifacts/shared-eval-001/results.json --output-dir artifacts/shared-listening-001
+```
+
+The diagnostic may read held-out teacher logits only after freezing the completed
+checkpoint; it does not update weights or select a checkpoint. The standalone
+evaluation command above reads no teacher logits. The listening page shuffles
+and renames eight unique WAVs, stores a private condition mapping, and does not
+fabricate ratings. It is a local file, with no HTTP listener or public exposure.
+This audio-only probe cannot supply image-grounding/art-gallery evidence.
