@@ -67,6 +67,29 @@ def aligned_residual_logits(talker, frame_hidden, gold):
     return talker.code_predictor.forward_finetune(inputs_embeds=torch.cat(inputs, dim=1)).logits
 
 
+def frame_logits(logits, prefix_length: int, frames: int):
+    """Align frame zero at the final codec BOS; include the EOS prediction."""
+    if prefix_length < 1 or frames < 1 or logits.shape[1] < prefix_length + frames:
+        raise ValueError("Invalid prefix/frame alignment")
+    return logits[:, prefix_length - 1 : prefix_length + frames]
+
+
+def distribution_kl(student, teacher):
+    """Mean KL per aligned frame/codebook; teacher is supervision only."""
+    if student.shape != teacher.shape:
+        raise ValueError("Teacher/student prediction shapes must match after frame alignment")
+    return (
+        torch.nn.functional.kl_div(
+            torch.log_softmax(student.float(), dim=-1),
+            torch.log_softmax(teacher.detach().float(), dim=-1),
+            log_target=True,
+            reduction="none",
+        )
+        .sum(-1)
+        .mean()
+    )
+
+
 @torch.no_grad()
 def render(builder, wrapper, prefix, speaker, out: Path, max_frames: int, seed: int):
     import soundfile as sf
@@ -115,10 +138,24 @@ def train(
     seed: int,
     resume: bool,
     residual_loss_weight: float = 0.0,
+    teacher_cache_dir: Path | None = None,
 ):
     if steps < 1 or tokens < 1 or learning_rate <= 0 or residual_loss_weight < 0:
         raise ValueError("steps, tokens and learning rate must be positive")
     baseline = json.loads(Path("artifacts/m0_italian.json").read_text())
+    teacher_info = None
+    if teacher_cache_dir is not None:
+        if residual_loss_weight <= 0:
+            raise ValueError("Teacher distribution distillation requires residual supervision")
+        teacher_info = json.loads((teacher_cache_dir / "config.json").read_text())
+        if digest(target) != teacher_info["target_audio_sha256"]:
+            raise ValueError("Target audio differs from the cached teacher trajectory")
+        for key in ["model_id", "model_revision", "lock_sha256"]:
+            expected = digest(Path("uv.lock")) if key == "lock_sha256" else baseline[key]
+            if teacher_info[key] != expected:
+                raise ValueError(f"Teacher cache configuration differs: {key}")
+        if digest(teacher_cache_dir / "teacher.safetensors") != teacher_info["teacher_cache_sha256"]:
+            raise ValueError("Teacher cache checksum differs")
     metadata = {
         "stage": "M1.1 single-utterance inversion control",
         "model_id": baseline["model_id"],
@@ -128,6 +165,8 @@ def train(
         "learning_rate": learning_rate,
         "precision": "float32",
         "residual_loss_weight": residual_loss_weight,
+        "objective": "teacher_distribution_kl" if teacher_info else "gold_codec_ce",
+        "teacher_cache_sha256": teacher_info["teacher_cache_sha256"] if teacher_info else None,
         "target_sha256": digest(target),
         "lock_sha256": digest(Path("uv.lock")),
         "source_revision": os.environ.get("LD_CODE_REVISION"),
@@ -149,6 +188,8 @@ def train(
             "learning_rate",
             "precision",
             "residual_loss_weight",
+            "objective",
+            "teacher_cache_sha256",
             "target_sha256",
             "lock_sha256",
             "source_sha256",
@@ -159,8 +200,19 @@ def train(
     torch.manual_seed(seed)
     wrapper, builder, speaker = load_backbone(metadata)
     device = speaker.device
+    teacher = None
+    if teacher_cache_dir is not None:
+        teacher = {
+            k: v.to(device) for k, v in load_file(str(teacher_cache_dir / "teacher.safetensors")).items()
+        }
+        if list(builder.role_ids) != teacher_info["role_ids"]:
+            raise ValueError("Teacher/student fixed-role protocol differs")
     with torch.no_grad():
-        gold = wrapper.model.speech_tokenizer.encode(str(target)).audio_codes[0][None].to(device)
+        gold = (
+            teacher["audio_codes"]
+            if teacher
+            else wrapper.model.speech_tokenizer.encode(str(target)).audio_codes[0][None].to(device)
+        )
         pad_id = torch.tensor([[wrapper.model.config.tts_pad_token_id]], device=device)
         pad = wrapper.model.talker.text_projection(wrapper.model.talker.get_text_embeddings()(pad_id))
         initial = pad.expand(1, tokens, -1).clone() + 0.02 * torch.randn(
@@ -193,6 +245,8 @@ def train(
             output = wrapper.model.talker(**batch, output_hidden_states=residual_loss_weight > 0)
             loss = output.loss
             residual_loss = torch.zeros((), device=device)
+            codec0_kl = torch.zeros((), device=device)
+            residual_kl = torch.zeros((), device=device)
             if residual_loss_weight:
                 prefix_length = builder.build_prefill(condition(prefix, speaker))["inputs_embeds"].shape[
                     1
@@ -205,6 +259,13 @@ def train(
                     residual_logits.reshape(-1, residual_logits.shape[-1]), gold[0, :, 1:].reshape(-1)
                 )
                 loss = loss + residual_loss_weight * residual_loss
+                if teacher is not None:
+                    codec0_kl = distribution_kl(
+                        frame_logits(output.logits, prefix_length, gold.shape[1]),
+                        teacher["codec0_logits"],
+                    )
+                    residual_kl = distribution_kl(residual_logits, teacher["residual_logits"])
+                    loss = codec0_kl + residual_loss_weight * residual_kl
             if not torch.isfinite(loss):
                 raise RuntimeError("Nonfinite loss: inspect the run before retrying")
             loss.backward()
@@ -217,6 +278,8 @@ def train(
                 "loss": float(loss.detach()),
                 "codec0_loss": float(output.loss.detach()),
                 "residual_loss": float(residual_loss.detach()),
+                "codec0_kl": float(codec0_kl.detach()),
+                "residual_kl": float(residual_kl.detach()),
                 "gradient_norm": grad_norm,
                 "elapsed_seconds": time.perf_counter() - started,
             }

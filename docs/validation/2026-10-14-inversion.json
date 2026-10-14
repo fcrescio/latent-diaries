@@ -51,6 +51,12 @@
   "checkpoint_reload_exact_waveform_match": true,
   "reference_transcript_empty_during_reload": true,
   "worker_gpu_tests_passed": 15,
-  "human_listening_status": "pending",
-  "media_or_weights_published": false
+  "human_listening_status": "rejected_intelligibility",
+  "media_or_weights_published": false,
+  "human_assessment": {
+    "voice_acceptable": true,
+    "prosody_reasonable": true,
+    "intelligible_italian": false,
+    "source": "Explicit user listening reply"
+  }
 }
