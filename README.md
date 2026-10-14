@@ -9,8 +9,10 @@ an Italian baseline and genuine-speech codec round-trip locally; the user
 confirmed clear Italian and an acceptable voice. Pretrained FP32 assembly and cache controls also pass.
 The user rejected run-002 sampled and greedy speech as unintelligible.
 The user accepts the 32-token run-006 with greedy first-codebook decoding as
-fully intelligible Italian. This is one memorized utterance; distinct utterances,
-generalization and image conditioning remain unverified. M1 is incomplete.
+fully intelligible Italian. A second separately learned utterance, run-007 with
+sampling, is almost clear per the user, with half a word unintelligible. These
+are memorization controls; generalization and image conditioning remain
+unverified. M1 is incomplete.
 No trained image-to-speech checkpoint exists. See `docs/DECISIONS.md` for evidence.
 
 ## Artistic brief

@@ -247,7 +247,7 @@
       "peak_allocated_vram_bytes": 5348864000,
       "frozen_model_gradients_absent": true,
       "inference_uses_utterance_text": false,
-      "human_listening_status": "pending",
+      "human_listening_status": "mostly_intelligible_minor_defect",
       "initial_loss": 1.2434539794921875,
       "final_loss": 0.0037264428101480007,
       "target_frames": 81,
@@ -261,6 +261,13 @@
         "seed": 42,
         "max_frames": 105,
         "human_listening_status": "pending"
+      },
+      "human_assessment": {
+        "source": "Explicit user listening feedback",
+        "mostly_intelligible_italian": true,
+        "remaining_issue": "Only half a word was unintelligible",
+        "fully_intelligible": false,
+        "scope": "Run-007 trained.wav, fully sampled seed-42 single-utterance memorization control"
       }
     }
   },
