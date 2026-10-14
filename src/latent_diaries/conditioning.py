@@ -163,7 +163,9 @@ class SoftConditioningBuilder:
         }
 
     @torch.no_grad()
-    def generate_codes(self, condition, max_frames: int, seed: int) -> list[torch.Tensor]:
+    def generate_codes(
+        self, condition, max_frames: int, seed: int, *, codec0_greedy: bool = False
+    ) -> list[torch.Tensor]:
         if max_frames < 1:
             raise ValueError("max_frames must be positive")
         codec = self.model.config.talker_config
@@ -178,7 +180,7 @@ class SoftConditioningBuilder:
                 **prefill,
                 max_new_tokens=max_frames + 1,
                 min_new_tokens=2,
-                do_sample=True,
+                do_sample=not codec0_greedy,
                 top_k=50,
                 top_p=1.0,
                 temperature=0.9,

@@ -4,13 +4,15 @@ A milestone is complete only with a committed reproduction command, a passing te
 
 2026-10-14 status: M0 baseline and genuine-speech codec round-trip are accepted
 by the user. Continuous assembly, frozen-backbone gradients, cache parity and
-checkpoint inference are exercised. M1.1 remains **failed for intelligibility**:
+checkpoint inference are exercised. M1.1 has one accepted intelligible utterance:
 the user rejected both sampled and fully greedy run-002 audio despite acceptable
 voice/prosody. Matched-target CE, teacher-distribution KL, generated-history
 supervision and a 32-token capacity control are documented experiments, not
 full speech-quality successes. User subsequently reports run-006 is substantially
 better, with intelligible Italian opening/ending but a partly unintelligible
-middle. This is a partial improvement, not full M1 acceptance. Generated-history
+middle. The user then accepted its codec-0-greedy / sampled-residual control as
+perfect Italian. This establishes one intelligible memorization control, not full
+M1 acceptance: distinct utterances and generalization remain unverified. Generated-history
 disagreement is concentrated in the middle third of this sample. The stock teacher-derived prefix reproduces its baseline exactly but
 is only a positive protocol control. M1.2 and M2–M5 remain unachieved. BF16 cache
 parity and EmbeddingGemma 2 compatibility remain open technical questions.

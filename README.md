@@ -8,8 +8,9 @@ Qwen classes on CPU and CUDA (16 tests pass in the GPU worker). M0 has generated
 an Italian baseline and genuine-speech codec round-trip locally; the user
 confirmed clear Italian and an acceptable voice. Pretrained FP32 assembly and cache controls also pass.
 The user rejected run-002 sampled and greedy speech as unintelligible.
-The 32-token run-006 is substantially better: its Italian opening and ending are
-understood, but its middle remains partly unintelligible. M1 is incomplete.
+The user accepts the 32-token run-006 with greedy first-codebook decoding as
+fully intelligible Italian. This is one memorized utterance; distinct utterances,
+generalization and image conditioning remain unverified. M1 is incomplete.
 No trained image-to-speech checkpoint exists. See `docs/DECISIONS.md` for evidence.
 
 ## Artistic brief
@@ -73,7 +74,7 @@ The agent can implement, test, debug and publish code, while you retain control 
 | Checkpoint upload, guarded HF Jobs launcher | Entrypoints provided; **not exercised** with real checkpoint/jobs |
 | Official Qwen Italian TTS baseline | GPU run produced 5.44 s audio and codec round-trip; user accepted speech/voice |
 | Continuous Qwen prefix / teacher-forced assembly / code generation | Tiny CPU/CUDA and pretrained FP32 mechanical controls pass; learned textless speech pending |
-| Single-utterance soft-prefix inversion | Resumable training/inference exercised; 32-token control partly intelligible per user; middle remains unclear; M1 incomplete |
+| Single-utterance soft-prefix inversion | Resumable training/inference exercised; User accepts 32-token control with codec-0 greedy decoding; one memorized utterance; M1 incomplete |
 | Visual reader / image-conditioned training | **Not implemented yet** |
 | Genuine Italian image-to-speech checkpoint / wearable experience | **Not yet achieved** |
 

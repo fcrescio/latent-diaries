@@ -103,10 +103,15 @@ def trajectory_logits(wrapper, builder, prefix, speaker, codes):
 
 
 @torch.no_grad()
-def render(builder, wrapper, prefix, speaker, out: Path, max_frames: int, seed: int):
+def render(
+    builder, wrapper, prefix, speaker, out: Path, max_frames: int, seed: int,
+    *, codec0_greedy: bool = False,
+):
     import soundfile as sf
 
-    codes = builder.generate_codes(condition(prefix, speaker), max_frames=max_frames, seed=seed)[0]
+    codes = builder.generate_codes(
+        condition(prefix, speaker), max_frames=max_frames, seed=seed, codec0_greedy=codec0_greedy
+    )[0]
     if not len(codes):
         return {"frames": 0, "audio": None, "empty": True}
     wavs, sr = wrapper.model.speech_tokenizer.decode([{"audio_codes": codes}])
@@ -119,6 +124,10 @@ def render(builder, wrapper, prefix, speaker, out: Path, max_frames: int, seed: 
         "seconds": len(wavs[0]) / sr,
         "audio_sha256": digest(out),
         "codebook_count": codes.shape[1],
+        "codec0_greedy": codec0_greedy,
+        "residuals_sampled": True,
+        "seed": seed,
+        "max_frames": max_frames,
     }
 
 
@@ -393,10 +402,12 @@ def train(
     print(json.dumps({"trained": trained, "null": null}), flush=True)
 
 
-def infer(folder: Path, out: Path, max_frames: int, seed: int):
+def infer(folder: Path, out: Path, max_frames: int, seed: int, codec0_greedy: bool = False):
     metadata = json.loads((folder / "config.json").read_text())
     wrapper, builder, speaker = load_backbone(metadata)
     prefix = load_file(str(folder / "prefix.safetensors"))["soft_tokens"].to(speaker.device)
-    result = render(builder, wrapper, prefix, speaker, out, max_frames, seed)
+    result = render(
+        builder, wrapper, prefix, speaker, out, max_frames, seed, codec0_greedy=codec0_greedy
+    )
     out.with_suffix(".json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result))

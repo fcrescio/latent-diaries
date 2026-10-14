@@ -177,5 +177,19 @@ DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile 
 `probe_sampled.wav` is an exact replay of the original. `probe_codec0_greedy.wav`
 removes first-codebook sampling; `probe_greedy.wav` removes sampling in all
 codebooks. Oracle residual injection writes diagnostic numbers only, never audio.
-The user's partial acceptance applies to the original sampled run-006 waveform;
-new decoding controls need separate listening.
+The user accepts the codec-0-greedy / sampled-residual control as fully
+intelligible Italian; the original sampled waveform remains only partly clear.
+
+
+Reproduce the accepted single-utterance control through the regular inference CLI
+(after rebuilding the worker). No teacher cache, gold audio codes or transcript
+is read by this command:
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu latent-diaries infer-soft-prefix --run-dir artifacts/m1-inversion-006 --output artifacts/m1-inversion-006/accepted-reloaded.wav --max-frames 99 --seed 42 --codec0-greedy
+```
+
+The flag disables sampling only for codec-0; all 15 residual codebooks retain
+sampling. Omit it to preserve the earlier inference default. The output manifest
+records this setting, seed and duration cap. Human acceptance is specific to the
+accepted waveform/checkpoint/settings, not arbitrary seeds or novel utterances.

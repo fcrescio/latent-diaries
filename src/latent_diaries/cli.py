@@ -60,6 +60,8 @@ def main():
     prefix.add_argument("--output", type=Path, required=True)
     prefix.add_argument("--max-frames", type=int, default=120)
     prefix.add_argument("--seed", type=int, default=42)
+    prefix.add_argument("--codec0-greedy", action="store_true",
+                        help="Greedy first codebook; keep residual codebooks sampled")
     for name in ("train-reader", "narrate-image", "evaluate-grounding"):
         sub.add_parser(name)
     args = parser.parse_args()
@@ -84,7 +86,7 @@ def main():
               args.cached_gold_ce, args.init_prefix_dir, args.rollout_every, args.rollout_weight)
     elif args.command == "infer-soft-prefix":
         from .inversion import infer
-        infer(args.run_dir, args.output, args.max_frames, args.seed)
+        infer(args.run_dir, args.output, args.max_frames, args.seed, args.codec0_greedy)
     else:
         not_ready(args.command)
 

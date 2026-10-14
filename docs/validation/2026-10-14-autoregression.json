@@ -189,7 +189,9 @@
           "gold_residuals_injected": false,
           "seed": 42,
           "sample_rate": 24000,
-          "seconds": 6.88
+          "seconds": 6.88,
+          "human_listening_status": "accepted_intelligible_italian",
+          "human_assessment_source": "Explicit user listening reply: perfect"
         },
         "greedy": {
           "frames": 99,
@@ -220,7 +222,18 @@
           "codec0_accuracy": 0.7599999904632568
         }
       },
-      "sampled_replay_exact_waveform_match": true
+      "sampled_replay_exact_waveform_match": true,
+      "accepted_fresh_cli_reload": {
+        "exact_waveform_match": true,
+        "frames": 86,
+        "seconds": 6.88,
+        "codec0_greedy": true,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 99,
+        "reference_transcript_empty": true,
+        "teacher_or_gold_codes_used": false
+      }
     }
   },
   "m1_complete": false,
