@@ -4,10 +4,12 @@ A milestone is complete only with a committed reproduction command, a passing te
 
 2026-10-14 status: bootstrap repairs pass host and worker tests, public GitHub
 source and private HF repositories exist. M-1 remains partial (review credentials
-unset); M0 awaits consented reference speech. M1.0 has tested continuous assembly,
+unset at bootstrap); M0 now has real baseline/codec artifacts awaiting listening. M1.0 has tested continuous assembly,
 gold-code label alignment and cache/generation parity with tiny random Qwen
 weights on CPU/CUDA; pretrained parity and audible M1.1/M1.2 evidence remain
-pending. No research milestone is marked complete.
+pending at bootstrap. Pretrained FP32 stock-prefill, gradient and cache controls
+have since passed; BF16 cache differences need precision-aware investigation.
+No research milestone is marked complete; M1.1/M1.2 still lack learned speech.
 
 | Milestone | Tasks | Evidence / exit gate |
 |---|---|---|

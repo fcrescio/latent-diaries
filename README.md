@@ -4,9 +4,10 @@
 
 Implementation has started: `uv.lock` pins the dependency set. Continuous Qwen
 conditioning, teacher forcing and code generation pass tests using tiny real
-Qwen classes on CPU and CUDA (14 tests pass in the GPU worker). M0 awaits a
-consented reference voice; no trained speech checkpoint or genuine generated
-audio is available yet. See `docs/DECISIONS.md` for evidence.
+Qwen classes on CPU and CUDA (14 tests pass in the GPU worker). M0 has generated
+an Italian baseline and genuine-speech codec round-trip locally; listening
+assessment is pending. Pretrained FP32 assembly and cache controls also pass.
+No trained image-to-speech checkpoint exists. See `docs/DECISIONS.md` for evidence.
 
 ## Artistic brief
 
@@ -67,8 +68,8 @@ The agent can implement, test, debug and publish code, while you retain control 
 | Synthetic demo, validated media importer, SQLite ratings, auth, CSV export | Implemented |
 | HF private repositories | Created under `fcrescio`; no data or checkpoint uploaded |
 | Checkpoint upload, guarded HF Jobs launcher | Entrypoints provided; **not exercised** with real checkpoint/jobs |
-| Official Qwen Italian TTS baseline | Entrypoint implemented; **not run** with downloaded model/voice |
-| Continuous Qwen prefix / teacher-forced assembly / code generation | Tiny-model CPU/CUDA tests pass; **no pretrained speech validation yet** |
+| Official Qwen Italian TTS baseline | GPU run produced 5.44 s audio and codec round-trip; listening pending |
+| Continuous Qwen prefix / teacher-forced assembly / code generation | Tiny CPU/CUDA and pretrained FP32 mechanical controls pass; learned textless speech pending |
 | Soft-prefix inversion trainer, visual reader | **Not implemented yet** |
 | Genuine Italian image-to-speech checkpoint / wearable experience | **Not yet achieved** |
 

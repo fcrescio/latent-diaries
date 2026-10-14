@@ -52,6 +52,22 @@ After supplying a consented `run-data/voices/reference.wav` and setting
 LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" make DOCKER=.cache/tools/docker m0-gpu
 ```
 
+`LD_REF_AUDIO` is the path inside the container: for host file
+`run-data/voices/test.wav`, use `/workspace/run-data/voices/test.wav`.
+`LD_REF_TEXT` contains that recording's exact transcript. Both stay in ignored
+`.env`; the transcript is used only by the separate text-conditioned baseline.
+
+After M0, run the pretrained assembly/cache controls against the cached snapshot:
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -v "$PWD/scripts:/workspace/scripts:ro" experiment-gpu python scripts/validate_qwen_pretrained.py --dtype float32
+```
+
+Results go to `artifacts/qwen-pretrained-validation.json`. A BF16 run currently
+exceeds the cache comparison tolerance; FP32 is the verified mechanical control.
+These controls use projected teacher text to compare stock assembly, and do not
+constitute learned textless narration or image conditioning.
+
 Set `HF_NAMESPACE=fcrescio` and a strong `REVIEW_PASSWORD` locally before Hub
 commands and listening review respectively. Keep secrets out of chat.
 
