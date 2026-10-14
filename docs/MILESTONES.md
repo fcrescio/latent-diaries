@@ -2,18 +2,16 @@
 
 A milestone is complete only with a committed reproduction command, a passing test and run evidence. Progression may stop on a human gate.
 
-2026-10-14 status: bootstrap repairs pass host and worker tests, public GitHub
-source and private HF repositories exist. M-1 remains partial (review credentials
-unset at bootstrap); M0 now has real baseline/codec artifacts awaiting listening. M1.0 has tested continuous assembly,
-gold-code label alignment and cache/generation parity with tiny random Qwen
-weights on CPU/CUDA; pretrained parity and audible M1.1/M1.2 evidence remain
-pending at bootstrap. Pretrained FP32 stock-prefill, gradient and cache controls
-have since passed; BF16 cache differences need precision-aware investigation.
-User has now accepted M0's Italian speech and voice; M0 baseline/codec acceptance
-is satisfied. M1.1 has a resumable single-utterance inversion control and a
-4-second transcript-free checkpoint output awaiting listening. Codec-0-only
-training collapsed; residual-codebook supervision improved duration. M1 is not
-complete: distinct utterances, intelligibility and generalization remain unproven.
+2026-10-14 status: M0 baseline and genuine-speech codec round-trip are accepted
+by the user. Continuous assembly, frozen-backbone gradients, cache parity and
+checkpoint inference are exercised. M1.1 remains **failed for intelligibility**:
+the user rejected both sampled and fully greedy run-002 audio despite acceptable
+voice/prosody. Matched-target CE, teacher-distribution KL, generated-history
+supervision and a 32-token capacity control are documented experiments, not
+speech-quality successes. Low teacher-forced loss does not survive generated
+histories. The stock teacher-derived prefix reproduces its baseline exactly but
+is only a positive protocol control. M1.2 and M2–M5 remain unachieved. BF16 cache
+parity and EmbeddingGemma 2 compatibility remain open technical questions.
 
 | Milestone | Tasks | Evidence / exit gate |
 |---|---|---|

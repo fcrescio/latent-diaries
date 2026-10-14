@@ -57,6 +57,7 @@
     "voice_acceptable": true,
     "prosody_reasonable": true,
     "intelligible_italian": false,
-    "source": "Explicit user listening reply"
+    "source": "Explicit user listening reply",
+    "fully_greedy_also_unintelligible": true
   }
 }

@@ -1,0 +1,159 @@
+{
+  "scope": "Single-utterance diagnostic ablations; no image grounding or human acceptance of new candidates",
+  "model_revision": "5d83992436eae1d760afd27aff78a71d676296fc",
+  "worker_gpu_tests_passed": 16,
+  "human_run002_sampled_and_greedy": "rejected_intelligibility",
+  "stock_teacher_continuous_prefix_exact_waveform_parity": true,
+  "teacher_prefix_is_learned": false,
+  "asr": {
+    "model_id": "openai/whisper-tiny",
+    "revision": "169d4a4341b33bc18d8881c4b69c2e104e1cc0af",
+    "scope": "Local auxiliary diagnostic only; no human/artistic score"
+  },
+  "runs": {
+    "run003": {
+      "tokens": 16,
+      "objective": "teacher_distribution_kl",
+      "learning_rate": 0.03,
+      "completed_steps": 200,
+      "source_revision": "5752e77157097be4745c41df197256fda3f90491",
+      "source_sha256": "2405e0426111c7fefe3906d336915c85a149823e0da82e2eec6eaa73b9f58fe1",
+      "lock_sha256": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+      "trainable_parameters": 16384,
+      "peak_allocated_vram_bytes": 5247503872,
+      "frozen_model_gradients_absent": true,
+      "inference_uses_utterance_text": false,
+      "human_listening_status": "pending",
+      "rollout_every": 0,
+      "source_revision_note": "Base commit plus source overlay; exact inversion module fingerprint retained in subsequent source commit",
+      "initial_loss": 1.7062040567398071,
+      "final_metrics": {
+        "loss": 0.004716919735074043,
+        "codec0_kl": 0.0005896697985008359,
+        "residual_kl": 0.004127250052988529,
+        "rollout_kl": null
+      },
+      "generated_frames": 74,
+      "generated_seconds": 5.92,
+      "null_frames": 99,
+      "policy_gap": {
+        "gold_history": {
+          "frames": 75,
+          "codec0_kl": 0.0006292122998274863,
+          "residual_kl": 0.0041008577682077885
+        },
+        "student_history": {
+          "frames": 74,
+          "codec0_kl": 0.8480119705200195,
+          "residual_kl": 0.2668358087539673
+        }
+      }
+    },
+    "run004": {
+      "tokens": 16,
+      "objective": "gold_codec_ce",
+      "learning_rate": 0.03,
+      "completed_steps": 200,
+      "source_revision": "fdd08183cc092cfc1485b4effea9d71e825e9b68",
+      "source_sha256": "64502621f854d7b30bd2953d2c718fedd7e1b0225bd1558879de2a20e1df51bc",
+      "lock_sha256": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+      "trainable_parameters": 16384,
+      "peak_allocated_vram_bytes": 5254870528,
+      "frozen_model_gradients_absent": true,
+      "inference_uses_utterance_text": false,
+      "human_listening_status": "pending",
+      "rollout_every": 0,
+      "source_revision_note": "Base commit plus source overlay; exact inversion module fingerprint retained in subsequent source commit",
+      "initial_loss": 5.832537651062012,
+      "final_metrics": {
+        "loss": 2.3597159385681152,
+        "codec0_kl": 0.9671991467475891,
+        "residual_kl": 0.9485799670219421,
+        "rollout_kl": null
+      },
+      "generated_frames": 69,
+      "generated_seconds": 5.52,
+      "null_frames": 99,
+      "policy_gap": null
+    },
+    "run005": {
+      "tokens": 16,
+      "objective": "teacher_distribution_kl",
+      "learning_rate": 0.01,
+      "completed_steps": 100,
+      "source_revision": "fdd08183cc092cfc1485b4effea9d71e825e9b68",
+      "source_sha256": "006f84c20bce2b8fca7e236fe02afabf0d06ebdf9b51163fdf0f0f4d471dfeb0",
+      "lock_sha256": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+      "trainable_parameters": 16384,
+      "peak_allocated_vram_bytes": 6226450944,
+      "frozen_model_gradients_absent": true,
+      "inference_uses_utterance_text": false,
+      "human_listening_status": "pending",
+      "rollout_every": 50,
+      "source_revision_note": "Base commit plus source overlay; exact inversion module fingerprint retained in subsequent source commit",
+      "initial_loss": 0.5597889423370361,
+      "final_metrics": {
+        "loss": 0.021328113973140717,
+        "codec0_kl": 0.006083549465984106,
+        "residual_kl": 0.011901269666850567,
+        "rollout_kl": 0.024671411141753197
+      },
+      "generated_frames": 77,
+      "generated_seconds": 6.16,
+      "null_frames": 99,
+      "policy_gap": {
+        "gold_history": {
+          "frames": 75,
+          "codec0_kl": 0.005826201289892197,
+          "residual_kl": 0.01171635091304779
+        },
+        "student_history": {
+          "frames": 77,
+          "codec0_kl": 1.5333898067474365,
+          "residual_kl": 0.37894538044929504
+        }
+      }
+    },
+    "run006": {
+      "tokens": 32,
+      "objective": "teacher_distribution_kl",
+      "learning_rate": 0.03,
+      "completed_steps": 200,
+      "source_revision": "fdd08183cc092cfc1485b4effea9d71e825e9b68",
+      "source_sha256": "006f84c20bce2b8fca7e236fe02afabf0d06ebdf9b51163fdf0f0f4d471dfeb0",
+      "lock_sha256": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+      "trainable_parameters": 32768,
+      "peak_allocated_vram_bytes": 5287823360,
+      "frozen_model_gradients_absent": true,
+      "inference_uses_utterance_text": false,
+      "human_listening_status": "pending",
+      "rollout_every": 0,
+      "source_revision_note": "Base commit plus source overlay; exact inversion module fingerprint retained in subsequent source commit",
+      "initial_loss": 1.6880770921707153,
+      "final_metrics": {
+        "loss": 0.0027473270893096924,
+        "codec0_kl": 0.000377949996618554,
+        "residual_kl": 0.002369377063587308,
+        "rollout_kl": 0.0
+      },
+      "generated_frames": 82,
+      "generated_seconds": 6.56,
+      "null_frames": 99,
+      "policy_gap": {
+        "gold_history": {
+          "frames": 75,
+          "codec0_kl": 0.000386818457627669,
+          "residual_kl": 0.0023612144868820906
+        },
+        "student_history": {
+          "frames": 82,
+          "codec0_kl": 0.9401979446411133,
+          "residual_kl": 0.20334623754024506
+        }
+      }
+    }
+  },
+  "m1_complete": false,
+  "media_or_weights_published": false,
+  "paid_jobs": false
+}

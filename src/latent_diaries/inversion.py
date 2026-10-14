@@ -90,6 +90,18 @@ def distribution_kl(student, teacher):
     )
 
 
+def trajectory_logits(wrapper, builder, prefix, speaker, codes):
+    """Policies conditioned on the same previous actions, with aligned heads."""
+    output = wrapper.model.talker(
+        **builder.build_teacher_forced(condition(prefix, speaker), codes), output_hidden_states=True
+    )
+    length = builder.build_prefill(condition(prefix, speaker))["inputs_embeds"].shape[1]
+    hidden = output.hidden_states[0][-1][0, length - 1 : length - 1 + codes.shape[1]]
+    return frame_logits(output.logits, length, codes.shape[1]), aligned_residual_logits(
+        wrapper.model.talker, hidden, codes[0]
+    )
+
+
 @torch.no_grad()
 def render(builder, wrapper, prefix, speaker, out: Path, max_frames: int, seed: int):
     import soundfile as sf
@@ -139,11 +151,21 @@ def train(
     resume: bool,
     residual_loss_weight: float = 0.0,
     teacher_cache_dir: Path | None = None,
+    cached_gold_ce: bool = False,
+    init_prefix_dir: Path | None = None,
+    rollout_every: int = 0,
+    rollout_weight: float = 1.0,
 ):
     if steps < 1 or tokens < 1 or learning_rate <= 0 or residual_loss_weight < 0:
         raise ValueError("steps, tokens and learning rate must be positive")
     baseline = json.loads(Path("artifacts/m0_italian.json").read_text())
     teacher_info = None
+    if cached_gold_ce and teacher_cache_dir is None:
+        raise ValueError("Cached-gold CE requires a teacher cache")
+    if rollout_every < 0 or rollout_weight <= 0:
+        raise ValueError("Invalid rollout refresh/weight")
+    if rollout_every and (teacher_cache_dir is None or cached_gold_ce):
+        raise ValueError("Rollout supervision requires teacher-distribution KL")
     if teacher_cache_dir is not None:
         if residual_loss_weight <= 0:
             raise ValueError("Teacher distribution distillation requires residual supervision")
@@ -165,8 +187,15 @@ def train(
         "learning_rate": learning_rate,
         "precision": "float32",
         "residual_loss_weight": residual_loss_weight,
-        "objective": "teacher_distribution_kl" if teacher_info else "gold_codec_ce",
+        "objective": "teacher_distribution_kl"
+        if teacher_info and not cached_gold_ce
+        else "gold_codec_ce",
         "teacher_cache_sha256": teacher_info["teacher_cache_sha256"] if teacher_info else None,
+        "init_prefix_sha256": digest(init_prefix_dir / "prefix.safetensors")
+        if init_prefix_dir
+        else None,
+        "rollout_every": rollout_every,
+        "rollout_weight": rollout_weight,
         "target_sha256": digest(target),
         "lock_sha256": digest(Path("uv.lock")),
         "source_revision": os.environ.get("LD_CODE_REVISION"),
@@ -190,11 +219,14 @@ def train(
             "residual_loss_weight",
             "objective",
             "teacher_cache_sha256",
+            "init_prefix_sha256",
+            "rollout_every",
+            "rollout_weight",
             "target_sha256",
             "lock_sha256",
             "source_sha256",
         ]:
-            if metadata[key] != saved[key]:
+            if metadata[key] != saved.get(key):
                 raise ValueError(f"Resume configuration changed: {key}")
         metadata = saved
     torch.manual_seed(seed)
@@ -220,7 +252,18 @@ def train(
         )
     torch.save(gold.cpu(), folder / "gold_codes.pt")
     prefix = torch.nn.Parameter(initial.clone())
+    if init_prefix_dir is not None:
+        initialized = load_file(str(init_prefix_dir / "prefix.safetensors"))["soft_tokens"].to(device)
+        if initialized.shape != prefix.shape:
+            raise ValueError("Initial checkpoint token/hidden shape differs")
+        prefix.data.copy_(initialized)
     optimizer = torch.optim.AdamW([prefix], lr=learning_rate, weight_decay=0.0)
+    teacher_prefix = (
+        load_file(str(teacher_cache_dir / "prefix.safetensors"))["soft_tokens"].to(device)
+        if rollout_every
+        else None
+    )
+    rollout_cache = None
     start = 0
     if resume:
         prefix.data.copy_(load_file(str(folder / "prefix.safetensors"))["soft_tokens"].to(device))
@@ -234,12 +277,42 @@ def train(
         torch.set_rng_state(state["cpu_rng"].cpu())
         if state["cuda_rng"]:
             torch.cuda.set_rng_state_all([s.cpu() for s in state["cuda_rng"]])
+        if rollout_every:
+            path = folder / metadata["rollout_cache_file"]
+            if digest(path) != metadata["rollout_cache_sha256"]:
+                raise ValueError("Rollout cache checksum differs")
+            rollout_cache = {k: v.to(device) for k, v in load_file(str(path)).items()}
     metadata["trainable_parameters"] = prefix.numel()
     metadata["target_frames"] = gold.shape[1]
     metadata["role_ids"] = list(builder.role_ids)
     started = time.perf_counter()
     with (folder / "loss.jsonl").open("a") as log:
         for step in range(start, steps):
+            if rollout_every and (rollout_cache is None or step % rollout_every == 0):
+                sampled = builder.generate_codes(
+                    condition(prefix, speaker),
+                    max_frames=int(gold.shape[1]) + 24,
+                    seed=seed + step // rollout_every,
+                )[0][None]
+                if not sampled.shape[1]:
+                    raise RuntimeError("Empty on-policy history")
+                with torch.no_grad():
+                    teacher0, teacher_rest = trajectory_logits(
+                        wrapper, builder, teacher_prefix, speaker, sampled
+                    )
+                rollout_cache = {
+                    "audio_codes": sampled.detach(),
+                    "codec0_logits": teacher0.detach(),
+                    "residual_logits": teacher_rest.detach(),
+                }
+                filename = f"rollout-step-{step:06d}.safetensors"
+                save_file({k: v.cpu() for k, v in rollout_cache.items()}, str(folder / filename))
+                metadata["rollout_cache_file"] = filename
+                metadata["rollout_cache_sha256"] = digest(folder / filename)
+                print(
+                    json.dumps({"rollout_refreshed_at_step": step, "frames": sampled.shape[1]}),
+                    flush=True,
+                )
             optimizer.zero_grad(set_to_none=True)
             batch = builder.build_teacher_forced(condition(prefix, speaker), gold)
             output = wrapper.model.talker(**batch, output_hidden_states=residual_loss_weight > 0)
@@ -265,7 +338,17 @@ def train(
                         teacher["codec0_logits"],
                     )
                     residual_kl = distribution_kl(residual_logits, teacher["residual_logits"])
-                    loss = codec0_kl + residual_loss_weight * residual_kl
+                    if not cached_gold_ce:
+                        loss = codec0_kl + residual_loss_weight * residual_kl
+            rollout_loss = torch.zeros((), device=device)
+            if rollout_cache is not None:
+                live0, live_rest = trajectory_logits(
+                    wrapper, builder, prefix, speaker, rollout_cache["audio_codes"]
+                )
+                rollout_loss = distribution_kl(
+                    live0, rollout_cache["codec0_logits"]
+                ) + residual_loss_weight * distribution_kl(live_rest, rollout_cache["residual_logits"])
+                loss = (loss + rollout_weight * rollout_loss) / (1 + rollout_weight)
             if not torch.isfinite(loss):
                 raise RuntimeError("Nonfinite loss: inspect the run before retrying")
             loss.backward()
@@ -280,6 +363,7 @@ def train(
                 "residual_loss": float(residual_loss.detach()),
                 "codec0_kl": float(codec0_kl.detach()),
                 "residual_kl": float(residual_kl.detach()),
+                "rollout_kl": float(rollout_loss.detach()),
                 "gradient_norm": grad_norm,
                 "elapsed_seconds": time.perf_counter() - started,
             }
