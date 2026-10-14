@@ -1,9 +1,10 @@
 """Command entry point. ML training stages fail closed until implemented and tested."""
 from __future__ import annotations
+
 import argparse
-import json
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -49,6 +50,11 @@ def main():
     inversion.add_argument("--seed", type=int, default=42)
     inversion.add_argument("--resume", action="store_true")
     inversion.add_argument("--residual-loss-weight", type=float, default=0.)
+    inversion.add_argument("--teacher-cache-dir", type=Path)
+    inversion.add_argument("--cached-gold-ce", action="store_true")
+    inversion.add_argument("--init-prefix-dir", type=Path)
+    inversion.add_argument("--rollout-every", type=int, default=0)
+    inversion.add_argument("--rollout-weight", type=float, default=1.)
     prefix = sub.add_parser("infer-soft-prefix")
     prefix.add_argument("--run-dir", type=Path, required=True)
     prefix.add_argument("--output", type=Path, required=True)
@@ -69,12 +75,13 @@ def main():
         from .review import ingest as ingest_reviews
         print("Imported", ingest_reviews(args.manifest, db_path, assets), "clip(s)")
     elif args.command == "qwen-baseline":
-        from .qwen_baseline import run, DEFAULT_TEXT
+        from .qwen_baseline import DEFAULT_TEXT, run
         run(args.output, text=args.text or DEFAULT_TEXT)
     elif args.command == "train-soft-prefix":
         from .inversion import train
         train(args.target_audio, args.run_dir, args.steps, args.tokens, args.learning_rate,
-              args.seed, args.resume, args.residual_loss_weight)
+              args.seed, args.resume, args.residual_loss_weight, args.teacher_cache_dir,
+              args.cached_gold_ce, args.init_prefix_dir, args.rollout_every, args.rollout_weight)
     elif args.command == "infer-soft-prefix":
         from .inversion import infer
         infer(args.run_dir, args.output, args.max_frames, args.seed)

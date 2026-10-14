@@ -11,5 +11,6 @@
   "image_reader_training_implemented": false,
   "image_narration_implemented": false,
   "human_review_service_implemented": true,
-  "hf_private_checkpoint_publish_implemented": true
+  "hf_private_checkpoint_publish_implemented": true,
+  "learned_prefix_italian_intelligibility_verified": false
 }

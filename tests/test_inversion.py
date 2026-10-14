@@ -8,7 +8,7 @@ torch = pytest.importorskip("torch")
 pytest.importorskip("qwen_tts")
 from safetensors.torch import load_file
 
-from latent_diaries.inversion import digest, save_checkpoint
+from latent_diaries.inversion import digest, distribution_kl, frame_logits, save_checkpoint
 
 
 def test_checkpoint_preserves_adam_continuation(tmp_path):
@@ -32,3 +32,22 @@ def test_checkpoint_preserves_adam_continuation(tmp_path):
     step(prefix, optimizer)
     step(restored, restored_optimizer)
     torch.testing.assert_close(restored, prefix, rtol=0, atol=0)
+
+
+def test_distillation_aligns_frames_with_different_prefix_lengths():
+    teacher = torch.randn(1, 12, 7, requires_grad=True)
+    student = torch.randn(1, 9, 7, requires_grad=True)
+    teacher_frames = frame_logits(teacher, prefix_length=8, frames=3)
+    student_frames = frame_logits(student, prefix_length=5, frames=3)
+    assert teacher_frames.shape == student_frames.shape == (1, 4, 7)
+    loss = distribution_kl(student_frames, teacher_frames)
+    loss.backward()
+    assert student.grad[:, 4:8].abs().sum() > 0
+    assert student.grad[:, :4].abs().sum() == 0
+    assert student.grad[:, 8:].abs().sum() == 0
+    assert teacher.grad is None
+    torch.testing.assert_close(
+        distribution_kl(teacher_frames, teacher_frames), torch.tensor(0.0), atol=1e-6, rtol=0
+    )
+    with pytest.raises(ValueError, match="prediction shapes"):
+        distribution_kl(student_frames[:, :2], teacher_frames)

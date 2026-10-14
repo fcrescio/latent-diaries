@@ -4,9 +4,11 @@
 
 Implementation has started: `uv.lock` pins the dependency set. Continuous Qwen
 conditioning, teacher forcing and code generation pass tests using tiny real
-Qwen classes on CPU and CUDA (15 tests pass in the GPU worker). M0 has generated
+Qwen classes on CPU and CUDA (16 tests pass in the GPU worker). M0 has generated
 an Italian baseline and genuine-speech codec round-trip locally; the user
 confirmed clear Italian and an acceptable voice. Pretrained FP32 assembly and cache controls also pass.
+The user rejected learned-prefix sampled and greedy speech as unintelligible.
+Teacher-forced fit has not translated into reliable autoregressive Italian.
 No trained image-to-speech checkpoint exists. See `docs/DECISIONS.md` for evidence.
 
 ## Artistic brief
@@ -70,7 +72,7 @@ The agent can implement, test, debug and publish code, while you retain control 
 | Checkpoint upload, guarded HF Jobs launcher | Entrypoints provided; **not exercised** with real checkpoint/jobs |
 | Official Qwen Italian TTS baseline | GPU run produced 5.44 s audio and codec round-trip; user accepted speech/voice |
 | Continuous Qwen prefix / teacher-forced assembly / code generation | Tiny CPU/CUDA and pretrained FP32 mechanical controls pass; learned textless speech pending |
-| Single-utterance soft-prefix inversion | Resumable prefix-only training and transcript-free checkpoint inference exercised; memorization control, not generalization |
+| Single-utterance soft-prefix inversion | Resumable training/inference exercised; user rejected speech intelligibility; M1 remains incomplete |
 | Visual reader / image-conditioned training | **Not implemented yet** |
 | Genuine Italian image-to-speech checkpoint / wearable experience | **Not yet achieved** |
 

@@ -94,7 +94,8 @@ generated waveform. No inference text is taken from checkpoint metadata.
 The codec-0-only run-001 is a documented negative control: teacher-forced CE
 became tiny but autoregressive output collapsed to 13 frames. Do not equate
 training CE with intelligible speech. Run-002 added residual loss after diagnosis
-and produced 50 frames; listening is pending. Details are in DECISIONS.
+and produced 50 frames; the user rejected both sampled and fully greedy speech
+as meaningless. Details are in DECISIONS.
 
 Set `HF_NAMESPACE=fcrescio` and a strong `REVIEW_PASSWORD` locally before Hub
 commands and listening review respectively. Keep secrets out of chat.
@@ -138,3 +139,30 @@ If the selected HF Job cannot read GHCR image due to image authentication, don't
 ## Reproducibility
 
 Track git SHA, Docker image digest, HF repo revisions, seed, precision, max new audio tokens, GPU type, elapsed time, train/validation split by **walk / scene_group** not neighboring frames. Store run manifests, metrics, training logs and private checkpoints. Create an experiment manifest for each run. Without actual GPU execution, those numbers are unknown and must not be invented.
+
+## Matched-teacher and autoregressive diagnostics
+
+All commands below run locally in the same GPU worker. Rebuild with
+`make test-docker` first. Prefixes/cached logits/audio stay in ignored artifacts.
+The teacher uses training-only text; its projected prefix is a positive control,
+not a learned or image-conditioned result. Inference loads only student tensors,
+fixed protocol markers and the speaker reference.
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/cache_inversion_teacher.py --output-dir artifacts/m1-teacher-new
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu latent-diaries train-soft-prefix --steps 200 --run-dir artifacts/m1-kl-new --target-audio artifacts/m1-teacher-new/teacher.wav --residual-loss-weight 1 --teacher-cache-dir artifacts/m1-teacher-new
+# Matched-target CE ablation: same command, fresh directory, add --cached-gold-ce.
+# Capacity ablation: same KL command, fresh directory, add --tokens 32.
+# Generated-history phase: fresh directory, add --init-prefix-dir artifacts/m1-kl-new --rollout-every 50 --learning-rate 0.01.
+# Resume that phase with identical flags plus --resume and increased total --steps.
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/probe_policy_gap.py --run-dir artifacts/m1-kl-new --teacher-cache-dir artifacts/m1-teacher-new
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm experiment-gpu python scripts/asr_diagnostic.py artifacts/m1-kl-new/trained.wav --output artifacts/asr-new.json --revision 169d4a4341b33bc18d8881c4b69c2e104e1cc0af
+```
+
+Generated-history supervision saves immutable rollout caches and checks their
+hash on resume; the 50→100 step continuation was exercised. New-phase
+initialization copies prefix tensors and resets the optimizer. Student and teacher
+can have different prefix lengths; codec-0 alignment includes EOS, residual
+alignment uses same-frame heads. KL is diagnostic, never a human quality score.
+Local Whisper is auxiliary only, uploads no audio, and never feeds a transcript
+back into synthesis. None of these ablations has established M1 acceptance.
