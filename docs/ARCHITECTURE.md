@@ -83,3 +83,21 @@ On M5: compute per-image E_t; maintain compact state M_t = f(M_{t-1}, E_t, previ
 ## Hardware/deployment
 
 Development BF16 on supported GPUs, FP32 CPU smoke. NVIDIA CUDA in Docker requires driver + NVIDIA Container Toolkit. Host MPS (Apple Silicon) is not exposed through ordinary Linux Docker GPU; document or adapt backend separately, but do not silently claim MPS GPU inside Docker. Aim for offline inference on image+text EmbeddingGemma modular configuration and compact Qwen+codec, with measured actual RAM/latency/quality after quantization. Prefer architecture consistency over small parameter counts at any cost.
+
+
+## M1 shared numeric-factor probe
+
+`SharedMapper` takes three authored numeric factors, applies a shared 128-unit
+tanh MLP, and outputs 32×1024 continuous tokens around a fixed PAD base. It has
+4,227,584 trainable parameters and no per-example lookup/prefix parameters. Six
+factor combinations train against stock-teacher distributions; two combinations
+are fixed as held-out before training (`configs/research/compositions-v1.json`).
+Text creates teacher audio/logit supervision only; no text encoder, projected
+teacher prefix, caption or target code sequence is loaded during evaluation.
+
+This controlled factor experiment is separate from the future EmbeddingGemma
+reader. Its inputs are manually authored semantic factors; it tests reuse and
+compositional generalization of continuous conditioning, not unseen vocabulary,
+natural images or artistic grounding. The null control is a zero factor vector.
+Both decoding modes and the same seed/duration cap are prescribed in advance.
+Human listening is required; teacher-forced held-out KL is only a diagnostic.

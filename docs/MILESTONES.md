@@ -14,7 +14,11 @@ The user also finds run-007 fully sampled speech almost good, with only half a
 word unintelligible. This is a second distinct, mostly intelligible memorization
 control; its greedy version has no listening acceptance. M1 remains incomplete:
 full clarity across utterances and unseen-input generalization are unverified.
-The stock teacher-derived prefix is a separate positive protocol control.
+A shared 4.23M-parameter numeric-factor mapper has now trained on six prespecified
+combinations, with two held out. Held-out teacher-forced agreement is roughly
+level with null conditioning; eight blinded clips await listening. This probes
+compositional generalization, not image grounding. The stock teacher-derived
+prefix is a separate positive protocol control.
 M1.2 and M2–M5 remain unachieved; BF16 cache parity and EmbeddingGemma 2
 compatibility remain open technical questions.
 
