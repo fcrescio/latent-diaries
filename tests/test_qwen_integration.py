@@ -116,3 +116,9 @@ def test_pinned_talker_gradient_and_cache_parity(device):
     assert 0 < first[0].shape[0] <= 3
     assert first[0].shape[1] == 16
     assert not (first[0][:, 0] == config.codec_eos_token_id).any()
+
+    mixed_first = builder.generate_codes(condition, max_frames=3, seed=41, codec0_greedy=True)
+    mixed_second = builder.generate_codes(condition, max_frames=3, seed=41, codec0_greedy=True)
+    torch.testing.assert_close(mixed_first[0], mixed_second[0], rtol=0, atol=0)
+    assert mixed_first[0].shape[1] == 16
+    assert 0 < len(mixed_first[0]) <= 3

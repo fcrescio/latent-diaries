@@ -21,7 +21,10 @@ from latent_diaries.qwen_baseline import DEFAULT_TEXT
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--text", default=DEFAULT_TEXT, help="Training-only Italian teacher sentence")
     args = parser.parse_args()
+    if not args.text.strip():
+        raise ValueError("Teacher text must be nonempty")
     folder = args.output_dir
     if folder.exists() and any(folder.iterdir()):
         raise ValueError("Use a fresh teacher-cache directory")
@@ -31,7 +34,7 @@ def main():
     prompt = wrapper.create_voice_clone_prompt(
         ref_audio=os.environ["LD_REF_AUDIO"], x_vector_only_mode=True
     )
-    ids = wrapper._tokenize_texts([wrapper._build_assistant_text(DEFAULT_TEXT)])[0]
+    ids = wrapper._tokenize_texts([wrapper._build_assistant_text(args.text)])[0]
     with torch.no_grad():
         prefix = wrapper.model.talker.text_projection(
             wrapper.model.talker.get_text_embeddings()(ids[:, 3:-5])
@@ -49,7 +52,7 @@ def main():
         with torch.random.fork_rng(devices=[speaker.device.index or 0]):
             torch.manual_seed(42)
             wavs, sr = wrapper.generate_voice_clone(
-                text=DEFAULT_TEXT,
+                text=args.text,
                 language="Italian",
                 voice_clone_prompt=prompt,
                 non_streaming_mode=True,
@@ -91,7 +94,7 @@ def main():
         "role_ids": list(builder.role_ids),
         "target_frames": gold.shape[1],
         "target_audio_sha256": digest(folder / "teacher.wav"),
-        "training_text_sha256": hashlib.sha256(DEFAULT_TEXT.encode()).hexdigest(),
+        "training_text_sha256": hashlib.sha256(args.text.encode()).hexdigest(),
         "teacher_cache_sha256": digest(folder / "teacher.safetensors"),
         "lock_sha256": digest(Path("uv.lock")),
         "source_sha256": digest(Path(__file__)),
