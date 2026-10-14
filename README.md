@@ -2,10 +2,11 @@
 
 **Research bootstrap — not yet a trained image-to-speech model.** Intended for an autonomous coding agent (e.g. Codex) to implement and experimentally validate stage by stage. The local listening service, mock gallery, import/export, GitHub repo bootstrap, HF private upload and safe HF Job launcher exist; actual textless training and image-to-speech generation remain research milestones.
 
-Implementation has started: `uv.lock` pins the dependency set, host tests pass,
-and continuous Qwen conditioning/teacher-forcing assembly is under container
-validation. M0 awaits a consented reference voice; no trained speech checkpoint
-or genuine generated audio is available yet. See `docs/DECISIONS.md` for evidence.
+Implementation has started: `uv.lock` pins the dependency set. Continuous Qwen
+conditioning, teacher forcing and code generation pass tests using tiny real
+Qwen classes on CPU and CUDA (14 tests pass in the GPU worker). M0 awaits a
+consented reference voice; no trained speech checkpoint or genuine generated
+audio is available yet. See `docs/DECISIONS.md` for evidence.
 
 ## Artistic brief
 
@@ -64,9 +65,11 @@ The agent can implement, test, debug and publish code, while you retain control 
 |---|---|
 | Source tree, Python package, CI, Docker worker, Docker review UI | Provided; local code tested |
 | Synthetic demo, validated media importer, SQLite ratings, auth, CSV export | Implemented |
-| HF private repos/checkpoint upload, guarded HF Jobs launcher | Implemented but **not executed** with credentials |
+| HF private repositories | Created under `fcrescio`; no data or checkpoint uploaded |
+| Checkpoint upload, guarded HF Jobs launcher | Entrypoints provided; **not exercised** with real checkpoint/jobs |
 | Official Qwen Italian TTS baseline | Entrypoint implemented; **not run** with downloaded model/voice |
-| Textless Qwen prefix builder, audio-code trainer, visual reader | **Agent must implement** |
+| Continuous Qwen prefix / teacher-forced assembly / code generation | Tiny-model CPU/CUDA tests pass; **no pretrained speech validation yet** |
+| Soft-prefix inversion trainer, visual reader | **Not implemented yet** |
 | Genuine Italian image-to-speech checkpoint / wearable experience | **Not yet achieved** |
 
 Use `docs/capabilities.json` for machine-readable safety flags. Never flip flags without tests.

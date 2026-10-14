@@ -8,7 +8,7 @@ Git, Python >=3.11, Docker Engine/Desktop + Compose v2, `gh` CLI for repository 
 cp .env.example .env
 chmod 600 .env
 # fill tokens/names and choose a strong REVIEW_PASSWORD
-python -m pip install -e '.[test]'
+uv sync --locked --extra test
 make test
 make init
 make demo  # SYNTHETIC image + sine audio: tests ONLY
@@ -28,6 +28,32 @@ make m0            # CPU possible but slow; uses real Qwen weights
 ```
 
 Downloads occur from HF into named cache volume. `qwen-baseline` does not run unless reference WAV exists (no voice data is distributed). Worker dependencies can be heavy. Record Docker image digest and package versions for each experiment.
+
+The locked M0/M1 stack uses qwen-tts 0.1.1, Transformers 4.57.3,
+Accelerate 1.12.0 and Hub 0.36.2. `make test-docker` runs the full regression
+suite in the same worker, including tiny real-Qwen gradient/cache tests. Those
+random-weight tests demonstrate tensor mechanics only, never audible Italian.
+M0 writes `artifacts/m0_italian.json` and a reference codec-round-trip WAV;
+human listening is still required. Set `LD_CODE_REVISION` to the source commit
+before an experiment. Upstream model components are pinned via a full snapshot.
+
+For this WSL checkout, native Docker/Compose/Buildx were installed under ignored
+`.cache/` and use the existing Docker Desktop Unix socket. Reproduce checks:
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" make DOCKER=.cache/tools/docker test-docker
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm experiment-gpu python -m pytest -q
+```
+
+After supplying a consented `run-data/voices/reference.wav` and setting
+`LD_REF_AUDIO=/workspace/run-data/voices/reference.wav` in `.env`, launch M0:
+
+```bash
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" make DOCKER=.cache/tools/docker m0-gpu
+```
+
+Set `HF_NAMESPACE=fcrescio` and a strong `REVIEW_PASSWORD` locally before Hub
+commands and listening review respectively. Keep secrets out of chat.
 
 ## Create GitHub repository
 

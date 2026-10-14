@@ -1,5 +1,6 @@
 SHELL := /bin/bash
 PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
+DOCKER ?= docker
 .DEFAULT_GOAL := help
 .PHONY: help init check-env doctor test test-docker review demo review-import m0 m0-gpu github hf-create hf-publish hf-dataset-publish hf-job-plan hf-job-run gpu-doctor
 help:
@@ -18,18 +19,18 @@ doctor:
 test:
 	@$(PYTHON) -m pytest -q
 review:
-	docker compose up -d --build review
-	docker compose ps
+	$(DOCKER) compose up -d --build review
+	$(DOCKER) compose ps
 # Generates clearly labeled mock records; does not run any ML model.
 demo:
 	@$(PYTHON) -m latent_diaries.cli demo-data
 m0:
-	docker compose --profile experiment run --rm experiment latent-diaries qwen-baseline
+	$(DOCKER) compose --profile experiment run --rm experiment latent-diaries qwen-baseline
 m0-gpu:
-	docker compose --profile gpu run --rm experiment-gpu latent-diaries qwen-baseline
+	$(DOCKER) compose --profile gpu run --rm experiment-gpu latent-diaries qwen-baseline
 
 gpu-doctor:
-	docker compose --profile gpu run --rm experiment-gpu latent-diaries doctor
+	$(DOCKER) compose --profile gpu run --rm experiment-gpu latent-diaries doctor
 
 github:
 	@$(PYTHON) scripts/bootstrap_github.py
@@ -45,5 +46,6 @@ hf-job-run:
 	@bash scripts/hf_job.sh --execute
 # Builds and tests containers without a GPU or remote tokens.
 test-docker:
-	docker compose --profile experiment build review experiment
-	docker compose --profile experiment run --rm experiment latent-diaries doctor
+	$(DOCKER) compose --profile experiment build review experiment
+	$(DOCKER) compose --profile experiment run --rm experiment latent-diaries doctor
+	$(DOCKER) compose --profile experiment run --rm experiment python -m pytest -q

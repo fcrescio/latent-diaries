@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-14",
+  "scope": "Random-weight Qwen mechanics only; no speech validation",
+  "source_revision_base": "15a974521b0c655cfe6d6977c3601c2955656955",
+  "source_dirty_at_validation": true,
+  "worker_image": "sha256:72a7d223b3e50a04df2b1a2784956ee9bfdd721ca467a968a26540eea12d7d6f",
+  "source_sha256": {
+    "uv.lock": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+    "src/latent_diaries/conditioning.py": "949db7b167d325544f6d285f72418afbdbb00b2593d666d29445d57d4f2f5c42",
+    "src/latent_diaries/qwen_baseline.py": "91340a1a02483fe1861254a3e13a9eb7b9f6e8d8c1dd55914c72cba3d74abd7b",
+    "tests/test_conditioning.py": "f63e6f7c8c5924acef5c9ba7c74b6af93710e9ba8cc5bdbf5a63399a55a5cdfe",
+    "tests/test_qwen_integration.py": "7a9982a21e4af61535d6574a311693c4d340f111b5c332ce3ff34128924ea956",
+    "docker/Dockerfile.worker": "4bad13a7ced44559c7d1bceb3746ab9afdb5df423e50d5a213deaf5e885b1d52",
+    "docker-compose.yml": "4dd647516f878f5deedc1dbf0c69587c202eaf2dff8d806ee276c00d9db490c4"
+  },
+  "tests": {
+    "host": {
+      "passed": 7,
+      "skipped_modules": 2
+    },
+    "worker_cpu": {
+      "passed": 13,
+      "skipped": 1
+    },
+    "worker_cuda": {
+      "passed": 14,
+      "skipped": 0
+    }
+  },
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 4090",
+    "vram_mib": 24564,
+    "driver": "610.74"
+  },
+  "speech_generated": false,
+  "paid_jobs_dispatched": 0,
+  "media_uploaded": false,
+  "pending": [
+    "M0 genuine consented voice",
+    "Pretrained Qwen parity",
+    "M1 intelligible Italian inversion",
+    "EmbeddingGemma 2 compatibility",
+    "Review credentials and ratings"
+  ]
+}

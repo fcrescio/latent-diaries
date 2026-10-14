@@ -7,10 +7,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /workspace
 RUN pip install uv==0.9.24
 COPY pyproject.toml uv.lock README.md ./
+RUN --mount=type=cache,target=/root/.cache/uv uv sync --locked --no-install-project --extra ml --extra test
 COPY src ./src
-RUN uv sync --locked --extra ml --extra test
+RUN --mount=type=cache,target=/root/.cache/uv uv sync --locked --extra ml --extra test
+RUN apt-get update && apt-get install -y --no-install-recommends sox build-essential && rm -rf /var/lib/apt/lists/*
 COPY configs ./configs
 COPY scripts ./scripts
 COPY docs ./docs
 COPY tests ./tests
+COPY services ./services
 CMD ["latent-diaries", "doctor"]

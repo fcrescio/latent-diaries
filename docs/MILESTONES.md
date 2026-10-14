@@ -2,6 +2,13 @@
 
 A milestone is complete only with a committed reproduction command, a passing test and run evidence. Progression may stop on a human gate.
 
+2026-10-14 status: bootstrap repairs pass host and worker tests, public GitHub
+source and private HF repositories exist. M-1 remains partial (review credentials
+unset); M0 awaits consented reference speech. M1.0 has tested continuous assembly,
+gold-code label alignment and cache/generation parity with tiny random Qwen
+weights on CPU/CUDA; pretrained parity and audible M1.1/M1.2 evidence remain
+pending. No research milestone is marked complete.
+
 | Milestone | Tasks | Evidence / exit gate |
 |---|---|---|
 | M-1 bootstrap | env, GitHub remote, HF private repos, Docker and review UI | `make test`, `make test-docker`, local browser, no tracked private files |
