@@ -1,0 +1,13 @@
+.git
+.env
+.env.*
+!.env.example
+run-data
+artifacts
+checkpoints
+*.safetensors
+*.ckpt
+.cache*
+.venv
+__pycache__
+.pytest_cache

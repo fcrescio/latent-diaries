@@ -1,0 +1,40 @@
+name: latent-diaries
+services:
+  review:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.review
+    env_file: .env
+    environment:
+      REVIEW_DB: /workspace/run-data/reviews.sqlite3
+      REVIEW_ASSETS: /workspace/run-data/review-assets
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./run-data:/workspace/run-data
+    read_only: true
+    tmpfs:
+      - /tmp
+    restart: unless-stopped
+  experiment:
+    profiles: ["experiment"]
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.worker
+    env_file: .env
+    environment:
+      HF_HOME: /cache/hf
+    volumes:
+      - ./run-data:/workspace/run-data
+      - ./artifacts:/workspace/artifacts
+      - ./configs:/workspace/configs:ro
+      - hf-cache:/cache/hf
+    working_dir: /workspace
+    command: ["latent-diaries", "doctor"]
+  experiment-gpu:
+    profiles: ["gpu"]
+    extends:
+      service: experiment
+    gpus: all
+volumes:
+  hf-cache:

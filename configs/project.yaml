@@ -1,0 +1,25 @@
+project: latent-diaries
+language: italian
+vision_model: google/embeddinggemma-2
+qwen_model: Qwen/Qwen3-TTS-12Hz-0.6B-Base
+narration_seconds: [6, 12]
+reader:
+  baseline: global_mlp
+  advanced: qformer
+  input_global_dim: 768
+  projected_dim: 1024
+  num_latent_tokens: 32
+  hidden_dim: 512
+  layers: 4
+training:
+  seed: 42
+  reader_frozen_backbones: true
+  objective: audio_codebook_ce
+  use_lora_only_if_baseline_fails: true
+  language: Italian
+  speaker: narrator_01
+release:
+  private_by_default: true
+  include_source_images: false
+  include_source_voices: false
+  auto_publish_to_public: false

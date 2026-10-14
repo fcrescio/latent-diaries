@@ -1,0 +1,9 @@
+{
+  "qwen_baseline_entrypoint": true,
+  "textless_inference_implemented": false,
+  "textless_training_implemented": false,
+  "image_reader_training_implemented": false,
+  "image_narration_implemented": false,
+  "human_review_service_implemented": true,
+  "hf_private_checkpoint_publish_implemented": true
+}

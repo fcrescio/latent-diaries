@@ -1,0 +1,1 @@
+Put only synthetic or licensed public sample assets here. Real wearable images and reference voices go under run-data/ (git-ignored). `latent-diaries demo-data` creates synthetic demonstration records.

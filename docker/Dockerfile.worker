@@ -1,0 +1,16 @@
+# One reproducible image for CPU smoke tests, local GPU and Hugging Face Docker Jobs.
+# CUDA availability depends on host runtime and PyTorch wheel; validate with 'doctor'.
+FROM python:3.11-slim
+ENV PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 HF_HOME=/cache/hf PATH=/workspace/.venv/bin:$PATH
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ffmpeg libsndfile1 git ca-certificates && rm -rf /var/lib/apt/lists/*
+WORKDIR /workspace
+RUN pip install uv==0.9.24
+COPY pyproject.toml uv.lock README.md ./
+COPY src ./src
+RUN uv sync --locked --extra ml --extra test
+COPY configs ./configs
+COPY scripts ./scripts
+COPY docs ./docs
+COPY tests ./tests
+CMD ["latent-diaries", "doctor"]

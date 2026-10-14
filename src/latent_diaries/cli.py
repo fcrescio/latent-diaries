@@ -1,0 +1,64 @@
+"""Command entry point. ML training stages fail closed until implemented and tested."""
+from __future__ import annotations
+import argparse
+import json
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+def doctor() -> None:
+    import platform
+    from importlib.util import find_spec
+    print("Python:", platform.python_version())
+    print("HF credentials configured:", bool(os.getenv("HF_TOKEN")))
+    print("Github credentials configured:", bool(os.getenv("GH_TOKEN")))
+    for module in ("torch", "transformers", "qwen_tts", "huggingface_hub"):
+        print(module, "installed" if find_spec(module) else "missing")
+    if find_spec("torch"):
+        import torch
+        print("CUDA available:", torch.cuda.is_available())
+        if torch.cuda.is_available():
+            print("Device:", torch.cuda.get_device_name())
+    print("NOTE: doctor verifies installation only; does not validate textless inference.")
+
+
+def not_ready(stage: str) -> None:
+    raise SystemExit(f"NOT IMPLEMENTED: {stage}. Read AGENTS.md and docs/MILESTONES.md. "
+                     "Never submit a paid cloud job for an unimplemented trainer.")
+
+
+def main():
+    parser = argparse.ArgumentParser(prog="latent-diaries")
+    sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("doctor")
+    sub.add_parser("demo-data")
+    ingest = sub.add_parser("ingest-review")
+    ingest.add_argument("--manifest", type=Path, required=True)
+    qwen = sub.add_parser("qwen-baseline")
+    qwen.add_argument("--output", type=Path, default=Path("artifacts/m0_italian.wav"))
+    qwen.add_argument("--text", default=None)
+    for name in ("train-soft-prefix", "train-reader", "narrate-image", "evaluate-grounding"):
+        sub.add_parser(name)
+    args = parser.parse_args()
+    db_path = Path(os.environ.get("REVIEW_DB", "run-data/reviews.sqlite3"))
+    assets = Path(os.environ.get("REVIEW_ASSETS", "run-data/review-assets"))
+    if args.command == "doctor":
+        doctor()
+    elif args.command == "demo-data":
+        from .demo import create_demo
+        count = create_demo(Path("run-data/demo"), db_path, assets)
+        print(f"Imported {count} SYNTHETIC NON-ML demonstration records")
+    elif args.command == "ingest-review":
+        from .review import ingest as ingest_reviews
+        print("Imported", ingest_reviews(args.manifest, db_path, assets), "clip(s)")
+    elif args.command == "qwen-baseline":
+        from .qwen_baseline import run, DEFAULT_TEXT
+        run(args.output, text=args.text or DEFAULT_TEXT)
+    else:
+        not_ready(args.command)
+
+if __name__ == "__main__":
+    main()

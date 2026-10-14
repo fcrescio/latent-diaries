@@ -1,0 +1,23 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Latent Diaries · Sala d'ascolto</title>
+<style>body{background:#f4f1eb;color:#171923;font:16px/1.5 system-ui,-apple-system,sans-serif;margin:0}
+main{max-width:980px;margin:auto;padding:30px 20px 80px}h1{font:500 clamp(2.2rem,5vw,4rem)/1.1 Georgia,serif;letter-spacing:-.04em}
+.lead{color:#515461;max-width:60ch}article{background:white;padding:24px;margin:28px 0;border:1px solid #dedbd6;border-radius:16px}
+.frame{display:grid;grid-template-columns:1fr 1fr;gap:24px}.frame img{width:100%;max-height:300px;object-fit:contain;background:#eeeae4;border-radius:9px}
+a{color:#264e78}audio{width:100%;margin:20px 0}fieldset{border:0;padding:0;margin:14px 0}legend{font-weight:600;margin-bottom:8px}
+.rating{display:flex;gap:14px;flex-wrap:wrap}.rating label{padding:5px;cursor:pointer}textarea{display:block;box-sizing:border-box;width:100%;min-height:75px;border:1px solid #bbb;border-radius:8px;padding:10px}
+button{background:#171923;color:#fff;border:0;border-radius:7px;padding:10px 17px;cursor:pointer}small,.muted{color:#6e7280} .ok{color:#256341;font-weight:600}
+@media(max-width:700px){.frame{grid-template-columns:1fr}}
+</style></head><body><main>
+<h1>Latent Diaries</h1><p class="lead">Una sala d'ascolto per una voce che interpreta fotografie. Guarda l'immagine, ascolta fino alla fine, valuta ciò che emerge. Le identità dei modelli restano nascoste.</p>
+<p class="muted">Revisore: {{username}} · <a href="/export.csv">Esporta giudizi CSV</a> · Scala: 1 minimo, 5 massimo</p>
+{% if not clips %}<article>Non ci sono ancora clip. Importa un manifest con <code>latent-diaries ingest-review --manifest path.jsonl</code>.</article>{% endif %}
+{% for c in clips %}<article id="{{c.id}}"><div class="frame"><div><img alt="Fotogramma da valutare" src="/media/{{c.id}}/image" loading="lazy"></div>
+<div><small>Clip {{loop.index}} · {{c.run_id}}{% if c.grounding %} · <span class="ok">Valutata</span>{% endif %}</small>
+<audio controls preload="none" src="/media/{{c.id}}/audio">Il browser non supporta audio.</audio>
+<form method="post" action="/review/{{c.id}}"><input type="hidden" name="csrf_token" value="{{c.csrf_token}}">
+{% for key, title in [('grounding','Relazione evocativa con l’immagine'),('voice','Qualità e continuità della voce'),('evocation','Forza narrativa / emotiva'),('surprise','Sorpresa e originalità')] %}
+<fieldset><legend>{{title}}</legend><div class="rating">{% for n in range(1,6) %}<label><input type="radio" name="{{key}}" value="{{n}}" {% if c[key] == n %}checked{% endif %} required> {{n}}</label>{% endfor %}</div></fieldset>
+{% endfor %}<label for="note-{{c.id}}">Annotazioni libere (anche critiche)</label><textarea id="note-{{c.id}}" name="note" maxlength="1000">{{c.note or ''}}</textarea>
+<p><button>Salva giudizio</button></p></form></div></div></article>{% endfor %}
+</main></body></html>
