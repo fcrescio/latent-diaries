@@ -124,3 +124,32 @@ The 1,195,520-parameter reader consumes authored numeric factors, not visual
 embeddings. Its lower tensor error cannot establish intelligibility, image
 grounding or arbitrary-utterance generalization. No variable text, teacher prefix,
 target code sequence or caption is loaded during standalone evaluation.
+
+
+## Exercised M2 image-feature boundary
+
+The official `google/embeddinggemma-2` revision
+`914f7f89142e33e77833254d9c9b90c3cef7303b` loads with its checkpoint-provided
+vision configuration and `audio_config=None`. All parameters are frozen. The
+installed Transformers 5.19.0 text backbone applies its 512→768 projection before
+returning `last_hidden_state`. Global embeddings use attention-masked mean
+pooling of these final states, then float32 L2 normalization. They are not the
+vision tower's patch states or an invented 768D intermediate representation.
+
+The processor receives `images=[[image] for image in batch]` with no text
+argument. Its flat-list semantics combine images into one sample, so explicit
+nesting is necessary. The encoder checks batch boundaries and permits only
+fixed image/BOS/EOS/PAD protocol IDs. No caption, transcript, source URL or
+provenance string is passed to the model. The frozen text backbone is still
+needed to contextualize visual soft tokens; this does not supply linguistic
+conditioning. Two real-image CUDA controls and the official processor-layout
+regression test exercise this boundary.
+
+Qwen's Transformers 4.57.3 pin is retained in the primary interpreter. The same
+worker image contains `/opt/vision/.venv` with a separate locked Transformers
+5.19.0 / Hub 1.31.0 / torchvision 0.29.1 environment. It appends the primary
+site-packages only after its own packages to reuse locked Torch 2.14.1/CUDA
+binaries. The two Transformers versions never share a process. Safetensors/JSON
+feature caches are the handoff to the future image reader. See
+`environments/vision/README.md` for the dependency boundary. Image-reader training
+and image-to-speech inference remain unimplemented.

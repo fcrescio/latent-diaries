@@ -390,3 +390,40 @@ does not pass fresh intelligibility. Preserve this checkpoint and split; all
 reviewed test cases are now exposed. Image grounding and seed robustness remain
 unverified. Sanitized evidence is in `validation/2026-10-15-sequence-reader.json`;
 individual judgments and audio fingerprints remain in ignored local artifacts.
+
+
+## M2 frozen image-feature cache (implemented and exercised)
+
+Build the single worker and prepare two attributed NASA images locally. The
+preparation script verifies fixed file hashes; this pair tests encoder mechanics,
+not a grounding benchmark or training corpus. NASA credits and its image-usage
+policy URL are retained in the local manifest. No media is uploaded.
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile experiment build experiment
+.venv/bin/python scripts/prepare_vision_smoke.py
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm experiment-gpu /opt/vision/.venv/bin/python scripts/cache_image_features.py --manifest artifacts/m2-image-smoke-inputs.json --output-dir artifacts/m2-vision-fresh --revision 914f7f89142e33e77833254d9c9b90c3cef7303b --device cuda
+```
+
+Use a fresh output directory. For CPU, use the `experiment` service and
+`--device cpu`; the full pretrained CPU path has not yet been exercised.
+`make test-docker` includes the small official vision API/processor tests on CPU.
+GPU extraction is verified at `artifacts/m2-vision-smoke-004/manifest.json`;
+sanitized evidence is in `validation/2026-10-15-image-features.json`.
+
+Custom manifests are nonempty JSON lists of objects with exactly `id`, `image`,
+`scene_group`, `source`, and `license`, all nonempty strings. Image paths are local
+paths relative to the worker's `/workspace`; provenance is metadata, never model
+conditioning. Keep related frames in the same scene group when defining future
+training/holdout splits. No captions or transcripts are accepted in this manifest.
+Outputs are `[N,768]` normalized `features.safetensors` plus a manifest recording
+model revision, both lock hashes, source hashes, source-image fingerprints,
+processor shapes, precision, latency, frozen parameters, repeat/batch parity and
+peak allocated VRAM. Source photos remain outside the cache; local smoke media
+can be deleted independently by removing `run-data/images/m2-smoke` and its feature
+cache. No automatic media retention/upload is enabled.
+
+The next M2 experiment requires paired image/Italian teacher supervision, an
+image reader trained only on training scenes, and a separate held-out-image
+comparison against shuffled and null images at the same speaker/seed. The
+accepted numeric M1 reader does not by itself meet this requirement.

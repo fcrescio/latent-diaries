@@ -49,3 +49,4 @@ test-docker:
 	$(DOCKER) compose --profile experiment build review experiment
 	$(DOCKER) compose --profile experiment run --rm experiment latent-diaries doctor
 	$(DOCKER) compose --profile experiment run --rm experiment python -m pytest -q
+	$(DOCKER) compose --profile experiment run --rm experiment /opt/vision/.venv/bin/python -m pytest -q tests/test_vision.py tests/test_vision_runtime.py

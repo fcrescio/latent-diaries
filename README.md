@@ -80,6 +80,7 @@ The agent can implement, test, debug and publish code, while you retain control 
 | Shared numeric-factor mapper | Blinded review: sampled training case clear; all held-out and null clips fail; no images |
 | Direct continuous teacher-prefix regression | Development speech improved, but both fresh combinations lose intelligibility; this affine recipe fails M1.2; no images |
 | Sequence-aware numeric reader | 1.20M parameters, 22 training combinations; both fresh tests and training control accepted, null rejected; scoped M1 complete, no images |
+| Frozen EmbeddingGemma 2 image-feature cache | Real-image CUDA extraction, normalized 768D vectors, repeat/batch parity exercised; one worker image with separate locked vision interpreter |
 | Visual reader / image-conditioned training | **Not implemented yet** |
 | Genuine Italian image-to-speech checkpoint / wearable experience | **Not yet achieved** |
 

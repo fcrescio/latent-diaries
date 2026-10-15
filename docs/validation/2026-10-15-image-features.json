@@ -1,0 +1,159 @@
+{
+  "model_id": "google/embeddinggemma-2",
+  "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+  "transformers_version": "5.19.0",
+  "torch_version": "2.14.1+cu130",
+  "device": "cuda",
+  "dtype": "float32",
+  "audio_encoder_loaded": false,
+  "vision_encoder_loaded": true,
+  "all_parameters_frozen": true,
+  "variable_text_used": false,
+  "pooling": "attention-masked mean of final 768D states then L2",
+  "shape": [
+    2,
+    768
+  ],
+  "norms": [
+    0.9999999403953552,
+    1.0
+  ],
+  "cosine_matrix": [
+    [
+      1.0,
+      0.8445644974708557
+    ],
+    [
+      0.8445645570755005,
+      1.0
+    ]
+  ],
+  "controls": {
+    "repeat_max_abs_error": 0.0,
+    "batch_single_max_abs_error": 1.993030309677124e-07
+  },
+  "load_seconds": 8.693787199998042,
+  "peak_allocated_vram_bytes": 2049432576,
+  "features_sha256": "5146750cf96d046272a70a8e6b33c4566b2a98dab85395bb1f513f88cbca11a1",
+  "input_manifest_sha256": "d48ae04a3d10525585a4f447705b219326d18342bcd7e98667c3635763ab1e3b",
+  "code_revision": "8251e8ef2d8242b5d8fc30247e91fc4a9966f598",
+  "source_sha256": "b0d8dbe9cac795b34161116346eddd7b00f589aa68f86a8b155b7f8caa51da5a",
+  "encoder_source_sha256": "92aa1ef3607e9562ed90d189f67b12349e3821765c4324cee01dd47fa1201e19",
+  "upstream_model_source_sha256": "132d8714852fa8f0c376af797229e7b48fe94e0cf6cae6f6640681e934062923",
+  "vision_lock_sha256": "00a7220f351e6b0b761575f3a173133582ef9aee4193164b5347fae57f232467",
+  "worker_lock_sha256": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+  "image_grounding_verified": false,
+  "speech_generated": false,
+  "scope": "M2 encoder mechanics on two attributed NASA images; no reader trained or speech generated",
+  "records": [
+    {
+      "id": "moon",
+      "scene_group": "moon",
+      "source": "https://www.nasa.gov/wp-content/uploads/2023/03/as11-44-6552.jpeg",
+      "license": "NASA/Apollo 11; NASA imagery usage guidelines https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "image_sha256": "5de2f18993a50c2a29c42c37a52f1b20c5e960911a863305007093789a99730a",
+      "seconds": 0.450490137001907,
+      "image_size": [
+        1041,
+        1041
+      ],
+      "processor": {
+        "input_ids": [
+          1,
+          2,
+          255999,
+          258880,
+          258882
+        ],
+        "input_shapes": {
+          "input_ids": [
+            1,
+            260
+          ],
+          "attention_mask": [
+            1,
+            260
+          ],
+          "pixel_values": [
+            1,
+            2520,
+            768
+          ],
+          "image_position_ids": [
+            1,
+            2520,
+            2
+          ]
+        },
+        "final_hidden_shape": [
+          1,
+          260,
+          768
+        ]
+      }
+    },
+    {
+      "id": "earth",
+      "scene_group": "earth",
+      "source": "https://images-assets.nasa.gov/image/PIA18033/PIA18033~small.jpg",
+      "license": "NASA/NOAA/GSFC/Suomi NPP/VIIRS/Norman Kuring; NASA imagery usage guidelines https://www.nasa.gov/nasa-brand-center/images-and-media/",
+      "image_sha256": "5b47eb38676ad790c2e6245ed1025c88ee31ad23f55e516066865f2f601046ec",
+      "seconds": 0.09624612599873217,
+      "image_size": [
+        640,
+        640
+      ],
+      "processor": {
+        "input_ids": [
+          1,
+          2,
+          255999,
+          258880,
+          258882
+        ],
+        "input_shapes": {
+          "input_ids": [
+            1,
+            260
+          ],
+          "attention_mask": [
+            1,
+            260
+          ],
+          "pixel_values": [
+            1,
+            2520,
+            768
+          ],
+          "image_position_ids": [
+            1,
+            2520,
+            2
+          ]
+        },
+        "final_hidden_shape": [
+          1,
+          260,
+          768
+        ]
+      }
+    }
+  ],
+  "execution_worker_image": "sha256:bee51daff48bd1a7c5af64bbf2e8fd11c61e670d328af3de4f1fabb17674afa6",
+  "final_validation_worker_image": "sha256:8a081ae5cccc3f63ea2e7551ef91b4dcf0c57e4c172fd9f2576cb4ed183af061",
+  "execution_used_readonly_source_script_overlays": true,
+  "code_revision_note": "Base revision at execution; exact executed file hashes identify uncommitted implementation",
+  "paid_jobs": false,
+  "media_or_weights_uploaded": false,
+  "public_host_started": false,
+  "tests": {
+    "host_passed": 7,
+    "host_skipped_ml_modules": 7,
+    "worker_cpu_passed": 24,
+    "worker_cpu_skipped": 3,
+    "gpu_primary_passed": 25,
+    "gpu_primary_skipped_vision_runtime": 2,
+    "vision_cpu_passed": 4,
+    "clean_smoke_download_and_hash_verification": true
+  }
+}
