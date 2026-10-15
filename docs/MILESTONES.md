@@ -22,7 +22,8 @@ reproduction. Individual listening notes and media remain private.
 M2–M5 remain unachieved. A global image reader has now actually trained/resumed
 on 50 private images, with 12 group-disjoint holdouts. Four held-out audio probes
 and train/null controls form 13 local blinded pairs including shuffled-image
-assignments. Human intelligibility/grounding assessment is pending. Final
+assignments. Human review is complete: only the training control is almost good; all four
+tested held-out outputs fail intelligibility. This pilot is a negative M2 result. Final
 `narrate-image` CLI remains fail-closed; research training is exercised. EmbeddingGemma 2 compatibility is now exercised in a separately locked interpreter
 inside the same worker image: two real images produce normalized 768D vectors
 with repeat/batch parity. The cached image-to-reader training link is exercised; grounding acceptance

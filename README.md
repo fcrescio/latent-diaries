@@ -81,7 +81,7 @@ The agent can implement, test, debug and publish code, while you retain control 
 | Direct continuous teacher-prefix regression | Development speech improved, but both fresh combinations lose intelligibility; this affine recipe fails M1.2; no images |
 | Sequence-aware numeric reader | 1.20M parameters, 22 training combinations; both fresh tests and training control accepted, null rejected; scoped M1 complete, no images |
 | Frozen EmbeddingGemma 2 image-feature cache | Real-image CUDA extraction, normalized 768D vectors, repeat/batch parity exercised; one worker image with separate locked vision interpreter |
-| Global image reader pilot | Local private-image training/resume and cached-image-conditioned audio exercised; 13 blinded pairs await human review; no grounding acceptance |
+| Global image reader pilot | Local private-image training/resume and cached-image-conditioned audio exercised; blinded review rejects all four tested held-out outputs; only training control almost good; M2 incomplete |
 | Genuine Italian image-to-speech checkpoint / wearable experience | **Not yet achieved** |
 
 Use `docs/capabilities.json` for machine-readable safety flags. Never flip flags without tests.
