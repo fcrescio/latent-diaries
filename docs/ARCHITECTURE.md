@@ -151,5 +151,35 @@ worker image contains `/opt/vision/.venv` with a separate locked Transformers
 site-packages only after its own packages to reuse locked Torch 2.14.1/CUDA
 binaries. The two Transformers versions never share a process. Safetensors/JSON
 feature caches are the handoff to the future image reader. See
-`environments/vision/README.md` for the dependency boundary. Image-reader training
-and image-to-speech inference remain unimplemented.
+`environments/vision/README.md` for the dependency boundary. The initial global image-reader research path is described below; final
+image narration remains unaccepted.
+
+
+## First global image-reader pilot
+
+`GlobalImageReader` takes normalized `[B,768]` frozen image vectors through
+LayerNorm, a width-128 linear/GELU bottleneck and a linear projection to
+`[B,K,1024]`. Training-only target mean/scale normalize masked prefix-vector MSE;
+a training-only affine numeric head predicts prefix length. The exercised model
+has 4,062,848 trainable parameters and K=30. Neither vision nor Qwen weights
+change. This is cached continuous-text-prefix distillation, not acoustic CE
+training or an automatic intelligibility objective.
+
+Local-only supervision comes from the user-authorized vision service. It sees
+resized metadata-free pixels, returns short Italian training narratives, and is
+stopped in `finally` before further GPU work. Its use was explicitly authorized
+as an existing label-service exception to the single worker-image policy; all
+reader training and EmbeddingGemma/Qwen-TTS inference use the worker. Source media
+are mounted read-only. Exact hashes and all image-derived information remain in
+ignored private storage, with no HF upload.
+
+Capture-day groups are unioned across near-duplicate dHash neighbors after exact
+file deduplication; connected components are assigned wholly to train or holdout.
+The fixed experiment uses 50 train and 12 held-out images. Only training texts are
+projected into target vectors. Evaluation inputs contain id/split/image vector
+only, and the existing Qwen builder preserves the no-text prefill/trailing-path
+invariants. The four preselected held-out outputs are also paired with shuffled
+images; null uses zero input at the same speaker/seed. Six actual generated WAVs
+make 13 blinded review pairs; repeated control assignments are intentional.
+Human judgments are required for clarity and grounding. Low training MSE alone
+is no acceptance evidence. The final `narrate-image` entrypoint remains closed.

@@ -427,3 +427,48 @@ The next M2 experiment requires paired image/Italian teacher supervision, an
 image reader trained only on training scenes, and a separate held-out-image
 comparison against shuffled and null images at the same speaker/seed. The
 accepted numeric M1 reader does not by itself meet this requirement.
+
+
+## Private image-reader pilot (local only)
+
+The user-authorized archive stays outside the repository and Docker build
+context. Mount it read-only at `/private/photos` for feature extraction; subsequent
+reader training and audio generation need cached vectors only. Never upload the
+images, archive filenames/locations, labels, features, audio, weights, ratings or
+per-image manifests. The local vision label service is an explicitly authorized
+existing container; the label helper stops it in `finally`, including failures.
+Do not start EmbeddingGemma/TTS training while that service occupies VRAM.
+
+Generic preparation commands (supply local paths/container name yourself; keep
+all outputs under ignored private storage):
+
+```bash
+.venv/bin/python scripts/inventory_private_images.py --root "$LD_PRIVATE_PHOTO_ROOT" --output artifacts/private-new/inventory.json
+DOCKER_CONFIG="$PWD/.cache/docker-config" .venv/bin/python scripts/label_private_images.py --inventory artifacts/private-new/inventory.json --output artifacts/private-new/labels.jsonl --docker .cache/tools/docker --container "$LD_LABEL_CONTAINER"
+.venv/bin/python scripts/select_private_pilot.py --inventory artifacts/private-new/inventory.json --labels artifacts/private-new/labels.jsonl --archive-root "$LD_PRIVATE_PHOTO_ROOT" --output-dir artifacts/private-new/split
+```
+
+Review the local candidate labels/exclusions and freeze the split before fitting.
+`configs/research/image-pilot-v1.json` specifies the fixed recipe. Use
+`cache_image_features.py` in the vision interpreter with `HF_HUB_OFFLINE=1` and
+the read-only archive mount. Then run `prepare_image_prefixes.py` in the primary
+GPU worker to project **training text only**, followed by `image_probe.py train`
+for 800 updates and `--resume` to 1600 with `--schedule-steps 1600` both times.
+`image_probe.py evaluate` accepts only the separate vector evaluation spec,
+never the training design/labels. Use `LD_REF_TEXT=` and offline mode.
+
+Exact commands for the exercised private run are saved locally in
+`artifacts/private-photos-001/reproduce.md`; complete provenance/checkpoint/media
+are deliberately absent from public Git/HF. All fits, optimizer steps and model
+inference run in the managed worker; host helpers only prepare media/JSON and
+call the authorized local labelling API. The inventorier was reproduced against
+the frozen first four source rows; the full frozen inventory is retained.
+
+`blind_private_gallery.py` creates resized EXIF-free review copies, assigns
+matched/shuffled/null pairs, preserves the 0600 mapping, and imports real clips
+without creating ratings. The current batch is E4-A…E4-M. Review remains behind
+HTTP Basic on loopback. `REVIEW_PORT` changes only the host port (default 8080);
+the exercised local instance uses 18080 because another service occupied 8080.
+Visit `http://localhost:18080/#m2p1-a` with existing review credentials.
+No public hosting or private-data upload is authorized. Human grounding and
+intelligibility remain pending until the actual ratings arrive.
