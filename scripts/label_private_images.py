@@ -123,12 +123,19 @@ def main():
                     "chat_template_kwargs": {"enable_thinking": False},
                 })
                 text = response["choices"][0]["message"]["content"]
-                label = json.loads(text)
+                rejection = None
                 if args.mode.startswith('opening-'):
-                    label = validate_anchor_label(label, row['scene_hint'] if args.mode == 'opening-v11' else None)
-                elif args.mode == 'scene-v3':
-                    label = validate_scene_label(label)
+                    try:
+                        label = validate_anchor_label(json.loads(text), row['scene_hint'] if args.mode == 'opening-v11' else None)
+                    except (ValueError, TypeError):
+                        # Untrusted malformed output is excluded, never coerced to a choice.
+                        label = {'keep': False, 'anchor': None}
+                        rejection = 'invalid_model_anchor_response'
                 else:
+                    label = json.loads(text)
+                if args.mode == 'scene-v3':
+                    label = validate_scene_label(label)
+                elif args.mode == 'freeform':
                     if set(label) != {"keep", "scene", "narration_it"} or type(label["keep"]) is not bool:
                         raise ValueError("Unexpected training label schema")
                     if not all(isinstance(label[k], str) for k in ["scene", "narration_it"]):
@@ -139,6 +146,10 @@ def main():
                         label["rejection"] = "sentence_length"
                 result = {"id": row["id"], "model": model, "label": label,
                           "seconds": time.monotonic() - start, "training_only": True}
+                if args.mode.startswith('opening-'):
+                    result['labeler_source_sha256'] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+                    if rejection:
+                        result['validation_rejection'] = rejection
                 output.write(json.dumps(result, ensure_ascii=False) + "\n")
                 output.flush()
                 print(f"Labelled {i + 1}/{len(rows)}; accepted={label['keep']}", flush=True)
