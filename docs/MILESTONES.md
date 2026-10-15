@@ -27,6 +27,9 @@ v2 combinatorial test was frozen before new teacher generation/fit and has now
 completed blinded listening: training speech is accepted; both fresh combinations
 start clearly then become unintelligible, and null loops in gibberish. The stock teacher-derived
 prefix is a separate positive protocol control.
+A v3 sequence-aware reader and affine baseline have now trained on 22 combinations
+with two new tests. Sequence reconstruction error is much lower, but the eight
+blinded comparison clips await human listening. M1.2 remains incomplete.
 M1.2 failed under audio-KL training; direct-prefix supervision improves exposed
 development cases but fails the fresh test; M2–M5 remain unachieved; BF16 cache parity and EmbeddingGemma 2
 compatibility remain open technical questions.

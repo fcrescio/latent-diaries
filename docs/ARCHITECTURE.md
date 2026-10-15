@@ -101,3 +101,26 @@ compositional generalization of continuous conditioning, not unseen vocabulary,
 natural images or artistic grounding. The null control is a zero factor vector.
 Both decoding modes and the same seed/duration cap are prescribed in advance.
 Human listening is required; teacher-forced held-out KL is only a diagnostic.
+
+
+## Sequence-aware factor reader (v3 M1 experiment)
+
+`SequenceReader` encodes weather, opening and memory as three factor tokens,
+then decodes learned positional queries through four width-128 transformer
+decoder layers (four heads, dropout zero). Absolute and predicted-length-relative
+coordinates condition each query. Key-padding masks prevent invalid queries
+from influencing valid positions. A shared affine numeric length head is fitted
+on training rows only. Output is a continuous `[B,K,1024]` prefix, trimmed by the
+predicted length before the existing frozen-Qwen conditioning builder.
+
+Training distills cached teacher-prefix vectors with masked per-dimension
+normalized reconstruction loss. Mean/scale and length coefficients use training
+examples only; no Qwen weights are loaded or optimized in this reconstruction
+stage. This is a supervision/architecture recipe comparison, not an isolation of
+attention alone: the affine baseline uses its established padded regression loss.
+Both methods share the v3 training split, speaker and fixed sampled decoder.
+
+The 1,195,520-parameter reader consumes authored numeric factors, not visual
+embeddings. Its lower tensor error cannot establish intelligibility, image
+grounding or arbitrary-utterance generalization. No variable text, teacher prefix,
+target code sequence or caption is loaded during standalone evaluation.

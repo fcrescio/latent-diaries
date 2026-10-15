@@ -35,6 +35,10 @@ def test_sequence_reader_gradients_masks_and_checkpoint(tmp_path):
     reader.eval()
     with torch.no_grad():
         expected = reader(features)[0]
+        for i in range(len(features)):
+            torch.testing.assert_close(
+                reader(features[i : i + 1])[0][0], expected[i], rtol=1e-5, atol=1e-6
+            )
     torch.save(reader.state_dict(), tmp_path / "state.pt")
     restored = SequenceReader(
         3, 6, torch.zeros(8), torch.ones(8), torch.zeros(6), width=16, layers=2, heads=2

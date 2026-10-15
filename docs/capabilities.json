@@ -18,5 +18,9 @@
   "shared_numeric_mapper_generalization_verified": false,
   "m1_1_distinct_memorized_utterances_accepted": true,
   "continuous_teacher_prefix_regression_exercised": true,
-  "continuous_teacher_prefix_regression_generalization_verified": false
+  "continuous_teacher_prefix_regression_generalization_verified": false,
+  "sequence_reader_training_exercised": true,
+  "sequence_reader_checkpoint_resume_exercised": true,
+  "sequence_reader_numeric_inference_exercised": true,
+  "sequence_reader_fresh_generalization_verified": false
 }

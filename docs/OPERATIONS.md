@@ -330,3 +330,54 @@ This compares predicted/teacher continuous vectors and lengths. First-five versu
 remaining-position errors are tensor diagnostics, not word-aligned speech scores.
 The initial fresh test is now exposed after listening; do not reuse its cases as
 untouched evaluation when changing architecture or supervision.
+
+
+## Sequence-aware reader v3 versus affine baseline
+
+`configs/research/compositions-v3.json` was committed before teacher generation:
+22 training combinations, fresh w02/e01 tests, six weather categories. Previously
+exposed cases are now training examples. Teacher-prefix reconstruction consumes
+numeric factors only. It is not an image reader or unseen-vocabulary evaluation.
+
+Rebuild the single worker first (or bind current `src` and `scripts` read-only
+before the service name during development). Use fresh fit/listening directories.
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/prepare_shared_probe.py --design configs/research/compositions-v3.json --output-dir artifacts/shared-corpus-003 --reuse-cache-root artifacts/shared-corpus-001 --reuse-cache-root artifacts/shared-corpus-002
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm experiment-gpu python scripts/sequence_probe.py train --dataset artifacts/shared-corpus-003/dataset.json --run-dir artifacts/sequence-reader-001 --steps 800 --schedule-steps 1600
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm experiment-gpu python scripts/sequence_probe.py train --dataset artifacts/shared-corpus-003/dataset.json --run-dir artifacts/sequence-reader-001 --steps 1600 --schedule-steps 1600 --resume
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile experiment run --rm experiment python scripts/prefix_regression_probe.py fit --dataset artifacts/shared-corpus-003/dataset.json --run-dir artifacts/affine-baseline-v3 --evaluation-scope fresh-test
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/sequence_probe.py evaluate --inputs artifacts/shared-corpus-003/eval-inputs.json --run-dir artifacts/sequence-reader-001 --output-dir artifacts/sequence-reader-eval-001 --ids w00 w02 e01
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/prefix_regression_probe.py evaluate --inputs artifacts/shared-corpus-003/eval-inputs.json --run-dir artifacts/affine-baseline-v3 --output-dir artifacts/affine-baseline-v3-eval --ids w00 w02 e01
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile experiment run --rm experiment python scripts/diagnose_sequence_probe.py --dataset artifacts/shared-corpus-003/dataset.json --run-dir artifacts/sequence-reader-001 --output artifacts/sequence-reader-001/prefix-diagnostic.json
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile experiment run --rm experiment python scripts/diagnose_prefix_regression.py --dataset artifacts/shared-corpus-003/dataset.json --run-dir artifacts/affine-baseline-v3 --output artifacts/affine-baseline-v3/prefix-diagnostic.json
+```
+
+The 1,600-step schedule is fixed during the first 800-step phase, so resume does
+not restart decay. Checkpoints verify model/config/source/prefix fingerprints and
+restore optimizer plus RNG. Normalization and length prediction use train rows
+only; no held-out prefix is opened until frozen post-training diagnostics.
+Generation reads no teacher/text/code targets. Training loss is normalized masked
+MSE; post-training comparisons use valid-position raw MSE, not human quality.
+
+Combine private result manifests and generate new blinded labels without serving
+files publicly (this host-side operation is JSON/file preparation, not training):
+
+```bash
+.venv/bin/python - <<'PYMERGE'
+import json
+from pathlib import Path
+folder = Path("artifacts/sequence-comparison-001")
+folder.mkdir(exist_ok=True)
+rows = []
+for method, source in [("sequence", "sequence-reader-eval-001"), ("affine", "affine-baseline-v3-eval")]:
+    values = json.loads(Path(f"artifacts/{source}/results.json").read_text())
+    rows.extend(row | {"method": method} for row in values["results"])
+(folder / "results.json").write_text(json.dumps({"results": rows}, indent=2) + "\n")
+PYMERGE
+.venv/bin/python scripts/blind_audio_probe.py --results artifacts/sequence-comparison-001/results.json --output-dir artifacts/sequence-listening-001 --label-prefix E3- --shuffle-seed 2026101503
+```
+
+Private mappings are 0600; no ratings are synthesized. Both methods use seed 42,
+sampled primary/residual codebooks and cap105. Compare fresh cases and controls
+through human listening before updating generalization capability flags.
