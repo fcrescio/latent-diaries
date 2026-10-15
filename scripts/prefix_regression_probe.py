@@ -54,7 +54,8 @@ def fit(args):
         dataset_sha256=digest(args.dataset),
         mapper_sha256=digest(args.run_dir / "mapper.safetensors"),
         train_ids=[r["id"] for r in rows],
-        development_ids=[r["id"] for r in dev],
+        heldout_ids=[r["id"] for r in dev],
+        evaluation_scope=args.evaluation_scope,
         input_dim=features.shape[1] - 1,
         maximum_tokens=maximum,
         trainable_coefficients=sum(t.numel() for t in weights.values()),
@@ -62,7 +63,7 @@ def fit(args):
         training_length_max_error=float(((features @ length_coef) - lengths).abs().max()),
         teacher_tensors_used_only_at_fit=True,
         qwen_weights_changed=False,
-        scope="Continuous prefix-vector regression; exposed development inputs, no generalization claim",
+        scope=f"Continuous prefix-vector regression; {args.evaluation_scope}, awaiting evaluation",
     )
     (args.run_dir / "config.json").write_text(json.dumps(info, indent=2) + "\n")
     print(json.dumps(info), flush=True)
@@ -78,7 +79,7 @@ def evaluate(args):
     for row in rows:
         if set(row) != {"id", "split", "features"}:
             raise ValueError("Numeric-only evaluation spec required")
-        if row["id"] not in info["train_ids"] + info["development_ids"]:
+        if row["id"] not in info["train_ids"] + info.get("heldout_ids", info.get("development_ids", [])):
             raise ValueError("Unknown ID")
     wrapper, builder, speaker = load_backbone(info)
     results = []
@@ -105,6 +106,7 @@ def evaluate(args):
             {
                 "teacher_files_read": False,
                 "text_used": False,
+                "evaluation_scope": info.get("evaluation_scope", "development"),
                 "results": results,
                 "mapper_sha256": info["mapper_sha256"],
                 "inputs_sha256": digest(args.inputs),
@@ -122,6 +124,9 @@ def main():
     sub = parser.add_subparsers(dest="command", required=True)
     train = sub.add_parser("fit")
     train.add_argument("--dataset", type=Path, required=True)
+    train.add_argument(
+        "--evaluation-scope", choices=["development", "fresh-test"], default="development"
+    )
     test = sub.add_parser("evaluate")
     test.add_argument("--inputs", type=Path, required=True)
     test.add_argument("--ids", nargs="+", required=True)

@@ -67,7 +67,7 @@
         "id": "c00",
         "split": "heldout",
         "predicted_prefix_length": 21,
-        "human_listening_status": "pending",
+        "human_listening_status": "mostly_intelligible_minor_slip",
         "frames": 55,
         "sample_rate": 24000,
         "seconds": 4.4,
@@ -81,7 +81,7 @@
         "id": "c01",
         "split": "train",
         "predicted_prefix_length": 20,
-        "human_listening_status": "pending",
+        "human_listening_status": "accepted_intelligible_italian",
         "frames": 70,
         "sample_rate": 24000,
         "seconds": 5.6,
@@ -95,7 +95,7 @@
         "id": "c07",
         "split": "heldout",
         "predicted_prefix_length": 19,
-        "human_listening_status": "pending",
+        "human_listening_status": "accepted_intelligible_italian",
         "frames": 64,
         "sample_rate": 24000,
         "seconds": 5.12,
@@ -109,7 +109,7 @@
         "id": "null",
         "split": "control",
         "predicted_prefix_length": 20,
-        "human_listening_status": "pending",
+        "human_listening_status": "unintelligible",
         "frames": 75,
         "sample_rate": 24000,
         "seconds": 6.0,
@@ -121,7 +121,7 @@
       }
     ]
   },
-  "human_listening_status": "pending",
+  "human_listening_status": "completed_development_improvement",
   "development_inputs_exposed": true,
   "fresh_generalization_test_passed": false,
   "m1_1_memorization_accepted": true,
@@ -134,5 +134,12 @@
     "gpu_passed": 20
   },
   "media_or_weights_uploaded": false,
-  "paid_jobs": false
+  "paid_jobs": false,
+  "human_summary": {
+    "training_control_accepted": true,
+    "one_exposed_development_case_accepted": true,
+    "other_exposed_development_case_mostly_clear_with_minor_slip": true,
+    "null_control_rejected": true,
+    "individual_assessments_stored_privately": true
+  }
 }
