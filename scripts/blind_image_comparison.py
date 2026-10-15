@@ -13,7 +13,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--design', type=Path, required=True)
     parser.add_argument('--plan', type=Path, required=True)
-    parser.add_argument('--baseline-results', type=Path, required=True)
+    parser.add_argument('--baseline-results', type=Path)
+    parser.add_argument('--candidate-only', action='store_true', help='Use prior baseline reviews without repeating their clips')
     parser.add_argument('--acoustic-results', '--candidate-results', dest='candidate_results', type=Path, required=True)
     parser.add_argument('--candidate-name', default='acoustic')
     parser.add_argument('--include-shuffled', action='store_true')
@@ -21,6 +22,8 @@ def main():
     parser.add_argument('--run-id', required=True)
     parser.add_argument('--label-prefix', default='E5-')
     args = parser.parse_args()
+    if args.candidate_only == bool(args.baseline_results):
+        raise ValueError('Provide baseline results or choose candidate-only review')
     if args.output_dir.exists() or not all(c.isalnum() or c in '-_' for c in args.run_id):
         raise ValueError('Use fresh output directory and safe run ID')
     if not args.label_prefix or not all(c.isascii() and (c.isalnum() or c in '-_') for c in args.label_prefix):
@@ -36,7 +39,9 @@ def main():
     if design[plan['training_id']]['split'] != 'train':
         raise ValueError('Invalid training control')
     pairs = []
-    for method, path in [('baseline', args.baseline_results), (args.candidate_name, args.candidate_results)]:
+    comparisons = [] if args.candidate_only else [('baseline', args.baseline_results)]
+    comparisons.append((args.candidate_name, args.candidate_results))
+    for method, path in comparisons:
         results = json.loads(path.read_text())
         if results['text_used'] or results['teacher_files_read'] or results['linguistic_labels_read']:
             raise ValueError('Comparison must use standalone label-free inference')

@@ -1,8 +1,11 @@
+import importlib.util
 import json
 import subprocess
 import sys
+from pathlib import Path
 
 import pytest
+from PIL import Image
 
 from latent_diaries.visual_anchors import (
     anchor_choices,
@@ -56,3 +59,29 @@ def test_short_choice_prompt_and_scene_membership():
         validate_anchor_label({'keep': True, 'anchor': 'food:0'}, 'vehicles')
     with pytest.raises(ValueError):
         anchor_prompt('unknown')
+
+
+@pytest.mark.parametrize('response', ['not json', '{"keep":true,"anchor":"food:999"}',
+                                     '{"keep":true,"anchor":"vehicles:0"}'])
+def test_invalid_model_label_is_excluded_and_service_stopped(tmp_path, monkeypatch, response):
+    spec = importlib.util.spec_from_file_location('local_labeler', Path('scripts/label_private_images.py'))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    image = tmp_path / 'sample.jpg'
+    Image.new('RGB', (4, 4)).save(image)
+    inventory = tmp_path / 'inventory.json'
+    inventory.write_text(json.dumps([{'id': 'train1', 'split': 'train', 'path': str(image), 'scene_hint': 'food'}]))
+    output = tmp_path / 'labels.jsonl'
+    actions = []
+    monkeypatch.setattr(module.subprocess, 'run', lambda cmd, **kw: actions.append(cmd[1]))
+    monkeypatch.setattr(module.signal, 'signal', lambda *args: None)
+    monkeypatch.setattr(module, 'json_request', lambda route, payload=None:
+                        {'data': [{'id': 'mock-local'}]} if route == '/v1/models' else
+                        {'choices': [{'message': {'content': response}}]})
+    monkeypatch.setattr(sys, 'argv', ['labeler', '--inventory', str(inventory), '--output', str(output),
+                                    '--mode', 'opening-v11', '--docker', 'fake-docker'])
+    module.main()
+    row = json.loads(output.read_text())
+    assert row['label'] == {'keep': False, 'anchor': None}
+    assert row['validation_rejection'] == 'invalid_model_anchor_response'
+    assert actions == ['start', 'stop']

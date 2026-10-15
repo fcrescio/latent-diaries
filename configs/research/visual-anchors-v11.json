@@ -5,5 +5,6 @@
   "adapter": "Same centered ridge to opening-specific normalized mean training text embedding; same train-group CV alpha grid and five folds; keep originalv10 labels/weights/audio",
   "evaluation": "Frozen v8 speech reader and same four development images, original-cohort control and null; seed42 cap105; compare actual matched/shuffled listening against retainedv9 if technically meaningful",
   "scope": "Annotation-method control, not new vocabulary or runtime scene classification; subset and supervision change jointly",
-  "privacy": "Local VLM only, stopped in finally; no private media/weights/labels/individual ratings uploaded; fresh96 remain reserved"
+  "privacy": "Local VLM only, stopped in finally; no private media/weights/labels/individual ratings uploaded; fresh96 remain reserved",
+  "review": "Ten new-method pairs:four matched,four shuffled,original training control,null. Do not rerate six unchangedv9 clips; compare descriptively against their existing E7 ratings, not as a concurrent blinded baseline."
 }
