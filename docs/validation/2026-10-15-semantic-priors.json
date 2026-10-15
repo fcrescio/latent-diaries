@@ -1,5 +1,5 @@
 {
-  "scope": "Continuous language-prior and exposed-development image research; human E6 review pending, no fresh-image acceptance",
+  "scope": "Continuous language-prior research; 15/16 E6 pairs rated, Italian/variety observed but grounding not accepted; no fresh acceptance",
   "worker_image": "sha256:52acc39c5443fa7041b4ee0201fec5db74c97078b55247b53be08f590703a7a3",
   "execution": "Single existing worker/dependency locks; current source/scripts/tests bound read-only",
   "crossmodal_text_prototype_diagnostic": {
@@ -57,7 +57,7 @@
     "v5": "Whole-prefix flow fragmented on auxiliary ASR including training controls; no image acceptance",
     "v6": "Causal flow improves stopping but auxiliary word content remains fragmented",
     "v7": "Two fixed text-feature controls have coherent auxiliary transcriptions; calibrated image transfer remains fragmented",
-    "v8": "Robust conditioning recipe generates six real image/control clips; all four development auxiliary transcriptions have distinct endings; pronunciation and artistic judgments pending"
+    "v8": "Available human notes consistently report good Italian and variety, but weak grounding including training control; one pair unrated"
   },
   "subspace": {
     "rank": 512,
@@ -145,5 +145,14 @@
     "primary_cpu": "36 passed /3 skips",
     "primary_cuda": "37 passed /2 vision-runtime skips",
     "locked_vision_cpu": "4 passed"
+  },
+  "human_review": {
+    "rated_pairs": 15,
+    "total_pairs": 16,
+    "new_method_matched_rated": 3,
+    "new_method_matched_grounding_mean": 1.6666666666666667,
+    "new_method_shuffled_rated": 4,
+    "new_method_shuffled_grounding_mean": 1,
+    "scope": "Incomplete descriptive review by one reviewer; no fresh/general grounding acceptance"
   }
 }

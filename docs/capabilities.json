@@ -54,5 +54,11 @@
   "continuous_language_prior_training_resume_exercised": true,
   "robust_semantic_prior_image_inference_exercised": true,
   "robust_semantic_prior_development_review_pending": true,
-  "robust_semantic_prior_fresh_generalization_verified": false
+  "robust_semantic_prior_fresh_generalization_verified": false,
+  "robust_semantic_prior_development_rated_pairs": 15,
+  "robust_semantic_prior_development_total_pairs": 16,
+  "robust_semantic_prior_development_italian_observed": true,
+  "robust_semantic_prior_grounding_accepted": false,
+  "train_group_semantic_adapter_selection_exercised": true,
+  "semantic_adapter_v9_development_review_pending": true
 }

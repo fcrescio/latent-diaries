@@ -674,5 +674,31 @@ derangement of the four new-method development pairs. Six new outputs and six
 retained baseline outputs form sixteen pairs because four new audio clips are
 deliberately reused on wrong images. Explain these repetitions to the reviewer;
 do not count them as independent generations. Existing ratings are preserved,
-with no automatic human scores. Pronunciation, evocation and grounding remain
-pending actual review; all reserved fresh candidates stay excluded.
+with no automatic human scores. Fifteen of sixteen pairs have saved ratings. Available notes report good Italian
+and variety but weak image relevance, including training. Grounding is not
+accepted; all reserved fresh candidates stay excluded.
+
+## Training-group semantic calibration control
+
+Keep the v8 speech checkpoint fixed. Select adapter regularization using only
+training scene groups, with no development labels in the selection loop:
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile experiment run --rm -v "$PWD/src:/workspace/src:ro" -v "$PWD/scripts:/workspace/scripts:ro" experiment python scripts/fit_semantic_image_adapter.py --image-dataset artifacts/private-photos-002/targets/dataset-expanded.json --design artifacts/private-photos-002/design/design.json --corpus artifacts/semantic-prior-v5/corpus/corpus.json --features artifacts/semantic-prior-v5/features/features.safetensors --output-dir artifacts/adapter-new/adapter --select-alpha
+```
+
+Then use the unchanged numeric-only `evaluate_autoregressive_prior.py` with
+`--run-dir artifacts/robust-prior-v8/reader`, the new adapter and existing strict
+`eval-expanded.json`; preserve the frozen evaluation-plan IDs and use a new
+output directory. The v9 private reproduction file records exact rendered paths
+and commands. No additional text features, labels or fresh images are opened.
+The current comparison is E7-A through E7-P at
+`http://localhost:18080/#m2-adapter-v9-a`, versus unchanged v8 outputs. Four new
+clips are intentionally repeated on shuffled images. No ratings are inferred.
+
+Current source tests pass in the existing pinned worker. A full local
+`make test-docker` rebuild fails at apt due to Docker disk exhaustion; targeted
+unused build-cache cleanup is insufficient to complete a rebuild, and a retry
+is cancelled while downloading redundant dependencies. No user images, volumes,
+containers or model caches are deleted. Do not describe this as a new worker
+image build or a passing full Docker rebuild.

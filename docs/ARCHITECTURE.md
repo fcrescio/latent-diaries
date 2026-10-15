@@ -290,3 +290,15 @@ JSON, reader/adapter weights, fixed Qwen protocol and speaker reference only.
 Text-feature controls are explicitly marked text-conditioned diagnostics.
 Actual image speech and blinded human assessment are required before advancing;
 all 96 fresh image candidates remain reserved.
+
+## Semantic adapter regularization control
+
+The v9 control keeps the v8 continuous speech prior frozen. It fits the same
+769×768 affine image-to-semantic tensor, selecting ridge regularization by five
+scene-group-disjoint folds of supported training images only. The fixed grid is
+0.001/0.01/0.1/1; normalized vector reconstruction selects0.1. All supported
+training cases are then refitted. Inference still uses one numeric projection
+and L2 normalization, with no labels, classifier, prototype retrieval or text.
+This addresses contraction toward the global mean, not fine visual specificity:
+broad training categories and authored opening clauses still limit grounding.
+The development comparison is not fresh generalization or human acceptance.
