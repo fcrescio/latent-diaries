@@ -555,3 +555,44 @@ Expanded training reduces development tensor error by about 22%, but fails the
 fixed gate. No new audio or fresh-test access follows; 96 candidates remain
 unlabelled. This control provides no new speech-quality acceptance. Keep all
 image-dependent files local, including category labels and per-image metrics.
+
+## Frozen-Qwen acoustic image-reader comparison
+
+`configs/research/acoustic-image-v4.json` prescribes a changed training
+objective on the existing canonical development corpus. All fresh candidates
+remain reserved. `diagnose_visual_categories.py --dataset <dataset-expanded>
+--design <design> --output <new-private-json>` runs in the CPU worker and reports
+separability against local training-service labels. It fits only training data;
+its classifier never enters speech inference.
+
+With the same worker array as above and a fresh private output root:
+
+```bash
+"${worker[@]}" experiment-gpu python scripts/prepare_acoustic_teachers.py --dataset artifacts/private-new/targets/dataset-expanded.json --output-dir artifacts/private-new/acoustic/teachers
+"${worker[@]}" experiment-gpu python scripts/train_acoustic_image_reader.py --dataset artifacts/private-new/targets/dataset-expanded.json --teachers artifacts/private-new/acoustic/teachers --initial-run artifacts/private-new/reader-expanded --run-dir artifacts/private-new/acoustic/reader --steps 160
+"${worker[@]}" experiment-gpu python scripts/train_acoustic_image_reader.py --dataset artifacts/private-new/targets/dataset-expanded.json --teachers artifacts/private-new/acoustic/teachers --initial-run artifacts/private-new/reader-expanded --run-dir artifacts/private-new/acoustic/reader --steps 320 --resume
+```
+
+Teacher generation reads training-supported continuous targets, caches genuine
+generated codes and decoded positive controls, and rejects empty/capped
+trajectories. Training updates only reader parameters, verifies absent backbone
+gradients, and checks checkpoint/teacher/source fingerprints on continuation.
+Keep source unchanged between stages. This is a limited scene-repertoire
+experiment, not open-ended narration or a trained category-to-text runtime.
+
+Freeze development IDs before fitting. Run the existing `image_probe.py
+evaluate` separately for the unchanged baseline and acoustic reader using only
+`eval-expanded.json`, identical `--ids`, seed and duration cap. Use different
+fresh output directories. `diagnose_acoustic_reader.py` separately takes
+`--dataset`, `--teachers`, `--baseline-run`, `--acoustic-run`, `--output`; it
+opens supervision for frozen teacher-forced development analysis only. Its
+losses cannot establish autoregressive speech quality.
+
+`blind_image_comparison.py` takes `--design`, `--plan`, `--baseline-results`,
+`--acoustic-results`, a fresh `--output-dir`, a unique `--run-id` and
+`--label-prefix`. It prepares resized EXIF-free local image copies and imports
+blinded generated clips without creating ratings. The bounded comparison has
+four development images plus training/null controls for each reader. This first
+listening comparison does not supply a shuffled-image grounding benchmark or
+fresh-test acceptance. Exact exercised commands and mappings stay in ignored
+local artifacts; never publish them or the media.

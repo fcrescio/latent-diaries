@@ -1,0 +1,132 @@
+{
+  "scope": "Existing canonical development data only; no fresh-test or human quality acceptance",
+  "protocol_commit": "ecc5c18",
+  "training_source_commit": "9141c1d7c37a7617f90deb177be1d0b92f9616dd",
+  "worker_image": "sha256:52acc39c5443fa7041b4ee0201fec5db74c97078b55247b53be08f590703a7a3",
+  "execution": "Existing single worker, current source/scripts read-only overlays; locks unchanged",
+  "training_images": 239,
+  "development_images": 55,
+  "supported_training_categories": 10,
+  "development_categories": 8,
+  "visual_diagnostic_against_local_vlm_labels": {
+    "ridge": {
+      "train": {
+        "accuracy": 0.9748954176902771,
+        "macro_recall": 0.9586140155792237,
+        "count": 239,
+        "represented_classes": 10
+      },
+      "development": {
+        "accuracy": 0.8363636136054993,
+        "macro_recall": 0.850829727947712,
+        "count": 55,
+        "represented_classes": 8
+      }
+    },
+    "permuted_ridge": {
+      "train": {
+        "accuracy": 0.1882845163345337,
+        "macro_recall": 0.11833341009914874,
+        "count": 239,
+        "represented_classes": 10
+      },
+      "development": {
+        "accuracy": 0.1818181872367859,
+        "macro_recall": 0.13465007580816746,
+        "count": 55,
+        "represented_classes": 8
+      }
+    },
+    "cosine_centroid": {
+      "train": {
+        "accuracy": 0.9205020666122437,
+        "macro_recall": 0.9396737098693848,
+        "count": 239,
+        "represented_classes": 10
+      },
+      "development": {
+        "accuracy": 0.7454545497894287,
+        "macro_recall": 0.7779130637645721,
+        "count": 55,
+        "represented_classes": 8
+      }
+    },
+    "majority": {
+      "train": {
+        "accuracy": 0.20083682239055634,
+        "macro_recall": 0.1,
+        "count": 239,
+        "represented_classes": 10
+      },
+      "development": {
+        "accuracy": 0.20000000298023224,
+        "macro_recall": 0.125,
+        "count": 55,
+        "represented_classes": 8
+      }
+    }
+  },
+  "acoustic_teacher_count": 10,
+  "steps": 320,
+  "actual_resume_at": 160,
+  "reader_trainable_parameters": 2741888,
+  "peak_training_allocated_vram_bytes": 5276428800,
+  "backbone_gradients_absent": true,
+  "teacher_forced_summary": {
+    "baseline": {
+      "train": {
+        "count": 10,
+        "total_loss": 1.1909463346004485,
+        "codec0_ce": 0.8569290697574615,
+        "residual_ce": 3.3401581764221193,
+        "normalized_prefix_mse": 1.4551864614986698e-05,
+        "raw_prefix_mse": 1.669108242730033e-08
+      },
+      "heldout": {
+        "count": 55,
+        "total_loss": 1.5513862685723738,
+        "codec0_ce": 1.1837439352815802,
+        "residual_ce": 3.486689394170588,
+        "normalized_prefix_mse": 0.18973388041962277,
+        "raw_prefix_mse": 0.0002143585502132985
+      }
+    },
+    "acoustic": {
+      "train": {
+        "count": 10,
+        "total_loss": 1.1153876900672912,
+        "codec0_ce": 0.7794593036174774,
+        "residual_ce": 3.3506452560424806,
+        "normalized_prefix_mse": 0.008638589875772595,
+        "raw_prefix_mse": 1.048296353474143e-05
+      },
+      "heldout": {
+        "count": 55,
+        "total_loss": 1.4971647002480246,
+        "codec0_ce": 1.1280734766613354,
+        "residual_ce": 3.49341063932939,
+        "normalized_prefix_mse": 0.19750147045335986,
+        "raw_prefix_mse": 0.00022337034556998829
+      }
+    }
+  },
+  "teacher_forced_training_summary_scope": "One first-by-ID training case per target, not all training images",
+  "relative_development_codec0_ce_reduction": 0.04702913946249898,
+  "generated_comparison_clips": 12,
+  "blinded_gallery_pairs": 12,
+  "listening_labels": "E5-A through E5-L",
+  "null_controls_reach_cap": true,
+  "standalone_inference_reads_teacher_or_text": false,
+  "human_review_status": "pending",
+  "human_quality_acceptance": false,
+  "fresh_candidates_reserved_unlabelled": 96,
+  "private_data_uploaded": false,
+  "paid_jobs_used": false,
+  "label_container_stopped": true,
+  "tests": {
+    "host": "10 passed / 10 ML module skips",
+    "worker_cpu": "32 passed / 3 skips",
+    "worker_cuda": "33 passed / 2 vision-runtime skips",
+    "vision_runtime_cpu": "4 passed"
+  }
+}

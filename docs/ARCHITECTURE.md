@@ -216,3 +216,29 @@ exposed-development result. The query reader's shared width-128 linear output
 also has a nonzero best-rank training-error floor; this limits fitting but does
 not by itself explain the held-out failure. The prescribed raw MSE audio gate
 fails, so no further speech batch is generated. M2 remains incomplete.
+
+## Acoustic-supervised image-reader control
+
+The v4 experiment warm-starts the canonical width128 global MLP, preserving
+its constant 20-token continuous output. Frozen Qwen generates one genuine
+16-codebook trajectory per training-supported authored sentence. The cached
+codes are supervision only: the reader consumes the image vector, while the
+Talker receives gold previous frames during teacher forcing. Its shifted
+first-codebook loss includes EOS. Frame-aligned hidden states and gold earlier
+codebooks feed the frozen residual predictor. The objective is codec0 CE plus
+0.1 residual CE plus 0.1 training-normalized prefix reconstruction loss.
+
+Qwen stays in evaluation mode with every parameter frozen; its forward remains
+in the gradient graph so acoustic losses update the reader. A tiny real-Qwen
+integration test checks nonzero reader gradients, absent teacher/backbone
+gradients and objective composition. Source, teacher, initialization, optimizer,
+RNG and fixed schedule fingerprints protect actual checkpoint continuation.
+
+The separate visual diagnostic fits centered ridge and cosine centroids to
+training-only category labels, with majority and shuffled-label controls. It
+measures separability against local VLM labels, not human visual correctness or
+grounding. Neither diagnostic classifier nor category/template lookup runs
+during speech inference. Standalone generation retains the strict numeric-vector
+schema and loads no acoustic targets or linguistic labels. Teacher-forced
+development loss is calculated separately and cannot establish autoregressive
+intelligibility. Blinded listening is required; fresh candidates stay reserved.

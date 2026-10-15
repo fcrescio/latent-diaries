@@ -42,5 +42,9 @@
   "training_only_ridge_length_exercised": true,
   "canonical_image_supervision_development_exercised": true,
   "canonical_image_supervision_development_gate_passed": false,
-  "canonical_image_supervision_fresh_test_exercised": false
+  "canonical_image_supervision_fresh_test_exercised": false,
+  "visual_category_separability_diagnostic_exercised": true,
+  "acoustic_image_reader_training_resume_exercised": true,
+  "acoustic_image_reader_development_review_pending": true,
+  "acoustic_image_reader_fresh_generalization_verified": false
 }

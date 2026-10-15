@@ -13,6 +13,13 @@ does not improve reconstruction. M2 remains incomplete and the final
 checkpoints and aggregate evidence are recorded in `docs/DECISIONS.md` and
 `docs/MILESTONES.md`. No accepted trained image-to-speech model is available.
 
+The latest acoustic-loss reader comparison has completed training/resume and
+generated 12 blinded development clips, E5-A through E5-L. Human listening is
+pending at the authenticated local gallery (`http://localhost:18080/#m2-acoustic-v4-a`
+on this workstation). Teacher-forced loss improvement is modest and does not
+establish intelligibility. Fresh test images remain reserved; all private
+photos, labels, features, audio, ratings and checkpoints stay local.
+
 ## Artistic brief
 
 Turn opt-in photos from a walk/wearable into an intimate, slightly unreliable oral memory in Italian. Images become a condition for a voice to speak, not an instruction to caption a scene. The work has its own aesthetic judgments (evocation, grounding, voice, surprise), not ASR WER as its aim.
