@@ -9,6 +9,7 @@ pytest.importorskip("qwen_tts")
 from qwen_tts.core.models.configuration_qwen3_tts import Qwen3TTSTalkerConfig
 from qwen_tts.core.models.modeling_qwen3_tts import Qwen3TTSTalkerForConditionalGeneration
 
+from latent_diaries.acoustic_reader import acoustic_objective
 from latent_diaries.conditioning import SoftConditioningBuilder, VisualCondition
 from latent_diaries.inversion import aligned_residual_logits
 
@@ -66,6 +67,18 @@ def test_pinned_talker_gradient_and_cache_parity(device):
     assert torch.isfinite(output.loss)
     output.loss.backward()
     assert soft.grad.abs().sum() > 0
+    assert all(p.grad is None for p in talker.parameters())
+    reader = torch.nn.Linear(5, 3 * 16).to(device)
+    predicted = reader(torch.randn(1, 5, device=device)).reshape(1, 3, 16)
+    target = torch.randn_like(predicted, requires_grad=True)
+    loss, metrics = acoustic_objective(SimpleNamespace(model=parent), builder, predicted,
+                                       condition.speaker_embedding, gold, target,
+                                       torch.ones(16, device=device))
+    torch.testing.assert_close(loss, metrics['codec0_ce'] + 0.1 * metrics['residual_ce']
+                               + 0.1 * metrics['normalized_prefix_mse'])
+    loss.backward()
+    assert reader.weight.grad.abs().sum() > 0
+    assert target.grad is None
     assert all(p.grad is None for p in talker.parameters())
     # Verify every residual head against generation's gold-previous-code prefix.
     frame_hidden = torch.randn(2, 16, device=device, requires_grad=True)
