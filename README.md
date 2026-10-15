@@ -75,11 +75,11 @@ The agent can implement, test, debug and publish code, while you retain control 
 | HF private repositories | Created under `fcrescio`; no data or checkpoint uploaded |
 | Checkpoint upload, guarded HF Jobs launcher | Entrypoints provided; **not exercised** with real checkpoint/jobs |
 | Official Qwen Italian TTS baseline | GPU run produced 5.44 s audio and codec round-trip; user accepted speech/voice |
-| Continuous Qwen prefix / teacher-forced assembly / code generation | Tiny CPU/CUDA and pretrained FP32 mechanical controls pass; learned textless speech pending |
-| Single-utterance soft-prefix inversion | Resumable training/inference exercised; User accepts 32-token control with codec-0 greedy decoding; one memorized utterance; M1 incomplete |
+| Continuous Qwen prefix / teacher-forced assembly / code generation | Tiny CPU/CUDA and pretrained FP32 mechanical controls pass; numeric-conditioned Italian accepted in scoped M1 probe |
+| Single-utterance soft-prefix inversion | Resumable training/inference exercised; User accepts 32-token control with codec-0 greedy decoding; one memorized utterance; later sequence reader passes scoped M1 |
 | Shared numeric-factor mapper | Blinded review: sampled training case clear; all held-out and null clips fail; no images |
-| Direct continuous teacher-prefix regression | Development speech improved, but both fresh combinations lose intelligibility; M1.2 incomplete; no images |
-| Sequence-aware numeric reader | 1.20M parameters, 22 training combinations, two fresh tests; eight blinded comparison clips await listening |
+| Direct continuous teacher-prefix regression | Development speech improved, but both fresh combinations lose intelligibility; this affine recipe fails M1.2; no images |
+| Sequence-aware numeric reader | 1.20M parameters, 22 training combinations; both fresh tests and training control accepted, null rejected; scoped M1 complete, no images |
 | Visual reader / image-conditioned training | **Not implemented yet** |
 | Genuine Italian image-to-speech checkpoint / wearable experience | **Not yet achieved** |
 

@@ -2,37 +2,26 @@
 
 A milestone is complete only with a committed reproduction command, a passing test and run evidence. Progression may stop on a human gate.
 
-2026-10-15 status: M0 baseline and genuine-speech codec round-trip are accepted.
-Continuous assembly, frozen-backbone gradients, cache parity and checkpoint
-inference are exercised. M1.1 memorization acceptance is satisfied by two distinct
-human-accepted Italian outputs: run-006 mixed decoding and shared-mapper-001
-sampled training case c01 (blind C). The first accepted control is
-run-006, 32 learned continuous tokens, greedy codec-0 and sampled residuals,
-seed 42. Fresh CLI inference reproduces that accepted waveform exactly without
-reading text or teacher targets. The original fully sampled run-006 has an
-unclear middle; run-002 sampled/greedy outputs were rejected. Acceptance is
-specific to the successful decoding control, not all checkpoints/settings.
-The user also finds run-007 fully sampled speech almost good, with only half a
-word unintelligible. This is a second distinct, mostly intelligible memorization
-control; its greedy version has no listening acceptance. M1 remains incomplete:
-full clarity across utterances and unseen-input generalization are unverified.
-A shared 4.23M-parameter numeric-factor mapper has now trained on six prespecified
-combinations, with two held out. Held-out teacher-forced agreement is roughly
-level with null conditioning. Blinded human listening accepts only the sampled
-training case; both held-out inputs fail in both decoding modes. This probes
-compositional generalization, not image grounding. An additive audio-KL control
-did not help. Human listening accepts the direct-prefix training control and one
-exposed development case, finds the other almost clear, and rejects null. A fresh
-v2 combinatorial test was frozen before new teacher generation/fit and has now
-completed blinded listening: training speech is accepted; both fresh combinations
-start clearly then become unintelligible, and null loops in gibberish. The stock teacher-derived
-prefix is a separate positive protocol control.
-A v3 sequence-aware reader and affine baseline have now trained on 22 combinations
-with two new tests. Sequence reconstruction error is much lower, but the eight
-blinded comparison clips await human listening. M1.2 remains incomplete.
-M1.2 failed under audio-KL training; direct-prefix supervision improves exposed
-development cases but fails the fresh test; M2–M5 remain unachieved; BF16 cache parity and EmbeddingGemma 2
-compatibility remain open technical questions.
+2026-10-15 status: M0 and M1 are accepted within the controlled numeric-factor
+probe. M0 has genuine Italian baseline speech and codec round-trip evidence.
+M1 has frozen-backbone gradient, mask/shift, cache and inference parity tests,
+distinct accepted memorized utterances, and now two accepted prespecified fresh
+numeric combinations from the v3 sequence reader. The training control is also
+accepted; null conditioning is rejected. Standalone generation reads numeric
+features and learned weights without variable text, teacher prefixes or codes.
+
+This M1.2 acceptance covers two combinatorial holdouts from 24 authored templates
+(22 training), sampled seed 42, one speaker. It does not establish unseen
+vocabulary, arbitrary stories, seed robustness, image dependence or artistic
+quality. The matched affine baseline does not pass fresh intelligibility; earlier
+shared-MLP and v2 affine failures remain documented in DECISIONS. All reviewed
+holdouts are now exposed and must not become fresh tests for a revised recipe.
+See `validation/2026-10-15-sequence-reader.json` and OPERATIONS for evidence and
+reproduction. Individual listening notes and media remain private.
+
+M2–M5 remain unachieved. Final image inference/training capability flags remain
+false. EmbeddingGemma 2 compatibility and BF16 cache parity remain open technical
+questions; the accepted speech path uses FP32 Qwen.
 
 | Milestone | Tasks | Evidence / exit gate |
 |---|---|---|
