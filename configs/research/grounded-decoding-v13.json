@@ -1,0 +1,11 @@
+{
+  "hypothesis": "The stable prior can choose a generic language branch despite image conditioning; favor continuous candidates that are more likely with the image than without it",
+  "weights": "Frozen v8 continuous prior and completed v12 image adapter; no further fitting or new data",
+  "guidance": "For first12 numeric prefix positions, score the conditional top4 candidate vectors using routing logprob plus conditional-minus-zero-condition continuous mixture logdensity; clamp logdensity ratio to[-2,2], scale1, temperature0.01; compare actual vectors, never arbitrary branch indices",
+  "null_context": "Frozen prior receives zero semantic condition and the SAME generated previous continuous vectors; its separately recurrent history has no teacher tokens",
+  "generation": "Keep existing top4 sampler temperature0.5,seed42 and Qwen sampledseed42 cap105. Greedy internal-candidate control is diagnostic only; preserve all previous results",
+  "screening": "Cheap numeric prefix controls first, then actual autoregressive audio; no nearest target/prototype lookup in standalone generation",
+  "precision_control": "Within-CUDA strict versus default cuDNN did not change the nearest opening in five cases; do not infer cross-device sampler parity from equal seeds",
+  "review": "Ten candidate-only matched/shuffled/training/null pairs if technically meaningful; earlier v9 ratings are a historical descriptive comparison",
+  "scope": "Exposed development only; no quality acceptance from likelihood, target-distance or ASR; all96 fresh candidates remain untouched"
+}
