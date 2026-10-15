@@ -84,4 +84,5 @@ def test_invalid_model_label_is_excluded_and_service_stopped(tmp_path, monkeypat
     row = json.loads(output.read_text())
     assert row['label'] == {'keep': False, 'anchor': None}
     assert row['validation_rejection'] == 'invalid_model_anchor_response'
+    assert len(row['labeler_source_sha256']) == 64
     assert actions == ['start', 'stop']

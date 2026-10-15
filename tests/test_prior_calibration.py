@@ -21,6 +21,14 @@ def test_frozen_prior_transmits_adapter_gradient_without_future_leak(device):
     assert adapter.coefficient.grad.norm() > 0
     assert torch.isfinite(adapter.coefficient.grad).all()
     assert all(p.grad is None for p in prior.parameters())
+    with torch.no_grad():
+        latent = prior.encode(target)
+        previous = torch.cat([torch.zeros_like(latent[:, :1]), latent[:, :-1]], 1)
+        with torch.backends.cudnn.flags(enabled=True, allow_tf32=False):
+            default_context = prior.contexts(adapter(image), previous)
+        with torch.backends.cudnn.flags(enabled=False):
+            native_context = prior.contexts(adapter(image), previous)
+        torch.testing.assert_close(default_context, native_context, atol=1e-6, rtol=1e-4)
     one = torch.ones(2, dtype=torch.long, device=device)
     changed = target.clone();changed[:, 1:] += 100
     assert torch.equal(opening_nll(prior, adapter(image), target, one),

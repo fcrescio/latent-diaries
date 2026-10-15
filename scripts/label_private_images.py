@@ -59,6 +59,7 @@ def main():
         raise ValueError('Visual-anchor labeling permits training images only')
     if args.mode == 'opening-v11' and any(not isinstance(r.get('scene_hint'), str) for r in rows):
         raise ValueError('Training scene hints required')
+    source_checksum = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     existing = []
     if args.output.exists():
@@ -98,7 +99,8 @@ def main():
                 row_prompt = anchor_prompt(row['scene_hint']) if args.mode == 'opening-v11' and row['scene_hint'] in OPENINGS else prompt
                 if args.mode == 'opening-v11' and row['scene_hint'] not in OPENINGS:
                     result = {'id': row['id'], 'model': model, 'label': {'keep': False, 'anchor': None},
-                              'seconds': 0.0, 'training_only': True, 'reason': 'unsupported_training_scene'}
+                              'seconds': 0.0, 'training_only': True, 'reason': 'unsupported_training_scene',
+                              'labeler_source_sha256': source_checksum}
                     output.write(json.dumps(result) + '\n');output.flush()
                     print(f'Labelled {i + 1}/{len(rows)}; unsupported scene skipped', flush=True)
                     continue
@@ -147,7 +149,7 @@ def main():
                 result = {"id": row["id"], "model": model, "label": label,
                           "seconds": time.monotonic() - start, "training_only": True}
                 if args.mode.startswith('opening-'):
-                    result['labeler_source_sha256'] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+                    result['labeler_source_sha256'] = source_checksum
                     if rejection:
                         result['validation_rejection'] = rejection
                 output.write(json.dumps(result, ensure_ascii=False) + "\n")
