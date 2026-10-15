@@ -470,5 +470,24 @@ without creating ratings. The current batch is E4-A…E4-M. Review remains behin
 HTTP Basic on loopback. `REVIEW_PORT` changes only the host port (default 8080);
 the exercised local instance uses 18080 because another service occupied 8080.
 Visit `http://localhost:18080/#m2p1-a` with existing review credentials.
-No public hosting or private-data upload is authorized. Human grounding and
-intelligibility remain pending until the actual ratings arrive.
+No public hosting or private-data upload is authorized. Review is complete for this batch: all four tested held-out outputs fail
+intelligibility; only the training control is almost good. M2 remains incomplete.
+Preserve these outputs and weights; reviewed cases are now exposed development
+inputs and must not be reused as untouched tests for a revised recipe.
+
+
+After the completed private review, run the frozen diagnostic with a fresh
+output directory. This command intentionally opens held-out teacher text for
+post-test error analysis, so these cases cannot become untouched future tests.
+It never updates weights and its exact-text/oracle-length outputs are diagnostic
+controls, not learned image-model results. All outputs must remain private.
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e HF_HUB_OFFLINE=1 -e LD_REF_TEXT= -v "$PWD/src:/workspace/src:ro" -v "$PWD/scripts:/workspace/scripts:ro" experiment-gpu python scripts/diagnose_image_probe.py --design artifacts/private-photos-001/split-001/design.json --dataset artifacts/private-photos-001/prefixes-001/dataset.json --run-dir artifacts/private-photos-001/reader-001 --plan artifacts/private-photos-001/evaluation-plan.json --output-dir artifacts/private-photos-001/postreview-new
+```
+
+During development bind current scripts/src read-only before the service name;
+the current already-built worker predates this diagnostic helper. Executed
+private evidence is at `postreview-001/diagnostic.json` with source and unchanged
+weight fingerprints. Auxiliary ASR transcripts remain private and are not human
+quality scores. No VLM service restart or reader retraining was needed.

@@ -183,3 +183,13 @@ images; null uses zero input at the same speaker/seed. Six actual generated WAVs
 make 13 blinded review pairs; repeated control assignments are intentional.
 Human judgments are required for clarity and grounding. Low training MSE alone
 is no acceptance evidence. The final `narrate-image` entrypoint remains closed.
+
+
+The first private global-reader pilot has now failed blinded held-out
+intelligibility: only its training control is almost good. Frozen post-review
+analysis finds near-exact training reconstruction, large held-out vector error
+and mostly incorrect held-out length predictions. A corrected-length diagnostic
+does not establish recovery; the new exact-text positive still awaits human
+assessment. These controls do not change reader weights or establish textless
+image generation. Details and aggregate evidence are in DECISIONS; individual
+ratings, vector errors and audio remain private.
