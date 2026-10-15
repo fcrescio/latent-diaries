@@ -15,7 +15,7 @@ def test_causal_prefix_context_and_frozen_numeric_basis():
     torch.testing.assert_close(before[:, :3], model.contexts(features, changed)[:, :3])
     target = torch.randn(2, 4, 8)
     loss, metrics = causal_loss(model, features, target, torch.tensor([2, 4]))
-    assert torch.isfinite(loss) and float(metrics['stop_bce']) > 0
+    assert torch.isfinite(loss) and float(metrics['stop_bce'].detach()) > 0
     loss.backward()
     assert model.gru.weight_ih_l0.grad.abs().sum() > 0
     assert model.flow_state.weight.grad.abs().sum() > 0

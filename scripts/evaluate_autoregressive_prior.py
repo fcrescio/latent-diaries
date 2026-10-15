@@ -39,6 +39,12 @@ def main():
     if not set(args.ids) <= {r['id'] for r in rows} or len(set(args.ids)) != len(args.ids):
         raise ValueError('Missing/duplicate requested IDs')
     model = load_prior(load_file(str(file)), info.get('recipe', 'causal-flow'))
+    if args.adapter:
+        adapter_info = json.loads((args.adapter.parent / 'manifest.json').read_text())
+        if (digest(args.adapter) != adapter_info['adapter_sha256'] or
+                adapter_info['corpus_sha256'] != info['corpus_sha256'] or
+                adapter_info['features_sha256'] != info['features_sha256']):
+            raise ValueError('Image adapter and language-prior training provenance differ')
     wrapper, builder, speaker = load_backbone(info)
     model.to(speaker.device).eval().requires_grad_(False)
     adapter = load_file(str(args.adapter))['coefficient'].to(speaker.device) if args.adapter else None
