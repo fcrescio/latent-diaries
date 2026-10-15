@@ -39,5 +39,8 @@
   "exact_text_image_pilot_positive_verified": true,
   "image_query_reader_development_exercised": true,
   "image_query_reader_development_improved": false,
-  "training_only_ridge_length_exercised": true
+  "training_only_ridge_length_exercised": true,
+  "canonical_image_supervision_development_exercised": true,
+  "canonical_image_supervision_development_gate_passed": false,
+  "canonical_image_supervision_fresh_test_exercised": false
 }

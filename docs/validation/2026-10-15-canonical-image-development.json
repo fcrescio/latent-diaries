@@ -1,0 +1,49 @@
+{
+  "scope": "Canonical coarse-scene development control; no fresh-test or artistic acceptance",
+  "protocol_commit": "2777688",
+  "implementation_commit": "5b5c2ac0bc865f0515cdae321fae3f54942ce21a",
+  "worker_image": "sha256:52acc39c5443fa7041b4ee0201fec5db74c97078b55247b53be08f590703a7a3",
+  "execution": "Existing single worker with current source/scripts bound read-only; dependency locks unchanged",
+  "canonical_prefix_length": 20,
+  "supported_scene_classes": 10,
+  "trainable_parameters": 2741888,
+  "steps_per_reader": 1600,
+  "actual_resume_at": 800,
+  "summary": {
+    "old": {
+      "train": {
+        "count": 46,
+        "mean_raw_prefix_mse": 5.7424542042539235e-11
+      },
+      "heldout": {
+        "count": 55,
+        "mean_raw_prefix_mse": 0.00027497546702348206
+      }
+    },
+    "expanded": {
+      "train": {
+        "count": 239,
+        "mean_raw_prefix_mse": 2.7164389378518992e-08
+      },
+      "heldout": {
+        "count": 55,
+        "mean_raw_prefix_mse": 0.00021435853526451286
+      }
+    }
+  },
+  "relative_development_error_reduction": 0.22044487246490507,
+  "gate_threshold": 1e-05,
+  "development_gate_passed": false,
+  "fresh_candidates_reserved_unlabelled": 96,
+  "new_audio_generated": false,
+  "human_quality_acceptance": false,
+  "label_container_stopped": true,
+  "private_data_uploaded": false,
+  "paid_jobs_used": false,
+  "tests": {
+    "host": "10 passed / 9 ML module skips",
+    "worker_cpu": "31 passed / 3 skips",
+    "worker_cuda": "32 passed / 2 vision runtime skips",
+    "vision_runtime_cpu": "4 passed"
+  }
+}

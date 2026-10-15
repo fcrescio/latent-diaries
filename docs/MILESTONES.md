@@ -26,7 +26,13 @@ assignments. Human review is complete: only the training control is almost good;
 tested held-out outputs fail intelligibility. This pilot is a negative M2 result.
 The exact-text diagnostic now has human acceptance for pronunciation/prosody.
 A fixed development-only query-reader/ridge-length ablation also fails to improve
-reconstruction; it produces no new audio and establishes no fresh generalization. Final
+reconstruction; it produces no new audio and establishes no fresh generalization.
+A subsequent canonical-supervision control trains/resumes on 46 original-cohort
+versus 239 expanded images, with 55 shared development images. Equal-length
+sentence targets remove length prediction; broader data reduces development
+prefix MSE by 22%, but the precommitted gate still fails. No new audio is
+generated, and 96 fresh candidates remain unlabelled. This bounded repertoire
+does not establish open-ended narration or M2 acceptance. Final
 `narrate-image` CLI remains fail-closed; research training is exercised. EmbeddingGemma 2 compatibility is now exercised in a separately locked interpreter
 inside the same worker image: two real images produce normalized 768D vectors
 with repeat/batch parity. The cached image-to-reader training link is exercised; grounding acceptance

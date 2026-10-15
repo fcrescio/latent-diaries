@@ -29,3 +29,26 @@ class GlobalImageReader(nn.Module):
         mask = torch.arange(self.maximum_tokens, device=features.device)[None] < lengths[:, None]
         prefix = self.network(features).reshape(-1, self.maximum_tokens, 1024)
         return prefix * self.scale + self.mean, mask, lengths
+
+
+def validate_image_inputs(rows, known_ids, allow_new=False):
+    """Validate image-vector-only inference, including genuinely new image IDs."""
+    import math
+
+    seen = set()
+    for row in rows:
+        if set(row) != {'id', 'split', 'features'}:
+            raise ValueError('Image-vector-only evaluation spec required')
+        label = row['id']
+        if not isinstance(label, str) or not label or not all(c.isalnum() or c in '-_' for c in label):
+            raise ValueError('Unsafe image ID')
+        if label in seen:
+            raise ValueError('Duplicate image ID')
+        seen.add(label)
+        if row['split'] not in {'train', 'heldout'}:
+            raise ValueError('Unknown evaluation split')
+        if label not in known_ids and not allow_new:
+            raise ValueError('Unknown ID; explicitly enable new-image inference')
+        if (not isinstance(row['features'], list) or len(row['features']) != 768 or
+                any(type(v) not in {int, float} or not math.isfinite(v) for v in row['features'])):
+            raise ValueError('Expected finite 768D image vector')

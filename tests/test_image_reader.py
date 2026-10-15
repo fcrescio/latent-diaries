@@ -28,3 +28,16 @@ def test_image_reader_gradient_checkpoint_and_batch_parity(tmp_path):
         assert torch.allclose(model(features[:1])[0], model(features)[0][:1], atol=1e-6)
     with pytest.raises(ValueError, match="768"):
         model(features[:, :5])
+
+
+def test_fresh_image_inputs_require_explicit_mode_and_reject_linguistic_conditions():
+    from latent_diaries.image_reader import validate_image_inputs
+
+    row = {'id':'fresh-image','split':'heldout','features':[0.0]*768}
+    with pytest.raises(ValueError, match='Unknown ID'):
+        validate_image_inputs([row], ['old'])
+    validate_image_inputs([row], ['old'], allow_new=True)
+    for bad in [row | {'text':'caption'}, row | {'scene':'trees'},
+                row | {'id':'../escape'}, row | {'features':[float('nan')]*768}]:
+        with pytest.raises(ValueError):
+            validate_image_inputs([bad], ['old'], allow_new=True)
