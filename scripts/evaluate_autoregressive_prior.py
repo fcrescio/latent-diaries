@@ -9,10 +9,12 @@ from safetensors.torch import load_file
 from latent_diaries.autoregressive_prior import AutoregressivePrior
 from latent_diaries.image_reader import validate_image_inputs
 from latent_diaries.inversion import digest, load_backbone, render
+from latent_diaries.multihypothesis_prior import MultihypothesisPrior
 
 
-def load_prior(weights):
-    model = AutoregressivePrior(*(weights[k] for k in ['mean', 'scale', 'basis', 'latent_scale']))
+def load_prior(weights, recipe='causal-flow'):
+    reader = MultihypothesisPrior if recipe == 'multihypothesis' else AutoregressivePrior
+    model = reader(*(weights[k] for k in ['mean', 'scale', 'basis', 'latent_scale']))
     model.load_state_dict(weights)
     return model
 
@@ -36,7 +38,7 @@ def main():
     validate_image_inputs(rows, [r['id'] for r in rows], allow_new=True)
     if not set(args.ids) <= {r['id'] for r in rows} or len(set(args.ids)) != len(args.ids):
         raise ValueError('Missing/duplicate requested IDs')
-    model = load_prior(load_file(str(file)))
+    model = load_prior(load_file(str(file)), info.get('recipe', 'causal-flow'))
     wrapper, builder, speaker = load_backbone(info)
     model.to(speaker.device).eval().requires_grad_(False)
     adapter = load_file(str(args.adapter))['coefficient'].to(speaker.device) if args.adapter else None
