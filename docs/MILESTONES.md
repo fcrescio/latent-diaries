@@ -32,7 +32,14 @@ versus 239 expanded images, with 55 shared development images. Equal-length
 sentence targets remove length prediction; broader data reduces development
 prefix MSE by 22%, but the precommitted gate still fails. No new audio is
 generated, and 96 fresh candidates remain unlabelled. This bounded repertoire
-does not establish open-ended narration or M2 acceptance. Final
+does not establish open-ended narration or M2 acceptance.
+An acoustic-loss follow-up now completes 320 reader updates through frozen
+Qwen, with real midpoint resume. A linear visual diagnostic predicts local
+category labels on development images with 84% accuracy, versus 20% majority
+and 18% shuffled-label controls. Development codec0 teacher-forced CE improves
+by 4.7%, while residual CE and prefix error slightly worsen. Twelve blinded
+development clips (E5-A through E5-L) await human listening; these diagnostics
+do not establish intelligibility or fresh-image grounding. Final
 `narrate-image` CLI remains fail-closed; research training is exercised. EmbeddingGemma 2 compatibility is now exercised in a separately locked interpreter
 inside the same worker image: two real images produce normalized 768D vectors
 with repeat/batch parity. The cached image-to-reader training link is exercised; grounding acceptance
