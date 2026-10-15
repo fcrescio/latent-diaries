@@ -2,9 +2,11 @@
 
 A milestone is complete only with a committed reproduction command, a passing test and run evidence. Progression may stop on a human gate.
 
-2026-10-14 status: M0 baseline and genuine-speech codec round-trip are accepted.
+2026-10-15 status: M0 baseline and genuine-speech codec round-trip are accepted.
 Continuous assembly, frozen-backbone gradients, cache parity and checkpoint
-inference are exercised. M1.1 has one human-accepted intelligible utterance:
+inference are exercised. M1.1 memorization acceptance is satisfied by two distinct
+human-accepted Italian outputs: run-006 mixed decoding and shared-mapper-001
+sampled training case c01 (blind C). The first accepted control is
 run-006, 32 learned continuous tokens, greedy codec-0 and sampled residuals,
 seed 42. Fresh CLI inference reproduces that accepted waveform exactly without
 reading text or teacher targets. The original fully sampled run-006 has an
@@ -16,10 +18,13 @@ control; its greedy version has no listening acceptance. M1 remains incomplete:
 full clarity across utterances and unseen-input generalization are unverified.
 A shared 4.23M-parameter numeric-factor mapper has now trained on six prespecified
 combinations, with two held out. Held-out teacher-forced agreement is roughly
-level with null conditioning; eight blinded clips await listening. This probes
-compositional generalization, not image grounding. The stock teacher-derived
+level with null conditioning. Blinded human listening accepts only the sampled
+training case; both held-out inputs fail in both decoding modes. This probes
+compositional generalization, not image grounding. An additive audio-KL control
+did not help; direct continuous teacher-prefix/length supervision now has four
+development/control clips awaiting human listening. The stock teacher-derived
 prefix is a separate positive protocol control.
-M1.2 and M2–M5 remain unachieved; BF16 cache parity and EmbeddingGemma 2
+M1.2 fails on the two exposed combinations; M2–M5 remain unachieved; BF16 cache parity and EmbeddingGemma 2
 compatibility remain open technical questions.
 
 | Milestone | Tasks | Evidence / exit gate |

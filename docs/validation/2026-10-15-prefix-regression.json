@@ -1,0 +1,138 @@
+{
+  "model_id": "Qwen/Qwen3-TTS-12Hz-0.6B-Base",
+  "model_revision": "5d83992436eae1d760afd27aff78a71d676296fc",
+  "lock_sha256": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+  "source_revision": "1650802a900b1caf332a164fba871ddaee8e74d2",
+  "source_sha256": "a993e9df4aa99cfb27eecf249e4f758fec81baf8746f650ad5e362b3e4de90ad",
+  "reader_source_sha256": "328a28be2166301a321b441d0f778d370e3a13f638088a3bba47e913d6454e38",
+  "train_ids": [
+    "c01",
+    "c02",
+    "c03",
+    "c04",
+    "c05",
+    "c06"
+  ],
+  "development_ids": [
+    "c00",
+    "c07"
+  ],
+  "input_dim": 3,
+  "maximum_tokens": 21,
+  "trainable_coefficients": 86020,
+  "training_prefix_mse": 8.657219116318642e-05,
+  "training_length_max_error": 3.552713678800501e-15,
+  "teacher_tensors_used_only_at_fit": true,
+  "qwen_weights_changed": false,
+  "scope": "Continuous prefix-vector regression; exposed development inputs, no generalization claim",
+  "source_revision_note": "Local pre-publication execution revision; exact executed module hashes are retained in published source",
+  "geometry_diagnostic": {
+    "scope": "Teacher-prefix geometry; no speech-quality or model-success claim",
+    "teacher_prefix_lengths": {
+      "c00": 21,
+      "c01": 20,
+      "c02": 20,
+      "c03": 19,
+      "c04": 21,
+      "c05": 20,
+      "c06": 20,
+      "c07": 19
+    },
+    "train_rows_used_in_fit": [
+      "c01",
+      "c02",
+      "c03",
+      "c04",
+      "c05",
+      "c06"
+    ],
+    "results": {
+      "mean_pool": {
+        "train_mse": 1.111295748614954e-08,
+        "development_mse": 4.333890627271208e-08,
+        "development_constant_baseline_mse": 1.6912504556959076e-05
+      },
+      "resampled_32_tokens": {
+        "train_mse": 1.8248716302548467e-05,
+        "development_mse": 5.634221860328421e-05,
+        "development_constant_baseline_mse": 0.00033662499726074165
+      }
+    }
+  },
+  "evaluation": {
+    "teacher_files_read": false,
+    "text_used": false,
+    "results": [
+      {
+        "id": "c00",
+        "split": "heldout",
+        "predicted_prefix_length": 21,
+        "human_listening_status": "pending",
+        "frames": 55,
+        "sample_rate": 24000,
+        "seconds": 4.4,
+        "codebook_count": 16,
+        "codec0_greedy": false,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "c01",
+        "split": "train",
+        "predicted_prefix_length": 20,
+        "human_listening_status": "pending",
+        "frames": 70,
+        "sample_rate": 24000,
+        "seconds": 5.6,
+        "codebook_count": 16,
+        "codec0_greedy": false,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "c07",
+        "split": "heldout",
+        "predicted_prefix_length": 19,
+        "human_listening_status": "pending",
+        "frames": 64,
+        "sample_rate": 24000,
+        "seconds": 5.12,
+        "codebook_count": 16,
+        "codec0_greedy": false,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "null",
+        "split": "control",
+        "predicted_prefix_length": 20,
+        "human_listening_status": "pending",
+        "frames": 75,
+        "sample_rate": 24000,
+        "seconds": 6.0,
+        "codebook_count": 16,
+        "codec0_greedy": false,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      }
+    ]
+  },
+  "human_listening_status": "pending",
+  "development_inputs_exposed": true,
+  "fresh_generalization_test_passed": false,
+  "m1_1_memorization_accepted": true,
+  "m1_complete": false,
+  "tests": {
+    "host_passed": 7,
+    "host_ml_modules_skipped": 4,
+    "worker_cpu_passed": 19,
+    "worker_cuda_skipped": 1,
+    "gpu_passed": 20
+  },
+  "media_or_weights_uploaded": false,
+  "paid_jobs": false
+}

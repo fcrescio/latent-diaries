@@ -12,6 +12,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--results", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--first-label", default="A")
     args = parser.parse_args()
     if args.output_dir.exists() and any(args.output_dir.iterdir()):
         raise ValueError("Use a fresh listening directory")
@@ -19,12 +20,18 @@ def main():
     # Reused null audio is represented only once, never as multiple observations.
     unique = {row["audio_sha256"]: row for row in results if row.get("audio")}
     rows = list(unique.values())
+    if (
+        len(args.first_label) != 1
+        or not "A" <= args.first_label <= "Z"
+        or ord(args.first_label) + len(rows) - 1 > ord("Z")
+    ):
+        raise ValueError("Choose an uppercase first label with room for all clips")
     random.Random(20261014).shuffle(rows)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     mapping = []
     sections = []
     for index, row in enumerate(rows):
-        label = chr(ord("A") + index)
+        label = chr(ord(args.first_label) + index)
         filename = f"clip-{label}.wav"
         shutil.copyfile(row["audio"], args.output_dir / filename)
         mapping.append({"label": label, "source": row})

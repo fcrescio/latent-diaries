@@ -251,3 +251,48 @@ evaluation command above reads no teacher logits. The listening page shuffles
 and renames eight unique WAVs, stores a private condition mapping, and does not
 fabricate ratings. It is a local file, with no HTTP listener or public exposure.
 This audio-only probe cannot supply image-grounding/art-gallery evidence.
+
+
+## Additive development control
+
+After blinded review of shared-mapper-001, c00/c07 are exposed development cases.
+Keep them out of optimization, but do not call them a fresh untouched test set
+when comparing later architectures. The additive map (`width=0`) has a shared
+bias plus three feature directions, 131,072 trainable parameters and no
+cross-factor interactions. The existing MLP remains the default; old MLP
+checkpoint layouts still load for inference. Resume requires exact source as
+before.
+
+```bash
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/shared_probe.py train --dataset artifacts/shared-corpus-001/dataset.json --run-dir artifacts/shared-mapper-002-additive --steps 1200 --architecture additive --learning-rate 0.03
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/diagnose_shared_probe.py --dataset artifacts/shared-corpus-001/dataset.json --run-dir artifacts/shared-mapper-002-additive --output artifacts/shared-mapper-002-additive/teacher-forced-diagnostic.json
+```
+
+The larger learning rate follows the direct-prefix parameterization used in the
+single-utterance controls. This comparison changes architecture and optimization
+scale; it does not isolate architecture as the sole causal factor. Gold-history
+KL remains a technical diagnostic, not human intelligibility.
+
+
+## Direct teacher-prefix supervision control
+
+This changes supervision from audio-logit KL to continuous teacher-prefix vectors
+and prefix length. Fit an affine numeric-factor map using only six training
+caches, right-padding to their maximum length; predict/trim the prefix length
+from numeric features during evaluation. This is a development diagnostic, not
+an image reader or a fresh held-out test. No teacher files/text are read by the
+evaluation command.
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile experiment run --rm experiment python scripts/inspect_factor_geometry.py --dataset artifacts/shared-corpus-001/dataset.json --output artifacts/shared-factor-geometry.json
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile experiment run --rm experiment python scripts/prefix_regression_probe.py fit --dataset artifacts/shared-corpus-001/dataset.json --run-dir artifacts/shared-prefix-regression-001
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/prefix_regression_probe.py evaluate --inputs artifacts/shared-corpus-001/eval-inputs.json --run-dir artifacts/shared-prefix-regression-001 --output-dir artifacts/shared-prefix-regression-eval-001 --ids c00 c01 c07
+.venv/bin/python scripts/blind_audio_probe.py --results artifacts/shared-prefix-regression-eval-001/results.json --output-dir artifacts/prefix-regression-listening-002 --first-label P
+```
+
+Rebuild the one worker first or bind current `src` and `scripts` read-only before
+the service name. Use fresh fit/listening directories. Closed-form fit needs no
+GPU or optimizer continuation. Evaluation uses fixed seed 42, sampled codec-0
+and residuals, a 105-frame cap and a separate null factor input. Tensor length
+prediction and trimming are tested; human intelligibility remains a listening
+gate. A new untouched test set is required before claiming generalization.

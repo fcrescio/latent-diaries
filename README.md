@@ -77,7 +77,8 @@ The agent can implement, test, debug and publish code, while you retain control 
 | Official Qwen Italian TTS baseline | GPU run produced 5.44 s audio and codec round-trip; user accepted speech/voice |
 | Continuous Qwen prefix / teacher-forced assembly / code generation | Tiny CPU/CUDA and pretrained FP32 mechanical controls pass; learned textless speech pending |
 | Single-utterance soft-prefix inversion | Resumable training/inference exercised; User accepts 32-token control with codec-0 greedy decoding; one memorized utterance; M1 incomplete |
-| Shared numeric-factor mapper | Trained on six combinations; held-out diagnostic near null; eight blinded clips awaiting listening; no images |
+| Shared numeric-factor mapper | Blinded review: sampled training case clear; all held-out and null clips fail; no images |
+| Direct continuous teacher-prefix regression | Numeric-only development outputs generated; four new blinded clips await listening; not image inference |
 | Visual reader / image-conditioned training | **Not implemented yet** |
 | Genuine Italian image-to-speech checkpoint / wearable experience | **Not yet achieved** |
 

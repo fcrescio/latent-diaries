@@ -58,7 +58,8 @@ def train(args):
         seed=42,
         tokens=32,
         input_dim=3,
-        width=128,
+        width=0 if args.architecture == "additive" else 128,
+        architecture=args.architecture,
         learning_rate=args.learning_rate,
         train_ids=[r["id"] for r in rows],
         heldout_ids=[r["id"] for r in heldout],
@@ -79,7 +80,7 @@ def train(args):
     with torch.no_grad():
         pad_id = torch.tensor([[wrapper.model.config.tts_pad_token_id]], device=device)
         pad = wrapper.model.talker.text_projection(wrapper.model.talker.get_text_embeddings()(pad_id))
-    mapper = SharedMapper(pad.expand(1, 32, -1), width=128).to(device)
+    mapper = SharedMapper(pad.expand(1, 32, -1), width=metadata["width"]).to(device)
     optimizer = torch.optim.AdamW(mapper.parameters(), lr=args.learning_rate, weight_decay=0)
     start = 0
     if args.resume:
@@ -220,6 +221,7 @@ def main():
     trainer.add_argument("--dataset", type=Path, required=True)
     trainer.add_argument("--steps", type=int, required=True)
     trainer.add_argument("--learning-rate", type=float, default=0.001)
+    trainer.add_argument("--architecture", choices=["mlp", "additive"], default="mlp")
     trainer.add_argument("--resume", action="store_true")
     evaluator = sub.add_parser("evaluate")
     evaluator.add_argument("--inputs", type=Path, required=True)

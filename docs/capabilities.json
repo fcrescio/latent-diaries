@@ -15,5 +15,8 @@
   "learned_prefix_italian_intelligibility_verified": true,
   "learned_prefix_intelligibility_scope": "One 32-token memorized utterance, codec-0 greedy/residuals sampled, seed 42; generalization unverified",
   "shared_numeric_mapper_training_exercised": true,
-  "shared_numeric_mapper_generalization_verified": false
+  "shared_numeric_mapper_generalization_verified": false,
+  "m1_1_distinct_memorized_utterances_accepted": true,
+  "continuous_teacher_prefix_regression_exercised": true,
+  "continuous_teacher_prefix_regression_generalization_verified": false
 }

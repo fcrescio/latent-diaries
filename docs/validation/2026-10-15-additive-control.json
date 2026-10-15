@@ -1,0 +1,173 @@
+{
+  "model_id": "Qwen/Qwen3-TTS-12Hz-0.6B-Base",
+  "model_revision": "5d83992436eae1d760afd27aff78a71d676296fc",
+  "source_revision": "9a2fdb079fb3dc955cdda11628a6cff9545dfbed",
+  "source_sha256": "2bb212308c18a8285720b293091ad32a1bdd4a6a347ddbcdb1870103d2fa1cd3",
+  "mapper_source_sha256": "4bc674469dc23ee22fc09251c016e25593c70d163a842fc837999b818d5ff12c",
+  "conditioning_source_sha256": "db424a2b7255fa2f21887bd9c822d00b55c80dcbb42c322ed6d05bcbe79b6c07",
+  "inversion_source_sha256": "afa0d67740f7e40b245105f5c2d3627e2db01102a65bc08e7c2510514631965c",
+  "lock_sha256": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+  "seed": 42,
+  "tokens": 32,
+  "input_dim": 3,
+  "width": 0,
+  "architecture": "additive",
+  "learning_rate": 0.03,
+  "train_ids": [
+    "c01",
+    "c02",
+    "c03",
+    "c04",
+    "c05",
+    "c06"
+  ],
+  "heldout_ids": [
+    "c00",
+    "c07"
+  ],
+  "trainable_parameters": 131072,
+  "peak_allocated_vram_bytes": 5271847936,
+  "completed_steps": 1200,
+  "frozen_model_gradients_absent": true,
+  "scope": "Additive structural development control; exposed former holdouts are not a fresh test set",
+  "teacher_forced_diagnostic": {
+    "scope": "Post-training teacher-forced diagnostic, not autoregressive speech quality",
+    "weights_updated": false,
+    "results": [
+      {
+        "id": "c00",
+        "split": "heldout",
+        "condition": "conditioned",
+        "codec0_kl": 1.0254002809524536,
+        "residual_kl": 0.36160916090011597
+      },
+      {
+        "id": "c00",
+        "split": "heldout",
+        "condition": "null",
+        "codec0_kl": 0.8606840968132019,
+        "residual_kl": 0.2696532607078552
+      },
+      {
+        "id": "c01",
+        "split": "train",
+        "condition": "conditioned",
+        "codec0_kl": 0.029431093484163284,
+        "residual_kl": 0.07009164988994598
+      },
+      {
+        "id": "c01",
+        "split": "train",
+        "condition": "null",
+        "codec0_kl": 0.7565508484840393,
+        "residual_kl": 0.2874552309513092
+      },
+      {
+        "id": "c02",
+        "split": "train",
+        "condition": "conditioned",
+        "codec0_kl": 0.014270750805735588,
+        "residual_kl": 0.04855421930551529
+      },
+      {
+        "id": "c02",
+        "split": "train",
+        "condition": "null",
+        "codec0_kl": 0.6929671168327332,
+        "residual_kl": 0.26071232557296753
+      },
+      {
+        "id": "c03",
+        "split": "train",
+        "condition": "conditioned",
+        "codec0_kl": 0.0217241533100605,
+        "residual_kl": 0.055761031806468964
+      },
+      {
+        "id": "c03",
+        "split": "train",
+        "condition": "null",
+        "codec0_kl": 0.6267807483673096,
+        "residual_kl": 0.2635449171066284
+      },
+      {
+        "id": "c04",
+        "split": "train",
+        "condition": "conditioned",
+        "codec0_kl": 0.010755381546914577,
+        "residual_kl": 0.04275818541646004
+      },
+      {
+        "id": "c04",
+        "split": "train",
+        "condition": "null",
+        "codec0_kl": 0.6918658018112183,
+        "residual_kl": 0.25624969601631165
+      },
+      {
+        "id": "c05",
+        "split": "train",
+        "condition": "conditioned",
+        "codec0_kl": 0.046161118894815445,
+        "residual_kl": 0.2040162831544876
+      },
+      {
+        "id": "c05",
+        "split": "train",
+        "condition": "null",
+        "codec0_kl": 0.5808120965957642,
+        "residual_kl": 0.23582197725772858
+      },
+      {
+        "id": "c06",
+        "split": "train",
+        "condition": "conditioned",
+        "codec0_kl": 0.016542164608836174,
+        "residual_kl": 0.052864547818899155
+      },
+      {
+        "id": "c06",
+        "split": "train",
+        "condition": "null",
+        "codec0_kl": 0.6836813688278198,
+        "residual_kl": 0.25393909215927124
+      },
+      {
+        "id": "c07",
+        "split": "heldout",
+        "condition": "conditioned",
+        "codec0_kl": 1.5162595510482788,
+        "residual_kl": 0.4922730326652527
+      },
+      {
+        "id": "c07",
+        "split": "heldout",
+        "condition": "null",
+        "codec0_kl": 0.7604547739028931,
+        "residual_kl": 0.27445507049560547
+      }
+    ]
+  },
+  "combined_kl_means": {
+    "train_conditioned": 0.1021550966737171,
+    "train_null": 0.9317302033305168,
+    "heldout_conditioned": 1.6977710127830505,
+    "heldout_null": 1.0826236009597778
+  },
+  "first_train_cycle_mean_kl": 1.6176968415578206,
+  "last_train_cycle_mean_kl": 0.10463803013165791,
+  "late_training_instability_observed": true,
+  "autoregressive_audio_generated": false,
+  "human_quality_claim": false,
+  "generalization_verified": false,
+  "media_or_weights_uploaded": false,
+  "paid_jobs": false,
+  "tests": {
+    "host_passed": 7,
+    "host_skipped_ml_modules": 4,
+    "worker_cpu_passed": 18,
+    "worker_cuda_skipped": 1,
+    "gpu_passed": 19
+  },
+  "source_revision_note": "Local pre-publication execution revision; exact executed module hashes are retained in published source"
+}
