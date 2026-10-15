@@ -56,3 +56,16 @@ def test_numeric_prefix_length_preserves_only_predicted_positions():
     assert predict_prefix(torch.tensor([-9.0, 0.0, 0.0]), coef, length_coef)[1] == 1
     with pytest.raises(ValueError, match="Finite"):
         predict_prefix(torch.tensor([float("nan"), 0.0, 0.0]), coef, length_coef)
+
+
+def test_fresh_design_excludes_exposed_combinations_and_represents_all_levels():
+    import json
+    from pathlib import Path
+
+    design = json.loads(Path("configs/research/compositions-v2.json").read_text())
+    train, test = validate_split(design["rows"])
+    assert {r["id"] for r in test} == set(design["fresh_test_ids"]) == {"s01", "s02"}
+    assert not {r["id"] for r in design["rows"]} & set(design["excluded_exposed_v1_ids"])
+    assert len(train) == 8 and len(test) == 2
+    for column in range(5):
+        assert {r["features"][column] for r in test} <= {r["features"][column] for r in train}
