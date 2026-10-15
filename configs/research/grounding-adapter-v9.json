@@ -1,0 +1,11 @@
+{
+  "hypothesis": "The fixed alpha1 semantic adapter contracts scene differences; retain the human-accepted v8 continuous speech prior and select adapter regularization using training scene-group validation only",
+  "alpha_grid": [0.001, 0.01, 0.1, 1.0],
+  "folds": 5,
+  "seed": 42,
+  "selection": "Minimize mean squared distance between normalized predicted and training-category semantic vectors on group-disjoint training folds; no development selection",
+  "frozen_components": "Same v8 reader, image embeddings, corpus, speaker, candidate sampling and Qwen seed42 cap105",
+  "evaluation": "Existing four exposed development images plus first training and null control; matched and shuffled human comparison against unchanged v8",
+  "fresh_access": false,
+  "inference": "Numeric linear projection plus normalization only; no category decision, text, prototype lookup or training targets"
+}
