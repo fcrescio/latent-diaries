@@ -375,3 +375,24 @@ Important uncertainties remain: Qwen code version/shape invariants, real learnab
 - Standalone v14-reader/v15-adapter inference actually renders all four frozen exposed development images plus training/null, unchanged sampledseed42/cap105 with guidance disabled and empty reference transcript. WAV hashes, nonempty24kHz streams and16-codebook manifests are verified; no text/teacher/linguistic-label inputs are read. Auxiliary transcriptions show changed subject choices and residual pronunciation/continuation uncertainty. Only actual human review may accept Italian/context; no machine artistic scores are assigned.
 - Import ten E8-A through E8-J pairs from six unique new WAVs: four matched, four deliberate shuffled repeats, original training/null. No unchanged baseline rerating and no automatic scores. Existing E7 ratings remain available for descriptive historical comparison. Authenticated gallery/all20 image/audio responses200, unauthenticated page401; zero new ratings at ingestion. Private mappings, resized metadata-free images, individual notes, vectors and all learned weights stay local. All96 fresh candidates remain unlabelled/unencoded. VLM stopped; no paid jobs or private uploads.
 - Final verification: `make test`19 passed/16 ML-module skips; same pinned worker with current read-only overlays CPU50 passed/3 skips, CUDA52 passed/2 vision-runtime skips, locked vision CPU4 passed. Tests include training-only label/schema guards, malformed response exclusion and service shutdown, adapter gradients through frozen prior, causal isolation, controlled FP32 backend agreement, continuous-mode permutation/neutrality and gain center preservation. Decoder-specific adapter mismatch is actually rejected before Qwen loads or an output directory is created. Changed-file Ruff, compile/security/whitespace checks pass. Full worker rebuild is still not claimed after the known disk failure; targeted removal of this project's unused failed layers recovers6.265GB without deleting user data/model caches/containers/volumes. Aggregate evidence: `docs/validation/2026-10-15-visual-anchors.json`. M2 and final image CLI acceptance remain open pending human and later fresh evidence.
+
+## 2026-10-15 — E8 reviewed; stop template-prior calibration, isolate acoustic alignment
+
+All ten E8 pairs are rated. The user reports no significant improvement; M2 is
+not accepted. Four matched pairs average grounding2.75/5, shuffled1/5, with one
+matched gibberish judgment. Repeated development exposure and no concurrent
+E7 comparison prevent an improvement claim. Ratings exported locally only.
+
+`docs/RESEARCH_REASSESSMENT.md` compares supervision, acoustic adaptation, LoRA,
+visual tokens, data scaling and a text-conditioned diagnostic. Chosen next:
+image-specific training utterances and direct frozen-Qwen acoustic supervision,
+first as a bounded fit/memorization control. The prior's 60 openings/40 tails
+and compounded autoregression are a poorly supported direction for further
+M2 tuning. The earlier ten-sentence acoustic control is not a decisive test of
+this alternative. Preserve all previous checkpoints; reserve96 untouched.
+
+Freeze `configs/research/instance-acoustic-v16.json` before labeling/fitting.
+Select first24 existing training IDs with distinct scene groups; user-authorized
+local vision service labels only those images, then stops in finally. No uploads.
+`make test`:19 passed/16 ML skips. Full image rebuild remains disk-limited as
+recorded previously; use the pinned worker with read-only source overlays.

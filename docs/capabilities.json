@@ -70,6 +70,9 @@
   "opening_robust_prior_training_resume_exercised": true,
   "semantic_gain_training_group_validation_exercised": true,
   "opening_robust_image_inference_exercised": true,
-  "opening_robust_development_review_pending": true,
-  "opening_robust_fresh_generalization_verified": false
+  "opening_robust_development_review_pending": false,
+  "opening_robust_fresh_generalization_verified": false,
+  "opening_robust_development_review_completed": true,
+  "opening_robust_grounding_accepted": false,
+  "instance_acoustic_training_exercised": false
 }

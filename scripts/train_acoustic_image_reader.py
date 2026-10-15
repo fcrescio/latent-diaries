@@ -21,17 +21,20 @@ def main():
     parser.add_argument('--initial-run', type=Path, required=True)
     parser.add_argument('--run-dir', type=Path, required=True)
     parser.add_argument('--steps', type=int, required=True)
+    parser.add_argument('--prefix-weight', type=float, default=0.1)
     parser.add_argument('--resume', action='store_true')
     args = parser.parse_args()
     if not Path('/.dockerenv').exists() or not 1 <= args.steps <= 320:
         raise ValueError('Use managed worker, within fixed 320-step schedule')
+    if not math.isfinite(args.prefix_weight) or args.prefix_weight < 0:
+        raise ValueError('Finite nonnegative prefix weight required')
     if args.run_dir.exists() and not args.resume:
         raise ValueError('Use a fresh run directory or explicit resume')
     info = json.loads((args.initial_run / 'config.json').read_text())
     initial_path = args.initial_run / 'reader.safetensors'
     if digest(initial_path) != info['reader_sha256'] or digest(args.dataset) != info['dataset_sha256']:
         raise ValueError('Initial model/dataset fingerprint differs')
-    if not info['fixed_length'] or info['evaluation_scope'] != 'development':
+    if info['evaluation_scope'] != 'development':
         raise ValueError('Expected constant-length development initialization')
     rows = json.loads(args.dataset.read_text())['rows']
     if any(r['split'] not in {'train', 'heldout'} for r in rows):
@@ -52,7 +55,8 @@ def main():
                 inversion_source_sha256=digest(Path('src/latent_diaries/inversion.py')),
                 source_revision=os.environ.get('LD_CODE_REVISION'), learning_rate=2e-5,
                 schedule_steps=320, warmup_steps=20,
-                objective='codec0 CE + 0.1 residual CE + 0.1 normalized prefix MSE',
+                prefix_weight=args.prefix_weight,
+                objective=f'codec0 CE + 0.1 residual CE + {args.prefix_weight} normalized prefix MSE',
                 scope='Warm-start acoustic image-reader development control; backbones frozen')
     if args.resume:
         saved = json.loads((args.run_dir / 'config.json').read_text())
@@ -111,9 +115,11 @@ def main():
                 param_group['lr'] = lr
             optimizer.zero_grad(set_to_none=True)
             prefix, mask, lengths = reader(features[row['id']])
-            if int(lengths[0]) != target.shape[1] or not bool(mask.all()):
+            length = int(lengths[0])
+            if length != target.shape[1] or not bool(mask[0, :length].all()):
                 raise ValueError('Teacher/reader constant prefix length differs')
-            loss, metrics = acoustic_objective(wrapper, builder, prefix, speaker, gold, target, reader.scale)
+            loss, metrics = acoustic_objective(wrapper, builder, prefix[:, :length], speaker, gold, target, reader.scale,
+                                               prefix_weight=args.prefix_weight)
             if not torch.isfinite(loss):
                 raise RuntimeError('Nonfinite acoustic loss; inspect before retry')
             loss.backward()

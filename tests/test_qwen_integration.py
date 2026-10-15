@@ -76,6 +76,15 @@ def test_pinned_talker_gradient_and_cache_parity(device):
                                        torch.ones(16, device=device))
     torch.testing.assert_close(loss, metrics['codec0_ce'] + 0.1 * metrics['residual_ce']
                                + 0.1 * metrics['normalized_prefix_mse'])
+    acoustic_only, acoustic_metrics = acoustic_objective(
+        SimpleNamespace(model=parent), builder, predicted,
+        condition.speaker_embedding, gold, target, torch.ones(16, device=device),
+        prefix_weight=0.0)
+    torch.testing.assert_close(acoustic_only, acoustic_metrics['codec0_ce']
+                               + 0.1 * acoustic_metrics['residual_ce'])
+    acoustic_only.backward(retain_graph=True)
+    assert reader.weight.grad.abs().sum() > 0
+    reader.zero_grad(set_to_none=True)
     loss.backward()
     assert reader.weight.grad.abs().sum() > 0
     assert target.grad is None

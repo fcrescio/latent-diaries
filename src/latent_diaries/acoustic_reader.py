@@ -4,7 +4,7 @@ from torch.nn import functional as F
 from .inversion import aligned_residual_logits, condition
 
 
-def acoustic_objective(wrapper, builder, prefix, speaker, gold, target, scale):
+def acoustic_objective(wrapper, builder, prefix, speaker, gold, target, scale, *, prefix_weight=0.1):
     if prefix.shape != target.shape or gold.shape[0] != 1:
         raise ValueError('Expected batch-one aligned acoustic/prefix targets')
     visual = condition(prefix, speaker)
@@ -16,6 +16,8 @@ def acoustic_objective(wrapper, builder, prefix, speaker, gold, target, scale):
     residual = F.cross_entropy(residual_logits.reshape(-1, residual_logits.shape[-1]),
                                gold[0, :, 1:].reshape(-1))
     reconstruction = ((prefix - target.detach()) / scale.detach()).square().mean()
-    loss = output.loss + 0.1 * residual + 0.1 * reconstruction
+    if prefix_weight < 0:
+        raise ValueError("Nonnegative prefix weight required")
+    loss = output.loss + 0.1 * residual + prefix_weight * reconstruction
     return loss, {'codec0_ce': output.loss, 'residual_ce': residual,
                   'normalized_prefix_mse': reconstruction}
