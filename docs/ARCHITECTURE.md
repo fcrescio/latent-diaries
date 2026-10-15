@@ -383,3 +383,23 @@ frozen backbones. Both prefill and trailing conditioning remain textless.
 No development or fresh-image success follows from the near-exact training
 fit. The width128 run's unstarted acoustic/evaluation stages are explicitly
 cancelled; its completed genuine teacher cache is reused, not regenerated.
+
+## Explicit final-attention LoRA control
+
+After the wider paired frozen-decoder control still gives fragmented development
+ASR, V20 adds rank8/alpha8 updates to q_proj and v_proj in Talker layers24–27.
+Their base shapes are2048×1024 and1024×1024:163,840 trainable adapter numbers,
+in addition to the8,882,944-reader parameters. Original weights remain frozen;
+no other attention layers, residual-code predictor, codec or speaker are adapted.
+Zero B matrices preserve the original function before training. Actual tiny-Qwen
+tests verify exact logits, conditioning/adapter gradients and unchanged vendor
+tensors after an optimization step.
+
+The adapter checkpoint contains A/B matrices only, with explicit tensor keys,
+shapes, module manifest and checksums. `load_backbone` rejects LoRA metadata to
+prevent silently evaluating the wrong frozen model. The dedicated loader first
+loads the pinned original backbone explicitly, injects the declared projections,
+validates the matching adapter, then freezes everything for image-only inference.
+No strings, transcript or linguistic labels are introduced. The fixed Italian,
+role/speaker/BOS/EOS/attention protocol and the two-path replacement are preserved.
+This is an experimental adaptation, not an accepted image narrator.

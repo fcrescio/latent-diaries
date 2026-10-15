@@ -850,3 +850,18 @@ For the longer paired comparison use `train_acoustic_image_reader.py
 same schedule. `image_probe.py evaluate --max-frames 160` avoids the shorter
 105-frame cap; historical default remains105. Freeze the exact recipe before
 fitting; do not silently modify a recorded experiment.
+
+For the explicitly frozen V20 control, in the same GPU worker and with
+`LD_REF_TEXT=`:
+
+```
+python scripts/train_lora_image_reader.py --dataset <paired-dataset> --teachers <genuine-teachers> --initial-run <same-prefix-baseline-as-frozen-control> --run-dir <new-lora-run> --prefix-weight 0 --schedule-steps 1600 --steps 800
+python scripts/train_lora_image_reader.py --dataset <paired-dataset> --teachers <genuine-teachers> --initial-run <same-prefix-baseline-as-frozen-control> --run-dir <new-lora-run> --prefix-weight 0 --schedule-steps 1600 --steps 1600 --resume
+python scripts/evaluate_lora_image_reader.py --run-dir <new-lora-run> --inputs <numeric-only-inputs> --ids <fixed-development-and-training-ids> --output-dir <new-results>
+```
+
+The dedicated evaluator verifies BOTH reader and LoRA checksums and the adapter
+source/module layout before generation. Generic backbone loading fails closed
+for LoRA metadata. Optional `--codec0-greedy` is a separate decoding diagnostic;
+residual codebooks remain sampled. Save actual parameter targets, VRAM and
+source revision; never copy original vendor weights into the adapter checkpoint.

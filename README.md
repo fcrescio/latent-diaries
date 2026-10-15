@@ -27,8 +27,10 @@ training control improves, while fresh-image grounding remains unaccepted.
 E8 is also fully reviewed: the user reports no significant improvement, with
 only a few acceptable cases. Further template-prior calibration is stopped.
 [The reassessment](docs/RESEARCH_REASSESSMENT.md) compares alternatives and
-chooses a bounded image-specific acoustic alignment control through frozen
-Qwen. No captions or scene labels enter inference. All 96 fresh candidates
+finds a linear-reader rank bottleneck and moves to170 image-specific
+training utterances with genuine acoustic supervision. Wider-reader and frozen
+Qwen controls still fail development transfer; a bounded final-attention LoRA
+comparison is exercised next. No captions or scene labels enter inference. All 96 fresh candidates
 remain reserved, and M2 remains unaccepted.
 
 ## Artistic brief

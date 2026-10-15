@@ -100,3 +100,12 @@ calibration is stopped in favor of the image-specific acoustic feasibility
 control specified in `configs/research/instance-acoustic-v16.json`;
 no M2 acceptance or unrestricted narrative-generation claim follows. All 96 fresh
 candidates remain unlabelled/unencoded; private media, labels and weights stay local.
+
+
+The subsequent reassessment prepares170 image-specific training utterances,
+corrects a measured width128 linear-prefix rank restriction, and exercises a
+width256 acoustic comparison with genuine targets and actual resumes. Training
+fits and losses improve while development auxiliary transcriptions still fail.
+Final-attention rank8 LoRA is therefore tested under a separately frozen protocol;
+its original vendor tensors remain frozen. M2 and fresh generalization remain
+unaccepted pending actual speech/grounding evidence and human assessment.

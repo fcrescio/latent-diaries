@@ -468,3 +468,30 @@ is recorded locally. No result is promoted on training losses alone.
 
 Final-source CPU suite before adding the rank test:54passed/3skipped. The full
 CUDA suite will include the new rank test. No paid resources or media uploads.
+
+## 2026-10-16 — Broader frozen decoder still fails; exercise bounded final-attention LoRA
+
+V19 completes1600 acoustic steps with actual800 resume. Training matched CE
+0.8555162→0.7414681, shuffled2.3669315→2.3575121. Autoregressive development
+auxiliary transcriptions remain fragmented, including loops. A separate
+codec0-greedy control on the same four images also remains fragmented. Neither
+loss improvement nor the corrected prefix rank establishes Italian transfer.
+No new human quality scores are invented, and no failed candidate replaces the
+accepted Italian-prior fallback. Full CUDA suite at this stage59passed/2skips.
+
+Freeze `configs/research/talker-lora-v20.json`. Use the SAME prefix-baseline
+initialization as V19 (not its already acoustic-fitted reader), identical dataset
+and genuine teacher-manifest hashes, same1600-step schedule/seed/reader LR.
+Train reader plus rank8 alpha8 adapters on q_proj/v_proj in Talker layers24–27
+only. Actual q_proj shapes2048×1024, v_proj1024×1024;163,840 additional trainable
+parameters. Vendor tensors, code_predictor, codec, voice and vision stay frozen.
+LoRA LR1e-4, reader2e-5; zero prefix regularizer; common joint norm clip1.
+
+`tests/test_talker_lora.py` exercises exact zero-adapter logits on official tiny
+Qwen, gradients through conditioning/adapters, unchanged original tensors after
+an optimizer step, LoRA-only serialization, and rejection of generic loading
+that would silently omit an adapter. Focused actual CUDA run5passed. Final
+CPU suite57passed/4skips. Save reader and LoRA checksums with optimizer/RNG state;
+real1600-step run resumes at800 and reaches peak5,753,666,560 bytes. Changed
+vendor weights=false; vendor gradients absent. Training results alone are not
+artistic/grounding approval. Source revision5a389fc recorded with file hashes.
