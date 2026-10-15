@@ -1,0 +1,528 @@
+{
+  "scope": "Sequence-aware numeric-factor reader versus affine baseline; no images or unseen vocabulary",
+  "design": "configs/research/compositions-v3.json",
+  "prespecification_commit": "a060b0d",
+  "design_sha256": "38ddbf492497378e72410cd1d4bde1ede9100a05cac01452c251411730777f6c",
+  "reader": {
+    "model_id": "Qwen/Qwen3-TTS-12Hz-0.6B-Base",
+    "model_revision": "5d83992436eae1d760afd27aff78a71d676296fc",
+    "lock_sha256": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+    "design_sha256": "38ddbf492497378e72410cd1d4bde1ede9100a05cac01452c251411730777f6c",
+    "source_revision": "d3232c4851b2512e093cd77493e2c88bc4a7a378",
+    "source_sha256": "2f47fc9c4a9f7005518b03afea7d108ddd59afe797364a09f1c676b56d10c24d",
+    "reader_source_sha256": "7bbcbba8c82ef2ee566cbd5084afdff9b0f4bf9af43a7511f97833ecc4fd52b7",
+    "train_ids": [
+      "c00",
+      "c01",
+      "c02",
+      "c03",
+      "c04",
+      "c05",
+      "c06",
+      "c07",
+      "s00",
+      "s01",
+      "s02",
+      "s03",
+      "f00",
+      "f01",
+      "f02",
+      "f03",
+      "w00",
+      "w01",
+      "w03",
+      "e00",
+      "e02",
+      "e03"
+    ],
+    "heldout_ids": [
+      "w02",
+      "e01"
+    ],
+    "weather_dim": 6,
+    "maximum_tokens": 21,
+    "width": 128,
+    "layers": 4,
+    "heads": 4,
+    "seed": 42,
+    "learning_rate": 0.001,
+    "schedule_steps": 1600,
+    "warmup_steps": 100,
+    "evaluation_scope": "fresh-test",
+    "qwen_weights_changed": false,
+    "scope": "Numeric factors, sequence-aware continuous prefixes; no image conditioning",
+    "trainable_parameters": 1195520,
+    "peak_allocated_vram_bytes": 66579968,
+    "completed_steps": 1600
+  },
+  "affine_baseline": {
+    "model_id": "Qwen/Qwen3-TTS-12Hz-0.6B-Base",
+    "model_revision": "5d83992436eae1d760afd27aff78a71d676296fc",
+    "lock_sha256": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+    "source_revision": "d3232c4851b2512e093cd77493e2c88bc4a7a378",
+    "source_sha256": "885e54cd124ae3d07effafba6461c56c92b605a648432690a35d6dcca8500704",
+    "reader_source_sha256": "328a28be2166301a321b441d0f778d370e3a13f638088a3bba47e913d6454e38",
+    "train_ids": [
+      "c00",
+      "c01",
+      "c02",
+      "c03",
+      "c04",
+      "c05",
+      "c06",
+      "c07",
+      "s00",
+      "s01",
+      "s02",
+      "s03",
+      "f00",
+      "f01",
+      "f02",
+      "f03",
+      "w00",
+      "w01",
+      "w03",
+      "e00",
+      "e02",
+      "e03"
+    ],
+    "heldout_ids": [
+      "w02",
+      "e01"
+    ],
+    "evaluation_scope": "fresh-test",
+    "input_dim": 8,
+    "maximum_tokens": 21,
+    "trainable_coefficients": 193545,
+    "training_prefix_mse": 0.000378634820904142,
+    "training_length_max_error": 7.105427357601002e-15,
+    "teacher_tensors_used_only_at_fit": true,
+    "qwen_weights_changed": false,
+    "scope": "Continuous prefix-vector regression; fresh-test, awaiting evaluation"
+  },
+  "actual_resume": {
+    "from_step": 800,
+    "to_step": 1600,
+    "optimizer_rng_and_schedule_restored": true
+  },
+  "first_normalized_masked_mse": 1.3418545722961426,
+  "final_normalized_masked_mse": 0.0001989471638808027,
+  "reader_prefix_diagnostic": {
+    "scope": "Frozen post-training teacher-prefix diagnostic, not audio quality or word alignment",
+    "weights_updated": false,
+    "summary": {
+      "train": {
+        "prefix_mse": 2.2486442477739646e-07,
+        "first_five_positions_mse": 1.4130898051689655e-07,
+        "remaining_positions_mse": 2.551130080519215e-07
+      },
+      "heldout": {
+        "prefix_mse": 1.363481175076231e-06,
+        "first_five_positions_mse": 1.0302737507572601e-06,
+        "remaining_positions_mse": 1.5079324668931804e-06
+      }
+    },
+    "results": [
+      {
+        "id": "c00",
+        "split": "train",
+        "predicted_prefix_length": 21,
+        "teacher_prefix_length": 21,
+        "length_matches": true,
+        "prefix_mse": 2.069634490453609e-07,
+        "first_five_positions_mse": 8.925496786105214e-08,
+        "remaining_positions_mse": 2.4374736540266895e-07
+      },
+      {
+        "id": "c01",
+        "split": "train",
+        "predicted_prefix_length": 20,
+        "teacher_prefix_length": 20,
+        "length_matches": true,
+        "prefix_mse": 1.8930080614154576e-07,
+        "first_five_positions_mse": 8.699896625330439e-08,
+        "remaining_positions_mse": 2.2340144312238408e-07
+      },
+      {
+        "id": "c02",
+        "split": "train",
+        "predicted_prefix_length": 20,
+        "teacher_prefix_length": 20,
+        "length_matches": true,
+        "prefix_mse": 1.9403744033752446e-07,
+        "first_five_positions_mse": 9.420243429758557e-08,
+        "remaining_positions_mse": 2.2731578042112233e-07
+      },
+      {
+        "id": "c03",
+        "split": "train",
+        "predicted_prefix_length": 19,
+        "teacher_prefix_length": 19,
+        "length_matches": true,
+        "prefix_mse": 1.661875046465866e-07,
+        "first_five_positions_mse": 9.701965097974607e-08,
+        "remaining_positions_mse": 1.9089034708485997e-07
+      },
+      {
+        "id": "c04",
+        "split": "train",
+        "predicted_prefix_length": 21,
+        "teacher_prefix_length": 21,
+        "length_matches": true,
+        "prefix_mse": 2.4357404981856234e-07,
+        "first_five_positions_mse": 1.5830801203264855e-07,
+        "remaining_positions_mse": 2.702196866266604e-07
+      },
+      {
+        "id": "c05",
+        "split": "train",
+        "predicted_prefix_length": 20,
+        "teacher_prefix_length": 20,
+        "length_matches": true,
+        "prefix_mse": 2.2076287109484838e-07,
+        "first_five_positions_mse": 1.2275492622393358e-07,
+        "remaining_positions_mse": 2.5343217657791683e-07
+      },
+      {
+        "id": "c06",
+        "split": "train",
+        "predicted_prefix_length": 20,
+        "teacher_prefix_length": 20,
+        "length_matches": true,
+        "prefix_mse": 1.97464459006369e-07,
+        "first_five_positions_mse": 1.3198712167650228e-07,
+        "remaining_positions_mse": 2.1929027127498557e-07
+      },
+      {
+        "id": "c07",
+        "split": "train",
+        "predicted_prefix_length": 19,
+        "teacher_prefix_length": 19,
+        "length_matches": true,
+        "prefix_mse": 1.9208049195640342e-07,
+        "first_five_positions_mse": 1.5335531600157992e-07,
+        "remaining_positions_mse": 2.0591093630173418e-07
+      },
+      {
+        "id": "s00",
+        "split": "train",
+        "predicted_prefix_length": 20,
+        "teacher_prefix_length": 20,
+        "length_matches": true,
+        "prefix_mse": 1.9354544633642945e-07,
+        "first_five_positions_mse": 1.1627055584995105e-07,
+        "remaining_positions_mse": 2.1930374316525558e-07
+      },
+      {
+        "id": "s01",
+        "split": "train",
+        "predicted_prefix_length": 19,
+        "teacher_prefix_length": 19,
+        "length_matches": true,
+        "prefix_mse": 1.8083017039316474e-07,
+        "first_five_positions_mse": 7.87294425208529e-08,
+        "remaining_positions_mse": 2.1729469779074861e-07
+      },
+      {
+        "id": "s02",
+        "split": "train",
+        "predicted_prefix_length": 19,
+        "teacher_prefix_length": 19,
+        "length_matches": true,
+        "prefix_mse": 1.760922714311164e-07,
+        "first_five_positions_mse": 9.212999430019408e-08,
+        "remaining_positions_mse": 2.0607878070677543e-07
+      },
+      {
+        "id": "s03",
+        "split": "train",
+        "predicted_prefix_length": 18,
+        "teacher_prefix_length": 18,
+        "length_matches": true,
+        "prefix_mse": 1.62119249580428e-07,
+        "first_five_positions_mse": 1.2215258493597503e-07,
+        "remaining_positions_mse": 1.7749106007158844e-07
+      },
+      {
+        "id": "f00",
+        "split": "train",
+        "predicted_prefix_length": 20,
+        "teacher_prefix_length": 20,
+        "length_matches": true,
+        "prefix_mse": 1.9100654924386617e-07,
+        "first_five_positions_mse": 9.573427917075605e-08,
+        "remaining_positions_mse": 2.2276397260156955e-07
+      },
+      {
+        "id": "f01",
+        "split": "train",
+        "predicted_prefix_length": 19,
+        "teacher_prefix_length": 19,
+        "length_matches": true,
+        "prefix_mse": 1.7423369058633398e-07,
+        "first_five_positions_mse": 8.104310467160758e-08,
+        "remaining_positions_mse": 2.0751603813096153e-07
+      },
+      {
+        "id": "f02",
+        "split": "train",
+        "predicted_prefix_length": 19,
+        "teacher_prefix_length": 19,
+        "length_matches": true,
+        "prefix_mse": 1.7701911758649658e-07,
+        "first_five_positions_mse": 9.829968661279054e-08,
+        "remaining_positions_mse": 2.051332046448806e-07
+      },
+      {
+        "id": "f03",
+        "split": "train",
+        "predicted_prefix_length": 18,
+        "teacher_prefix_length": 18,
+        "length_matches": true,
+        "prefix_mse": 1.7207784708261897e-07,
+        "first_five_positions_mse": 9.921872390350472e-08,
+        "remaining_positions_mse": 2.001006009777484e-07
+      },
+      {
+        "id": "w00",
+        "split": "train",
+        "predicted_prefix_length": 19,
+        "teacher_prefix_length": 19,
+        "length_matches": true,
+        "prefix_mse": 2.704202870518202e-07,
+        "first_five_positions_mse": 2.48372259648022e-07,
+        "remaining_positions_mse": 2.782946069146419e-07
+      },
+      {
+        "id": "w01",
+        "split": "train",
+        "predicted_prefix_length": 18,
+        "teacher_prefix_length": 18,
+        "length_matches": true,
+        "prefix_mse": 2.470837330292852e-07,
+        "first_five_positions_mse": 1.9689416319579323e-07,
+        "remaining_positions_mse": 2.663874738573213e-07
+      },
+      {
+        "id": "w02",
+        "split": "heldout",
+        "predicted_prefix_length": 18,
+        "teacher_prefix_length": 18,
+        "length_matches": true,
+        "prefix_mse": 9.048292781699274e-07,
+        "first_five_positions_mse": 1.2552025054901605e-06,
+        "remaining_positions_mse": 7.700703577029344e-07
+      },
+      {
+        "id": "w03",
+        "split": "train",
+        "predicted_prefix_length": 17,
+        "teacher_prefix_length": 17,
+        "length_matches": true,
+        "prefix_mse": 2.747059966168308e-07,
+        "first_five_positions_mse": 2.7294166216051963e-07,
+        "remaining_positions_mse": 2.7544115255295765e-07
+      },
+      {
+        "id": "e00",
+        "split": "train",
+        "predicted_prefix_length": 18,
+        "teacher_prefix_length": 18,
+        "length_matches": true,
+        "prefix_mse": 3.6295119798523956e-07,
+        "first_five_positions_mse": 2.272535795100339e-07,
+        "remaining_positions_mse": 4.1514255144647905e-07
+      },
+      {
+        "id": "e01",
+        "split": "heldout",
+        "predicted_prefix_length": 17,
+        "teacher_prefix_length": 17,
+        "length_matches": true,
+        "prefix_mse": 1.8221330719825346e-06,
+        "first_five_positions_mse": 8.053449960243597e-07,
+        "remaining_positions_mse": 2.2457945760834264e-06
+      },
+      {
+        "id": "e02",
+        "split": "train",
+        "predicted_prefix_length": 17,
+        "teacher_prefix_length": 17,
+        "length_matches": true,
+        "prefix_mse": 3.53236231376286e-07,
+        "first_five_positions_mse": 1.5413803566843853e-07,
+        "remaining_positions_mse": 4.3619380107884353e-07
+      },
+      {
+        "id": "e03",
+        "split": "train",
+        "predicted_prefix_length": 16,
+        "teacher_prefix_length": 16,
+        "length_matches": true,
+        "prefix_mse": 4.013244847556052e-07,
+        "first_five_positions_mse": 2.9173810389693244e-07,
+        "remaining_positions_mse": 4.51136486390169e-07
+      }
+    ]
+  },
+  "baseline_prefix_diagnostic_summary": {
+    "train": {
+      "prefix_mse": 0.00040222679275426674,
+      "first_five_positions_mse": 1.0347436160694188e-18,
+      "remaining_positions_mse": 0.0005492180432404646
+    },
+    "heldout": {
+      "prefix_mse": 0.0012825516168959439,
+      "first_five_positions_mse": 1.5067453905738035e-18,
+      "remaining_positions_mse": 0.0017947533633559942
+    }
+  },
+  "heldout_prefix_mse_improvement_factor": 940.6449024308954,
+  "training_memory_scope": "Reader-only cached-prefix reconstruction; excludes frozen Qwen audio generation",
+  "teacher_caches_reused": 12,
+  "new_teacher_caches": 12,
+  "evaluations": {
+    "sequence": {
+      "text_used": false,
+      "teacher_files_read": false,
+      "results": [
+        {
+          "id": "w00",
+          "split": "train",
+          "predicted_prefix_length": 19,
+          "human_listening_status": "pending",
+          "frames": 60,
+          "sample_rate": 24000,
+          "seconds": 4.8,
+          "codebook_count": 16,
+          "codec0_greedy": false,
+          "residuals_sampled": true,
+          "seed": 42,
+          "max_frames": 105
+        },
+        {
+          "id": "w02",
+          "split": "heldout",
+          "predicted_prefix_length": 18,
+          "human_listening_status": "pending",
+          "frames": 55,
+          "sample_rate": 24000,
+          "seconds": 4.4,
+          "codebook_count": 16,
+          "codec0_greedy": false,
+          "residuals_sampled": true,
+          "seed": 42,
+          "max_frames": 105
+        },
+        {
+          "id": "e01",
+          "split": "heldout",
+          "predicted_prefix_length": 17,
+          "human_listening_status": "pending",
+          "frames": 70,
+          "sample_rate": 24000,
+          "seconds": 5.6,
+          "codebook_count": 16,
+          "codec0_greedy": false,
+          "residuals_sampled": true,
+          "seed": 42,
+          "max_frames": 105
+        },
+        {
+          "id": "null",
+          "split": "control",
+          "predicted_prefix_length": 16,
+          "human_listening_status": "pending",
+          "frames": 59,
+          "sample_rate": 24000,
+          "seconds": 4.72,
+          "codebook_count": 16,
+          "codec0_greedy": false,
+          "residuals_sampled": true,
+          "seed": 42,
+          "max_frames": 105
+        }
+      ]
+    },
+    "affine": {
+      "text_used": false,
+      "teacher_files_read": false,
+      "results": [
+        {
+          "id": "w00",
+          "split": "train",
+          "predicted_prefix_length": 19,
+          "human_listening_status": "pending",
+          "frames": 70,
+          "sample_rate": 24000,
+          "seconds": 5.6,
+          "codebook_count": 16,
+          "codec0_greedy": false,
+          "residuals_sampled": true,
+          "seed": 42,
+          "max_frames": 105
+        },
+        {
+          "id": "w02",
+          "split": "heldout",
+          "predicted_prefix_length": 18,
+          "human_listening_status": "pending",
+          "frames": 69,
+          "sample_rate": 24000,
+          "seconds": 5.52,
+          "codebook_count": 16,
+          "codec0_greedy": false,
+          "residuals_sampled": true,
+          "seed": 42,
+          "max_frames": 105
+        },
+        {
+          "id": "e01",
+          "split": "heldout",
+          "predicted_prefix_length": 17,
+          "human_listening_status": "pending",
+          "frames": 80,
+          "sample_rate": 24000,
+          "seconds": 6.4,
+          "codebook_count": 16,
+          "codec0_greedy": false,
+          "residuals_sampled": true,
+          "seed": 42,
+          "max_frames": 105
+        },
+        {
+          "id": "null",
+          "split": "control",
+          "predicted_prefix_length": 16,
+          "human_listening_status": "pending",
+          "frames": 59,
+          "sample_rate": 24000,
+          "seconds": 4.72,
+          "codebook_count": 16,
+          "codec0_greedy": false,
+          "residuals_sampled": true,
+          "seed": 42,
+          "max_frames": 105
+        }
+      ]
+    }
+  },
+  "unique_blinded_clips": 8,
+  "human_listening_status": "pending",
+  "generalization_verified": false,
+  "m1_complete": false,
+  "tests": {
+    "host_passed": 7,
+    "host_skipped_ml_modules": 5,
+    "worker_cpu_passed": 22,
+    "worker_cuda_skipped": 1,
+    "gpu_passed": 23,
+    "targeted_cpu_batch_parity_tests_passed": 2
+  },
+  "paid_jobs": false,
+  "media_or_weights_uploaded": false,
+  "worker_recipe": "docker/Dockerfile.worker",
+  "final_validation_worker_image": "sha256:bd1e50d47421ca3a677fc8938be5350e9d119e0094f36483341858ed1182e919",
+  "experiments_used_readonly_source_script_overlays": true,
+  "training_image_digest_captured": false
+}

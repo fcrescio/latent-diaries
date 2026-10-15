@@ -14,7 +14,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--design", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--reuse-cache-root", type=Path)
+    parser.add_argument("--reuse-cache-root", type=Path, action="append", default=[])
     args = parser.parse_args()
     design = json.loads(args.design.read_text())
     validate_split(design["rows"])
@@ -22,9 +22,10 @@ def main():
     entries = []
     for row in design["rows"]:
         folder = args.output_dir / row["id"]
-        reused = args.reuse_cache_root / row["id"] if args.reuse_cache_root else None
-        if reused and (reused / "config.json").exists():
-            folder = reused
+        for root in args.reuse_cache_root:
+            if (root / row["id"] / "config.json").exists():
+                folder = root / row["id"]
+                break
         if not (folder / "config.json").exists():
             subprocess.run(
                 [
