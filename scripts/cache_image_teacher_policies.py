@@ -36,7 +36,7 @@ def main():
             if not torch.isfinite(first).all() or not torch.isfinite(rest).all():
                 raise ValueError('Nonfinite teacher distributions')
             target = args.output_dir/f'policy-{i:03d}.safetensors'
-            save_file({'codec0_logits':first.cpu(), 'residual_logits':rest.cpu()}, str(target))
+            save_file({'codec0_logits':first.cpu().contiguous(), 'residual_logits':rest.cpu().contiguous()}, str(target))
             records.append({'prefix_key':str(Path(record['prefix_file']).parent),
                             'codes_sha256':record['codes_sha256'], 'file':str(target),
                             'sha256':digest(target), 'frames':gold.shape[1]})

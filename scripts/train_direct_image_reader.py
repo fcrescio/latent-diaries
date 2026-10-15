@@ -67,6 +67,8 @@ def main():
     if policies['teacher_manifest_sha256'] != digest(teacher_manifest) or policies['lock_sha256'] != digest(Path('uv.lock')):
         raise ValueError('Teacher policy provenance differs')
     policy_by_key = {r['prefix_key']:r for r in policies['records']}
+    if set(policy_by_key) != {str(Path(r['prefix_file']).parent) for r in teachers['records']}:
+        raise ValueError('Teacher policy coverage differs')
     if len(policy_by_key) != len(policies['records']):
         raise ValueError('Duplicate teacher policy keys')
     info.update(policy_manifest_sha256=digest(policies_path), provenance_reader_sha256=digest(initial_path), completed_steps=0,
