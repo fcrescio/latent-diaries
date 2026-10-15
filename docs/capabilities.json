@@ -23,5 +23,8 @@
   "sequence_reader_checkpoint_resume_exercised": true,
   "sequence_reader_numeric_inference_exercised": true,
   "sequence_reader_fresh_generalization_verified": true,
-  "m1_2_numeric_composition_accepted": true
+  "m1_2_numeric_composition_accepted": true,
+  "embeddinggemma2_image_features_implemented": true,
+  "embeddinggemma2_image_features_cuda_exercised": true,
+  "embeddinggemma2_feature_scope": "Two NASA images; frozen image-only FP32 encoder, normalized 768D cache, repeat and batch parity. No image-conditioned speech or grounding acceptance."
 }

@@ -11,6 +11,11 @@ RUN --mount=type=cache,target=/root/.cache/uv uv sync --locked --no-install-proj
 COPY src ./src
 RUN --mount=type=cache,target=/root/.cache/uv uv sync --locked --extra ml --extra test
 RUN apt-get update && apt-get install -y --no-install-recommends sox build-essential && rm -rf /var/lib/apt/lists/*
+# Qwen pins Transformers 4; vision requires Transformers 5. Keep separate import
+# paths in this same worker image, sharing the already pinned Torch binary stack.
+COPY environments/vision /opt/vision
+RUN --mount=type=cache,target=/root/.cache/uv uv sync --project /opt/vision --locked && \
+    /opt/vision/.venv/bin/python -c "import site; from pathlib import Path; Path(site.getsitepackages()[0], 'worker-stack.pth').write_text('/workspace/.venv/lib/python3.11/site-packages\n/workspace/src\n')"
 COPY configs ./configs
 COPY scripts ./scripts
 COPY docs ./docs

@@ -20,8 +20,10 @@ See `validation/2026-10-15-sequence-reader.json` and OPERATIONS for evidence and
 reproduction. Individual listening notes and media remain private.
 
 M2–M5 remain unachieved. Final image inference/training capability flags remain
-false. EmbeddingGemma 2 compatibility and BF16 cache parity remain open technical
-questions; the accepted speech path uses FP32 Qwen.
+false. EmbeddingGemma 2 compatibility is now exercised in a separately locked interpreter
+inside the same worker image: two real images produce normalized 768D vectors
+with repeat/batch parity. The image-to-reader training link and grounding tests
+remain open. BF16 cache parity is also open; accepted speech uses FP32 Qwen.
 
 | Milestone | Tasks | Evidence / exit gate |
 |---|---|---|
