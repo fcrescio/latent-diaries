@@ -105,7 +105,7 @@ def train(args):
         architecture=args.architecture,
         fixed_length=args.fixed_length,
         maximum_tokens=maximum,
-        width=128,
+        width=args.width,
         seed=42,
         learning_rate=0.001,
         schedule_steps=args.schedule_steps,
@@ -125,7 +125,7 @@ def train(args):
     folder.mkdir(parents=True, exist_ok=True)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     reader_type = ImageQueryReader if args.architecture == "image-query" else GlobalImageReader
-    reader = reader_type(maximum, mean, scale, length_coef).to(device)
+    reader = reader_type(maximum, mean, scale, length_coef, width=args.width).to(device)
     optimizer = torch.optim.AdamW(reader.parameters(), lr=info["learning_rate"], weight_decay=0.0)
     start = 0
     if args.resume:
@@ -237,6 +237,7 @@ def main():
     trainer.add_argument("--steps", type=int, required=True)
     trainer.add_argument("--schedule-steps", type=int, default=1600)
     trainer.add_argument("--resume", action="store_true")
+    trainer.add_argument("--width", type=int, choices=[128, 256], default=128)
     trainer.add_argument("--fixed-length", action="store_true")
     trainer.add_argument("--evaluation-scope", choices=["fresh-test", "exposed-development", "development"])
     trainer.add_argument("--architecture", choices=["global-mlp", "image-query"], default="global-mlp")
