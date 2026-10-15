@@ -51,7 +51,8 @@ def main():
         adapter_info = json.loads((args.adapter.parent / 'manifest.json').read_text())
         if (digest(args.adapter) != adapter_info['adapter_sha256'] or
                 adapter_info['corpus_sha256'] != info['corpus_sha256'] or
-                adapter_info['features_sha256'] != info['features_sha256']):
+                adapter_info['features_sha256'] != info['features_sha256'] or
+                (adapter_info.get('prior_sha256') and adapter_info['prior_sha256'] != info['reader_sha256'])):
             raise ValueError('Image adapter and language-prior training provenance differ')
     wrapper, builder, speaker = load_backbone(info)
     model.to(speaker.device).eval().requires_grad_(False)
