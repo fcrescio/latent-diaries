@@ -13,12 +13,13 @@ does not improve reconstruction. M2 remains incomplete and the final
 checkpoints and aggregate evidence are recorded in `docs/DECISIONS.md` and
 `docs/MILESTONES.md`. No accepted trained image-to-speech model is available.
 
-The latest acoustic-loss reader comparison has completed training/resume and
-generated 12 blinded development clips, E5-A through E5-L. Human listening is
-pending at the authenticated local gallery (`http://localhost:18080/#m2-acoustic-v4-a`
-on this workstation). Teacher-forced loss improvement is modest and does not
-establish intelligibility. Fresh test images remain reserved; all private
-photos, labels, features, audio, ratings and checkpoints stay local.
+Human review of all 12 acoustic-comparison clips is complete. The canonical
+baseline has good-Italian notes on three of four exposed development cases;
+one has an unclear opening. Acoustic fine-tuning does not improve the human
+results. The repeated generic ending comes from deliberately constrained
+training sentences, so this is limited-repertoire progress rather than original
+narration. Fresh test images remain reserved; all private photos, labels,
+features, audio, ratings and checkpoints stay local.
 
 ## Artistic brief
 

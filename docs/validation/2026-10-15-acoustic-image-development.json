@@ -1,5 +1,5 @@
 {
-  "scope": "Existing canonical development data only; no fresh-test or human quality acceptance",
+  "scope": "Existing canonical development data only; completed human review, no fresh-test or artistic acceptance",
   "protocol_commit": "ecc5c18",
   "training_source_commit": "9141c1d7c37a7617f90deb177be1d0b92f9616dd",
   "worker_image": "sha256:52acc39c5443fa7041b4ee0201fec5db74c97078b55247b53be08f590703a7a3",
@@ -117,7 +117,7 @@
   "listening_labels": "E5-A through E5-L",
   "null_controls_reach_cap": true,
   "standalone_inference_reads_teacher_or_text": false,
-  "human_review_status": "pending",
+  "human_review_status": "complete",
   "human_quality_acceptance": false,
   "fresh_candidates_reserved_unlabelled": 96,
   "private_data_uploaded": false,
@@ -128,5 +128,31 @@
     "worker_cpu": "32 passed / 3 skips",
     "worker_cuda": "33 passed / 2 vision-runtime skips",
     "vision_runtime_cpu": "4 passed"
+  },
+  "human_review_summary": {
+    "rated_pairs": 12,
+    "reviewers": 1,
+    "development_cases_per_method": 4,
+    "development_means": {
+      "baseline": {
+        "count": 4,
+        "mean_voice": 3.25,
+        "mean_grounding": 2.75,
+        "mean_evocation": 1.75,
+        "mean_surprise": 1.5
+      },
+      "acoustic": {
+        "count": 4,
+        "mean_voice": 2.5,
+        "mean_grounding": 2.75,
+        "mean_evocation": 1.0,
+        "mean_surprise": 1.0
+      }
+    },
+    "acoustic_recipe_improvement_accepted": false,
+    "canonical_baseline_clear_italian_notes_cases": 3,
+    "canonical_baseline_unclear_opening_cases": 1,
+    "shared_generic_ending_is_authored_training_target": true,
+    "scope": "Descriptive user scores/notes, not WER, statistical significance or fresh-test acceptance"
   }
 }
