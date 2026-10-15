@@ -1,0 +1,10 @@
+{
+  "hypothesis": "Ridge shrinkage toward the shared semantic mean favors the default narrative; strengthen image-dependent deviations while selecting strength through frozen opening likelihood on training scene-group validation",
+  "motivation_scope": "Exploratory fixed-development numeric gain controls recover plausible opening subjects at gains2/4; these are exposed development diagnostics, not untouched quality evidence",
+  "initialization": "Frozen v11 ridge alpha1 adapter and completed v14 opening-robust reader; no reader/backbone changes",
+  "gain_grid": [1.0, 1.5, 2.0, 3.0, 4.0],
+  "validation": "Five group-disjoint training folds, seed42; refit alpha1 ridge within each fold, use only its training target mean, evaluate opening NLL on its held training images. Select macro-average NLL across training anchors; no development labels/targets in selection",
+  "final_fit": "Fold selected scalar gain into the existing full-training affine tensor around the full-training semantic target mean; inference remains one projection plus normalization, no prototype or label access",
+  "evaluation": "Same four exposed development images, original training/null; sampled prior and Qwenseed42 cap105, guidance disabled. Human matched/shuffled review required; no fresh access or ASR acceptance",
+  "privacy": "All141-image labels, features, weights and individual outputs stay local; all96 fresh candidates reserved; no remote jobs"
+}
