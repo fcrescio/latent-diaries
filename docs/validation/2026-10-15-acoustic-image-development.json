@@ -154,5 +154,23 @@
     "canonical_baseline_unclear_opening_cases": 1,
     "shared_generic_ending_is_authored_training_target": true,
     "scope": "Descriptive user scores/notes, not WER, statistical significance or fresh-test acceptance"
+  },
+  "postreview_prefix_segment_analysis": {
+    "scope": "Read-only exposed-development tensor diagnostic; no runtime lookup or human score",
+    "positions": 20,
+    "identical_positions_across_all_ten_targets": 11,
+    "variable_positions": 9,
+    "summary": {
+      "baseline": {
+        "shared_position_mse": 2.1424739315989427e-05,
+        "variable_position_mse": 0.0004501665534917265,
+        "nearest_canonical_target_agreement": 0.800000011920929
+      },
+      "acoustic": {
+        "shared_position_mse": 2.9987035304657184e-05,
+        "variable_position_mse": 0.0004597277147695422,
+        "nearest_canonical_target_agreement": 0.8181818127632141
+      }
+    }
   }
 }
