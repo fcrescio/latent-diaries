@@ -21,16 +21,15 @@ training sentences, so this is limited-repertoire progress rather than original
 narration. Fresh test images remain reserved; all private photos, labels,
 features, audio, ratings and checkpoints stay local.
 
-Work continues with a continuous autoregressive language prior trained on varied
-Italian supervision, then calibrated from image vectors. Earlier flow controls
-failed; a robust continuous-candidate reader now generates six new image/control
-clips. The available E6 human notes consistently report good Italian and varied
-content, but weak image relevance, including the training control. Fifteen of
-sixteen pairs have saved ratings; image grounding is not accepted. Work now
-isolates contraction in the numeric image adapter while preserving the speech
-reader. The new blinded comparison is **E7-A through E7-P** at
-`http://localhost:18080/#m2-adapter-v9-a`. It includes unchanged v8 and shuffled
-controls; actual review is pending. All 96 fresh candidates remain reserved.
+E7 review confirms stable Italian and interesting phrases, but weak context:
+matched development grounding averages 1.75/5 for both adapter versions. The
+training control improves, while fresh-image grounding remains unaccepted.
+Work now uses more specific training-only visual anchors and calibrates the
+numeric image adapter through the frozen continuous speech reader. Neither
+captions nor scene labels enter inference. The new **E8-A through E8-J** gallery
+is ready at `http://localhost:18080/#m2-semantic-gain-v15-a`: four matched images,
+four shuffled assignments and training/null controls from six new WAVs. Actual
+review of context and Italian remains pending. All 96 fresh candidates stay reserved.
 
 ## Artistic brief
 

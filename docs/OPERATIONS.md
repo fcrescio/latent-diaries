@@ -702,3 +702,100 @@ unused build-cache cleanup is insufficient to complete a rebuild, and a retry
 is cancelled while downloading redundant dependencies. No user images, volumes,
 containers or model caches are deleted. Do not describe this as a new worker
 image build or a passing full Docker rebuild.
+
+## Specific visual-anchor supervision control
+
+`configs/research/visual-anchors-v10.json` preserves the existing corpus and v8
+speech reader. Prepare a private inventory of existing training images only,
+with `id`, `path`, `split: train`; do not include development or reserved rows.
+The authorized local label service selects one of the existing 60 authored
+opening anchors or skips. Its helper always stops the service on completion or
+failure, including resumed runs:
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .venv/bin/python scripts/label_private_images.py --inventory artifacts/anchors-new/training-inventory.json --output artifacts/anchors-new/anchor-labels.jsonl --limit 239 --mode opening-v10 --docker .cache/tools/docker
+```
+
+After confirming the service is stopped, fit numeric calibration in the managed
+CPU worker with `fit_semantic_image_adapter.py`, the same dataset/design/corpus/
+features arguments as v9, plus `--anchor-labels <private-jsonl> --select-alpha`.
+Labels must be unique training IDs with explicit training-only provenance and
+validated authored choices. Targets average only training text features sharing
+the selected opening. Alpha selection still uses training groups only. The
+standalone evaluator is unchanged and reads no labels, target means or strings.
+All labels, checkpoint weights and image-dependent diagnostics remain local.
+This comparison changes the accepted training subset as well as supervision;
+do not attribute any improvement to granularity alone without a matched-subset
+control. Frozen numeric anchor-mean controls are text-conditioned diagnostics,
+not image-grounding or speech-quality acceptance.
+
+V11 adds `--mode opening-v11` and a `scene_hint` from existing training labels
+to each training inventory row. Unsupported hints are skipped. A valid anchor
+must belong to that hint's six choices. Malformed model responses are explicitly
+excluded with a validation-rejection record; they are never converted to a valid
+choice. Resuming preserves completed labels and verifies inventory/prompt hashes.
+The service still stops in finally. Supply `--anchor-protocol
+configs/research/visual-anchors-v11.json` when fitting this variant. Its coverage
+and numerical fit do not establish speech quality or grounding.
+
+## Prior-aware numeric adapter fitting
+
+Use the same cached corpus and accepted v11 training labels. The following
+managed-worker commands perform the prescribed midpoint restart. Keep source
+fixed across both stages and use a fresh run directory; older runs require their
+recorded source revision. The vendor models and v8 speech reader stay frozen:
+
+```bash
+worker=(.cache/tools/docker compose --profile gpu run --rm -v "$PWD/src:/workspace/src:ro" -v "$PWD/scripts:/workspace/scripts:ro")
+export DOCKER_CONFIG="$PWD/.cache/docker-config"
+export LD_CODE_REVISION=$(git rev-parse HEAD)
+"${worker[@]}" experiment-gpu python scripts/train_prior_aware_adapter.py --image-dataset artifacts/private-photos-002/targets/dataset-expanded.json --labels artifacts/visual-anchors-v11/anchor-labels.jsonl --corpus-dir artifacts/semantic-prior-v5/corpus --prior-dir artifacts/robust-prior-v8/reader --initial-adapter artifacts/visual-anchors-v11/adapter/adapter.safetensors --run-dir artifacts/calibration-new/adapter --steps 500
+"${worker[@]}" experiment-gpu python scripts/train_prior_aware_adapter.py --image-dataset artifacts/private-photos-002/targets/dataset-expanded.json --labels artifacts/visual-anchors-v11/anchor-labels.jsonl --corpus-dir artifacts/semantic-prior-v5/corpus --prior-dir artifacts/robust-prior-v8/reader --initial-adapter artifacts/visual-anchors-v11/adapter/adapter.safetensors --run-dir artifacts/calibration-new/adapter --steps 1000 --resume
+```
+
+Then use the unchanged `evaluate_autoregressive_prior.py --mode image` with
+strict numeric inputs and the new adapter. Never pass the training corpus or
+labels to evaluation. Check actual autoregressive audio; training opening NLL
+is not intelligibility or grounding acceptance. All learned weights and
+image-dependent outputs remain local. `blind_image_comparison.py --candidate-only`
+imports only the new method and its prescribed controls; omit `--baseline-results`.
+Retained earlier ratings are a descriptive historical comparison, not a
+concurrent blinded baseline or independent replications.
+
+## Opening-specific robustness and semantic-gain comparison
+
+The current local review is E8-A through E8-J at
+`http://localhost:18080/#m2-semantic-gain-v15-a`. It contains ten pairs from six
+new outputs, with four deliberate shuffled-image repeats. Do not rerate the six
+unchanged v9 baseline clips; any comparison to E7 is descriptive and historical.
+No human ratings are created automatically. Assess both Italian clarity and
+image connection; likelihood/ASR cannot supply that assessment.
+
+V14 uses the same managed worker array and corpus/feature paths as v8. Add
+`--initial-run artifacts/robust-prior-v8/reader --recipe multihypothesis --modes 32
+--robust-semantics --opening-semantics` to `train_autoregressive_prior.py`, using
+`--steps 1500` then `--steps 3000 --resume` in a new reader directory. The exact
+completed source is 9b5f300; preserve source across continuation. Vendor backbones
+are not loaded during this cached reader fit. The original v8 fallback remains.
+
+Fit V15 only from training pairs and the completed frozen v14 reader:
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -v "$PWD/src:/workspace/src:ro" -v "$PWD/scripts:/workspace/scripts:ro" experiment-gpu python scripts/fit_semantic_gain.py --image-dataset artifacts/private-photos-002/targets/dataset-expanded.json --labels artifacts/visual-anchors-v11/anchor-labels.jsonl --corpus-dir artifacts/semantic-prior-v5/corpus --features artifacts/semantic-prior-v5/features/features.safetensors --prior-dir artifacts/opening-robust-prior-v14/reader --initial-adapter artifacts/visual-anchors-v11/adapter/adapter.safetensors --output-dir artifacts/gain-new/adapter
+```
+
+Use `evaluate_autoregressive_prior.py --run-dir artifacts/opening-robust-prior-v14/reader
+--inputs artifacts/private-photos-002/targets/eval-expanded.json --mode image
+--adapter artifacts/gain-new/adapter/adapter.safetensors --ids q0052 p0055 p0046 q0002 p0003
+--output-dir artifacts/gain-new/image-evaluation` in the GPU worker with
+`-e LD_REF_TEXT= -e HF_HUB_OFFLINE=1`. Guidance is disabled by default; Qwen
+sampling/seed are unchanged. Decoder-specific adapters now verify the frozen
+prior hash, preventing accidental mixing of v12 calibration with a newer reader.
+The negative pairing control rejects before Qwen loads or any WAV is written.
+All media/labels/features/checkpoints and exact private manifests stay local.
+
+The original full worker rebuild remains unverified after Docker storage failure.
+About6.265GB of this project's failed dependency layer was subsequently reclaimed
+by pruning its unused children before the parent; no user containers, volumes,
+model caches or data were removed. The existing pinned worker with source overlays
+passes current CPU/CUDA/locked-vision tests; do not claim a newly baked image.

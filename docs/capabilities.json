@@ -60,5 +60,16 @@
   "robust_semantic_prior_development_italian_observed": true,
   "robust_semantic_prior_grounding_accepted": false,
   "train_group_semantic_adapter_selection_exercised": true,
-  "semantic_adapter_v9_development_review_pending": true
+  "semantic_adapter_v9_development_review_pending": false,
+  "semantic_adapter_v9_development_review_completed": true,
+  "semantic_adapter_v9_grounding_accepted": false,
+  "visual_anchor_training_supervision_exercised": true,
+  "prior_aware_image_calibration_training_resume_exercised": true,
+  "continuous_density_guidance_numeric_control_exercised": true,
+  "continuous_density_guidance_image_audio_exercised": false,
+  "opening_robust_prior_training_resume_exercised": true,
+  "semantic_gain_training_group_validation_exercised": true,
+  "opening_robust_image_inference_exercised": true,
+  "opening_robust_development_review_pending": true,
+  "opening_robust_fresh_generalization_verified": false
 }

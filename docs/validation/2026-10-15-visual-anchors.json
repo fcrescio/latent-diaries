@@ -1,0 +1,129 @@
+{
+  "scope": "Exposed-development grounding research after completed E7 review; E8 human review pending, no fresh-image acceptance",
+  "worker_image": "sha256:52acc39c5443fa7041b4ee0201fec5db74c97078b55247b53be08f590703a7a3",
+  "execution": "Same pinned worker and locks; current read-only source overlays; no new worker bake",
+  "v10": {
+    "scope": "Training-only60-choice annotation control; no new human batch or fresh acceptance",
+    "training_images_labeled": 239,
+    "accepted_images": 72,
+    "supported_anchors": 26,
+    "alpha": 0.1,
+    "train_group_validation": {
+      "0.001": 0.1299369600084093,
+      "0.01": 0.12781674000951979,
+      "0.1": 0.1178512540128496,
+      "1.0": 0.11893145408895281
+    },
+    "frozen_reader_unchanged": true,
+    "image_control_wavs": 6,
+    "text_feature_control_wavs": 5,
+    "image_outputs_reaching_cap": 0,
+    "original_cohort_control_excluded_from_fit": true,
+    "text_used_in_image_inference": false,
+    "grounding_accepted": false,
+    "fresh_candidates_accessed": 0,
+    "private_data_uploaded": false,
+    "outcome": "Coarse content remains mixed in auxiliary transcripts; skipped-training-image audit motivates shorter annotation prompt, without human quality claims"
+  },
+  "v11": {
+    "training_images_labeled": 239,
+    "accepted_training_images": 141,
+    "supported_anchors": 34,
+    "invalid_responses_explicitly_excluded": 1,
+    "alpha": 1.0,
+    "annotation_resumed_after_interruption": true,
+    "local_vision_service_stopped": true,
+    "generated_audio_clips": 6,
+    "reaching_frame_cap": 1,
+    "reads_text_or_targets": false
+  },
+  "v12": {
+    "completed_steps": 1000,
+    "trainable_parameters": 590592,
+    "frozen_prior_parameters": 9406113,
+    "peak_allocated_vram_bytes": 360086528,
+    "opening_diagnostic": {
+      "cases": 34,
+      "matched_nll": 0.11102224886417389,
+      "shuffled_nll": 1.1350834369659424,
+      "semantic_drift_squared": 0.0025011796969920397
+    },
+    "actual_resume_at": 500,
+    "source_revision": "4fbd2c987120f0c54f51462ed40e02becf9a5474",
+    "generated_audio_clips": 6,
+    "reaching_frame_cap": 0,
+    "reads_text_or_targets": false
+  },
+  "v13": {
+    "numeric_guidance_exercised": true,
+    "permutation_invariance_and_zero_condition_tests": true,
+    "nearest_opening_changed_on_five_fixed_controls": false,
+    "audio_rendered": false,
+    "quality_improvement_accepted": false
+  },
+  "v14": {
+    "completed_steps": 3000,
+    "trainable_parameters": 9406113,
+    "peak_allocated_vram_bytes": 455980544,
+    "opening_semantics": true,
+    "source_revision": "9b5f3007b276b0100a9a1eb4022530e84ae2b174",
+    "actual_resume_at": 1500,
+    "generated_audio_clips": 6,
+    "reaching_frame_cap": 0,
+    "reads_text_or_targets": false
+  },
+  "v15": {
+    "selected_gain": 1.5,
+    "fixed_ridge_alpha": 1.0,
+    "gain_grid_macro_opening_nll": {
+      "1.0": 0.9510513035690084,
+      "1.5": 0.9182026614161098,
+      "2.0": 0.9900248848340091,
+      "3.0": 1.2813241867458118,
+      "4.0": 1.7073326356270735
+    },
+    "gain_grid_micro_opening_nll": {
+      "1.0": 1.0739339590072632,
+      "1.5": 0.9862813949584961,
+      "2.0": 1.0142474174499512,
+      "3.0": 1.249047040939331,
+      "4.0": 1.6233034133911133
+    },
+    "selection_scope": "Five scene-group-disjoint training folds; exploratory development motivation disclosed; no fresh access",
+    "coefficients": 590592,
+    "reader_updated_after_v14": false,
+    "generated_audio_clips": 6,
+    "reaching_frame_cap": 0,
+    "reads_text_or_targets": false
+  },
+  "gallery": {
+    "run_id": "m2-semantic-gain-v15",
+    "blind_labels": "E8-A through E8-J",
+    "pairs": 10,
+    "unique_audio": 6,
+    "matched_development": 4,
+    "shuffled": 4,
+    "training_null_controls": 2,
+    "previous_baseline_not_rerated": true,
+    "historical_E7_comparison_only": true,
+    "human_ratings_created": false,
+    "human_review_pending": true,
+    "auth_page_and20_media_responses": 200,
+    "unauth_page": 401
+  },
+  "tests": {
+    "host": "19 passed /16 ML-module skips",
+    "primary_cpu": "50 passed /3 skips",
+    "primary_cuda": "52 passed /2 vision-runtime skips",
+    "locked_vision_cpu": "4 passed",
+    "wrong_decoder_specific_adapter_pair": "Rejected before backbone loading or output creation",
+    "changed_file_ruff_compile_security_whitespace": "pass",
+    "full_local_worker_rebuild": "Previously failed from Docker disk exhaustion; not claimed passing. Only project failed build-cache layers cleaned; existing worker exercised."
+  },
+  "inference_guidance_enabled": false,
+  "qwen_codec0_sampling": true,
+  "human_grounding_accepted": false,
+  "fresh_candidates_reserved_unlabelled_unencoded": 96,
+  "private_data_uploaded": false,
+  "paid_jobs_used": false
+}

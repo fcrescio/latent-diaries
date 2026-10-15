@@ -88,3 +88,13 @@ keeping the speech reader frozen.
 ## Advancement rules
 
 If M1 continuous conditioning is impossible without extensive retraining, try late-layer LoRA after a documented negative result; do not abandon the no-text inference objective without discussing a change in project identity with the human. When local GPU unavailable, prepare remote job but require explicit G1 approval. If quality gate depends on artistic judgment, present actual samples in review service; wait for the user ratings before claiming success.
+
+E7 is fully reviewed: Italian is stable and phrases are interesting, but matched
+grounding averages 1.75/5 for both compared adapters. Fine visual-anchor training
+supervision, prior-aware calibration and bounded guidance controls are exercised
+without fresh access. The opening-robust reader completes3000 steps with real
+resume; a scalar semantic gain selected from training-group validation is folded
+into its frozen image adapter. E8-A through E8-J contains six genuine new WAVs
+in ten matched/shuffled/training/null pairs. Context and Italian review is pending;
+no M2 acceptance or unrestricted narrative-generation claim follows. All 96 fresh
+candidates remain unlabelled/unencoded; private media, labels and weights stay local.
