@@ -19,11 +19,14 @@ holdouts are now exposed and must not become fresh tests for a revised recipe.
 See `validation/2026-10-15-sequence-reader.json` and OPERATIONS for evidence and
 reproduction. Individual listening notes and media remain private.
 
-M2–M5 remain unachieved. Final image inference/training capability flags remain
-false. EmbeddingGemma 2 compatibility is now exercised in a separately locked interpreter
+M2–M5 remain unachieved. A global image reader has now actually trained/resumed
+on 50 private images, with 12 group-disjoint holdouts. Four held-out audio probes
+and train/null controls form 13 local blinded pairs including shuffled-image
+assignments. Human intelligibility/grounding assessment is pending. Final
+`narrate-image` CLI remains fail-closed; research training is exercised. EmbeddingGemma 2 compatibility is now exercised in a separately locked interpreter
 inside the same worker image: two real images produce normalized 768D vectors
-with repeat/batch parity. The image-to-reader training link and grounding tests
-remain open. BF16 cache parity is also open; accepted speech uses FP32 Qwen.
+with repeat/batch parity. The cached image-to-reader training link is exercised; grounding acceptance
+remains open. BF16 cache parity is also open; accepted speech uses FP32 Qwen.
 
 | Milestone | Tasks | Evidence / exit gate |
 |---|---|---|

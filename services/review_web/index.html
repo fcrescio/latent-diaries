@@ -13,7 +13,7 @@ button{background:#171923;color:#fff;border:0;border-radius:7px;padding:10px 17p
 <p class="muted">Revisore: {{username}} · <a href="/export.csv">Esporta giudizi CSV</a> · Scala: 1 minimo, 5 massimo</p>
 {% if not clips %}<article>Non ci sono ancora clip. Importa un manifest con <code>latent-diaries ingest-review --manifest path.jsonl</code>.</article>{% endif %}
 {% for c in clips %}<article id="{{c.id}}"><div class="frame"><div><img alt="Fotogramma da valutare" src="/media/{{c.id}}/image" loading="lazy"></div>
-<div><small>Clip {{loop.index}} · {{c.run_id}}{% if c.grounding %} · <span class="ok">Valutata</span>{% endif %}</small>
+<div><small>Clip {{c.blind_label or loop.index}} · {{c.run_id}}{% if c.grounding %} · <span class="ok">Valutata</span>{% endif %}</small>
 <audio controls preload="none" src="/media/{{c.id}}/audio">Il browser non supporta audio.</audio>
 <form method="post" action="/review/{{c.id}}"><input type="hidden" name="csrf_token" value="{{c.csrf_token}}">
 {% for key, title in [('grounding','Relazione evocativa con l’immagine'),('voice','Qualità e continuità della voce'),('evocation','Forza narrativa / emotiva'),('surprise','Sorpresa e originalità')] %}

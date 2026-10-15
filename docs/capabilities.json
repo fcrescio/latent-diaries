@@ -26,5 +26,12 @@
   "m1_2_numeric_composition_accepted": true,
   "embeddinggemma2_image_features_implemented": true,
   "embeddinggemma2_image_features_cuda_exercised": true,
-  "embeddinggemma2_feature_scope": "Two NASA images; frozen image-only FP32 encoder, normalized 768D cache, repeat and batch parity. No image-conditioned speech or grounding acceptance."
+  "embeddinggemma2_feature_scope": "Two NASA images; frozen image-only FP32 encoder, normalized 768D cache, repeat and batch parity. No image-conditioned speech or grounding acceptance.",
+  "global_image_reader_training_exercised": true,
+  "global_image_reader_resume_exercised": true,
+  "cached_image_conditioned_audio_exercised": true,
+  "private_image_gallery_exercised": true,
+  "image_grounding_verified": false,
+  "image_reader_scope": "Research script: 50 training / 12 capture-group-disjoint held-out images; 4 held-out audio probes, train/null controls, 13 blinded image/audio pairs. Human review pending; final narrate-image CLI remains fail-closed.",
+  "research_global_image_reader_training_implemented": true
 }
