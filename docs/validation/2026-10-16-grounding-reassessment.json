@@ -1,0 +1,31 @@
+{
+  "e8": {
+    "rated_pairs": 10,
+    "matched_pairs": 4,
+    "shuffled_pairs": 4,
+    "matched_mean_grounding": 2.75,
+    "shuffled_mean_grounding": 1.0,
+    "user_significant_improvement": false,
+    "matched_gibberish_judgments": 1,
+    "m2_accepted": false,
+    "scope": "Repeatedly exposed development; no concurrent prior comparison"
+  },
+  "v16": {
+    "selected_training_groups": 24,
+    "accepted_labels": 7,
+    "overlong_exclusions": 16,
+    "other_exclusions": 1,
+    "local_vision_container_stopped": true,
+    "reserved_fresh_access": false,
+    "prefix_steps": 1600,
+    "prefix_actual_resume_at": 800,
+    "prefix_final_normalized_mse": 8.806158554371547e-15,
+    "scope": "Small training fit only; acoustic stage and human judgments pending"
+  },
+  "tests": {
+    "host_passed": 19,
+    "host_ml_skipped": 17,
+    "worker_cpu_passed": 52,
+    "worker_cpu_skipped": 3
+  }
+}

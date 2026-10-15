@@ -95,6 +95,8 @@ supervision, prior-aware calibration and bounded guidance controls are exercised
 without fresh access. The opening-robust reader completes3000 steps with real
 resume; a scalar semantic gain selected from training-group validation is folded
 into its frozen image adapter. E8-A through E8-J contains six genuine new WAVs
-in ten matched/shuffled/training/null pairs. Context and Italian review is pending;
+in ten matched/shuffled/training/null pairs. Review is complete; the user finds no significant improvement. Further prior
+calibration is stopped in favor of the image-specific acoustic feasibility
+control specified in `configs/research/instance-acoustic-v16.json`;
 no M2 acceptance or unrestricted narrative-generation claim follows. All 96 fresh
 candidates remain unlabelled/unencoded; private media, labels and weights stay local.

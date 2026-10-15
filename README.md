@@ -24,12 +24,12 @@ features, audio, ratings and checkpoints stay local.
 E7 review confirms stable Italian and interesting phrases, but weak context:
 matched development grounding averages 1.75/5 for both adapter versions. The
 training control improves, while fresh-image grounding remains unaccepted.
-Work now uses more specific training-only visual anchors and calibrates the
-numeric image adapter through the frozen continuous speech reader. Neither
-captions nor scene labels enter inference. The new **E8-A through E8-J** gallery
-is ready at `http://localhost:18080/#m2-semantic-gain-v15-a`: four matched images,
-four shuffled assignments and training/null controls from six new WAVs. Actual
-review of context and Italian remains pending. All 96 fresh candidates stay reserved.
+E8 is also fully reviewed: the user reports no significant improvement, with
+only a few acceptable cases. Further template-prior calibration is stopped.
+[The reassessment](docs/RESEARCH_REASSESSMENT.md) compares alternatives and
+chooses a bounded image-specific acoustic alignment control through frozen
+Qwen. No captions or scene labels enter inference. All 96 fresh candidates
+remain reserved, and M2 remains unaccepted.
 
 ## Artistic brief
 

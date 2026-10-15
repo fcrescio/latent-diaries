@@ -764,7 +764,7 @@ concurrent blinded baseline or independent replications.
 
 ## Opening-specific robustness and semantic-gain comparison
 
-The current local review is E8-A through E8-J at
+The completed local review is E8-A through E8-J at
 `http://localhost:18080/#m2-semantic-gain-v15-a`. It contains ten pairs from six
 new outputs, with four deliberate shuffled-image repeats. Do not rerate the six
 unchanged v9 baseline clips; any comparison to E7 is descriptive and historical.
@@ -799,3 +799,28 @@ About6.265GB of this project's failed dependency layer was subsequently reclaime
 by pruning its unused children before the parent; no user containers, volumes,
 model caches or data were removed. The existing pinned worker with source overlays
 passes current CPU/CUDA/locked-vision tests; do not claim a newly baked image.
+
+
+## Image-specific acoustic feasibility control
+
+Read `docs/RESEARCH_REASSESSMENT.md` and freeze
+`configs/research/instance-acoustic-v16.json` before preparing data. Select only
+existing training rows with distinct scene groups; `label_private_images.py
+--mode instance-v16` requires training provenance and shuts down the authorized
+local vision container after labeling. Excluded/overlong outputs stay excluded.
+
+In the same pinned GPU worker with read-only source overlays and `LD_REF_TEXT=`:
+
+1. `python scripts/prepare_instance_supervision.py --dataset <existing-development-dataset> --labels <local-training-labels> --output-dir <new-targets>`
+2. `python scripts/image_probe.py train --dataset <new-targets>/dataset.json --run-dir <new-baseline> --evaluation-scope development --steps 800`, then the same command with `--steps 1600 --resume`.
+3. `python scripts/prepare_acoustic_teachers.py --dataset <new-targets>/dataset.json --output-dir <new-teachers>`.
+4. `python scripts/train_acoustic_image_reader.py --dataset <new-targets>/dataset.json --teachers <new-teachers> --initial-run <new-baseline> --run-dir <new-acoustic> --prefix-weight 0 --steps 160`, then `--steps 320 --resume`.
+5. Evaluate both readers with `image_probe.py evaluate` on the frozen numeric-only evaluation inputs and chosen IDs. Retain teacher positive WAVs separately.
+6. `python scripts/diagnose_instance_acoustics.py --dataset <new-targets>/dataset.json --teachers <new-teachers> --baseline-run <new-baseline> --acoustic-run <new-acoustic> --output <new-diagnostic.json>` measures training oracle, matched and cyclically swapped image codec0 likelihood. It is not a human quality score.
+
+Variable prefix lengths use the existing numeric length head fitted exclusively
+to training rows. The acoustic stage trims to each predicted valid length and
+requires teacher length parity. Both frozen backbones, all16 codebooks, EOS and
+the two-path textless conditioning protocol are preserved. No reserved fresh
+images, labels or linguistic strings are loaded at inference. Do not interpret
+successful memorization as held-out grounding.
