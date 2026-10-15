@@ -198,7 +198,7 @@ def evaluate(args):
         length = int(lengths[0])
         assert bool(mask[0, :length].all())
         output = render(
-            builder, wrapper, prefix[:, :length], speaker, args.output_dir / f"{label}.wav", args.max_frames, 42
+            builder, wrapper, prefix[:, :length], speaker, args.output_dir / f"{label}.wav", args.max_frames, 42, codec0_greedy=args.codec0_greedy
         )
         result = {
             "id": label,
@@ -242,6 +242,7 @@ def main():
     trainer.add_argument("--evaluation-scope", choices=["fresh-test", "exposed-development", "development"])
     trainer.add_argument("--architecture", choices=["global-mlp", "image-query"], default="global-mlp")
     evaluator = sub.add_parser("evaluate")
+    evaluator.add_argument("--codec0-greedy", action="store_true")
     evaluator.add_argument("--max-frames", type=int, default=105)
     evaluator.add_argument("--allow-new-images", action="store_true")
     evaluator.add_argument("--inputs", type=Path, required=True)
