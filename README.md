@@ -78,7 +78,7 @@ The agent can implement, test, debug and publish code, while you retain control 
 | Continuous Qwen prefix / teacher-forced assembly / code generation | Tiny CPU/CUDA and pretrained FP32 mechanical controls pass; learned textless speech pending |
 | Single-utterance soft-prefix inversion | Resumable training/inference exercised; User accepts 32-token control with codec-0 greedy decoding; one memorized utterance; M1 incomplete |
 | Shared numeric-factor mapper | Blinded review: sampled training case clear; all held-out and null clips fail; no images |
-| Direct continuous teacher-prefix regression | Development speech accepted/mostly clear; null rejected; four fresh-test/control clips await listening; no images |
+| Direct continuous teacher-prefix regression | Development speech improved, but both fresh combinations lose intelligibility; M1.2 incomplete; no images |
 | Visual reader / image-conditioned training | **Not implemented yet** |
 | Genuine Italian image-to-speech checkpoint / wearable experience | **Not yet achieved** |
 
