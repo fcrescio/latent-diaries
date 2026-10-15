@@ -1,0 +1,17 @@
+{
+  "scope": "Same authored training corpus; make continuous language prior robust to image-like semantic uncertainty",
+  "hypothesis": "Exact sentence embeddings yield clear prior controls but averaged image semantics cause nonword interpolation; train on ambiguous semantics with enough continuous modes",
+  "initialization": "Warm-start v7 causal/context/subspace weights; expand8 context-dependent candidate heads to32 by four perturbed copies per old candidate",
+  "feature_augmentation": "Per sentence:50% normalized class-mean text vector plus Gaussian0.01;30% exact sentence vector;10% exact vector plus Gaussian0.015;10% zero. Means use training rows only",
+  "objective": "Best continuous candidate reconstruction +0.1 routing CE +0.2 numeric EOS BCE; previous-vector noise0.02",
+  "steps": 6000,
+  "resume_at": 3000,
+  "batch_size": 16,
+  "learning_rate": 0.0003,
+  "schedule": "warmup100 cosine floor0.1 fixed6000",
+  "seed": 42,
+  "primary_generation": "Sample top4 internal continuous modes at temperature0.5 with fixedseed42; use generated previous vectors; numeric EOS0.5 min1 max32; Qwen sampledseed42 cap105",
+  "diagnostic_generation": "Greedy candidate text controls kept separate; no text IDs, vocabulary quantization or stored sentence lookup",
+  "evaluation": "Same fixed text controls and existing image-plan plus null; no fresh candidate access",
+  "acceptance": "Actual blinded human listening, no ASR-derived approval or artistic score"
+}
