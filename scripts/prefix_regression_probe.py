@@ -1,8 +1,8 @@
 """Direct training-only teacher-prefix supervision; numeric-only evaluation.
 
-Right-padded continuous teacher vectors and prefix length are fit jointly from
-six train combinations. No per-example lookup, text IDs or tokenizer at eval.
-The exposed development combinations are not a fresh test set.
+Right-padded continuous teacher vectors and prefix length are fit from train
+combinations only. No per-example lookup, text IDs or tokenizer at eval.
+Evaluation scope distinguishes exposed development from prespecified fresh tests.
 """
 
 import argparse

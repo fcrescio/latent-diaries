@@ -1,0 +1,120 @@
+{
+  "model_id": "Qwen/Qwen3-TTS-12Hz-0.6B-Base",
+  "model_revision": "5d83992436eae1d760afd27aff78a71d676296fc",
+  "lock_sha256": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+  "source_revision": "08c838bb7412939a21275a7d0cadba86f55ba70e",
+  "source_sha256": "7a170fb7359efd88ba3fa142e8eebd15d10dd6b75d9c9c58eaff7e2009cb686d",
+  "reader_source_sha256": "328a28be2166301a321b441d0f778d370e3a13f638088a3bba47e913d6454e38",
+  "train_ids": [
+    "c01",
+    "c02",
+    "c03",
+    "c04",
+    "c05",
+    "c06",
+    "s00",
+    "s03"
+  ],
+  "heldout_ids": [
+    "s01",
+    "s02"
+  ],
+  "evaluation_scope": "fresh-test",
+  "input_dim": 5,
+  "maximum_tokens": 21,
+  "trainable_coefficients": 129030,
+  "training_prefix_mse": 0.0001595231493588533,
+  "training_length_max_error": 7.105427357601002e-15,
+  "teacher_tensors_used_only_at_fit": true,
+  "qwen_weights_changed": false,
+  "scope": "Continuous prefix-vector regression; fresh-test, awaiting evaluation",
+  "design": "configs/research/compositions-v2.json",
+  "design_sha256": "2f313e1020bbf25c976fa07aeab1506d633f196a32479ba18b436aa434dfbadb",
+  "prespecification_commit": "08c838bb7412939a21275a7d0cadba86f55ba70e",
+  "fresh_test_ids": [
+    "s01",
+    "s02"
+  ],
+  "excluded_exposed_v1_ids": [
+    "c00",
+    "c07"
+  ],
+  "teacher_caches_reused": 6,
+  "new_teacher_caches": 4,
+  "evaluation": {
+    "teacher_files_read": false,
+    "text_used": false,
+    "evaluation_scope": "fresh-test",
+    "results": [
+      {
+        "id": "s00",
+        "split": "train",
+        "predicted_prefix_length": 20,
+        "human_listening_status": "pending",
+        "frames": 75,
+        "sample_rate": 24000,
+        "seconds": 6.0,
+        "codebook_count": 16,
+        "codec0_greedy": false,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "s01",
+        "split": "heldout",
+        "predicted_prefix_length": 19,
+        "human_listening_status": "pending",
+        "frames": 74,
+        "sample_rate": 24000,
+        "seconds": 5.92,
+        "codebook_count": 16,
+        "codec0_greedy": false,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "s02",
+        "split": "heldout",
+        "predicted_prefix_length": 19,
+        "human_listening_status": "pending",
+        "frames": 78,
+        "sample_rate": 24000,
+        "seconds": 6.24,
+        "codebook_count": 16,
+        "codec0_greedy": false,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      },
+      {
+        "id": "null",
+        "split": "control",
+        "predicted_prefix_length": 15,
+        "human_listening_status": "pending",
+        "frames": 105,
+        "sample_rate": 24000,
+        "seconds": 8.4,
+        "codebook_count": 16,
+        "codec0_greedy": false,
+        "residuals_sampled": true,
+        "seed": 42,
+        "max_frames": 105
+      }
+    ]
+  },
+  "human_listening_status": "pending",
+  "generalization_verified": false,
+  "m1_complete": false,
+  "image_conditioned": false,
+  "tests": {
+    "host_passed": 7,
+    "host_skipped_ml_modules": 4,
+    "worker_cpu_passed": 20,
+    "worker_cuda_skipped": 1,
+    "gpu_passed": 21
+  },
+  "media_or_weights_uploaded": false,
+  "paid_jobs": false
+}

@@ -296,3 +296,25 @@ GPU or optimizer continuation. Evaluation uses fixed seed 42, sampled codec-0
 and residuals, a 105-frame cap and a separate null factor input. Tensor length
 prediction and trimming are tested; human intelligibility remains a listening
 gate. A new untouched test set is required before claiming generalization.
+
+
+## Frozen fresh composition test (v2)
+
+The v1 development cases c00/c07 were exposed while choosing prefix supervision.
+The v2 design excludes them and reserves s01/s02 before new generation or fit.
+Use three weather one-hot numeric coordinates plus opening/memory coordinates.
+Eight training rows include the original six and two snow cases; the two fresh
+snow combinations contain factor levels already represented in training. Keep
+the same affine prefix/length method, sampled decoder, seed and duration cap.
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/prepare_shared_probe.py --design configs/research/compositions-v2.json --output-dir artifacts/shared-corpus-002 --reuse-cache-root artifacts/shared-corpus-001
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile experiment run --rm experiment python scripts/prefix_regression_probe.py fit --dataset artifacts/shared-corpus-002/dataset.json --run-dir artifacts/shared-prefix-regression-002 --evaluation-scope fresh-test
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= experiment-gpu python scripts/prefix_regression_probe.py evaluate --inputs artifacts/shared-corpus-002/eval-inputs.json --run-dir artifacts/shared-prefix-regression-002 --output-dir artifacts/shared-prefix-regression-eval-002 --ids s00 s01 s02
+.venv/bin/python scripts/blind_audio_probe.py --results artifacts/shared-prefix-regression-eval-002/results.json --output-dir artifacts/prefix-regression-listening-003 --first-label T
+```
+
+Reuse checks sentence fingerprints and writes references to old caches rather
+than duplicating media. Fit opens train rows only. Fresh-test labels identify
+mapper-level combinatorial holdouts, not new vocabulary or unseen images.
+Human listening and condition sensitivity are still needed before accepting M1.2.

@@ -21,10 +21,13 @@ combinations, with two held out. Held-out teacher-forced agreement is roughly
 level with null conditioning. Blinded human listening accepts only the sampled
 training case; both held-out inputs fail in both decoding modes. This probes
 compositional generalization, not image grounding. An additive audio-KL control
-did not help; direct continuous teacher-prefix/length supervision now has four
-development/control clips awaiting human listening. The stock teacher-derived
+did not help. Human listening accepts the direct-prefix training control and one
+exposed development case, finds the other almost clear, and rejects null. A fresh
+v2 combinatorial test was frozen before new teacher generation/fit and has now
+generated four blinded clips awaiting listening. The stock teacher-derived
 prefix is a separate positive protocol control.
-M1.2 fails on the two exposed combinations; M2–M5 remain unachieved; BF16 cache parity and EmbeddingGemma 2
+M1.2 failed under audio-KL training; direct-prefix supervision improves exposed
+development cases and awaits fresh-test listening; M2–M5 remain unachieved; BF16 cache parity and EmbeddingGemma 2
 compatibility remain open technical questions.
 
 | Milestone | Tasks | Evidence / exit gate |
