@@ -18,6 +18,7 @@ from urllib.request import Request, urlopen
 from PIL import Image, ImageOps
 
 from latent_diaries.canonical_supervision import SCENE_PROMPT, validate_scene_label
+from latent_diaries.prior_corpus import OPENINGS
 from latent_diaries.visual_anchors import anchor_prompt, validate_anchor_label
 
 PROMPT = """Return one JSON object with exactly these keys:
@@ -48,20 +49,24 @@ def main():
     parser.add_argument("--inventory", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--limit", type=int, default=192)
-    parser.add_argument("--mode", choices=["freeform", "scene-v3", "opening-v10"], default="freeform")
+    parser.add_argument("--mode", choices=["freeform", "scene-v3", "opening-v10", "opening-v11"], default="freeform")
     parser.add_argument("--docker", default="docker")
     parser.add_argument("--container", default="qwen-optimization-glp8-backup")
     args = parser.parse_args()
     signal.signal(signal.SIGTERM, lambda *_: (_ for _ in ()).throw(SystemExit(143)))
     rows = json.loads(args.inventory.read_text())[:args.limit]
-    if args.mode == 'opening-v10' and any(r.get('split') != 'train' for r in rows):
+    if args.mode.startswith('opening-') and any(r.get('split') != 'train' for r in rows):
         raise ValueError('Visual-anchor labeling permits training images only')
+    if args.mode == 'opening-v11' and any(not isinstance(r.get('scene_hint'), str) for r in rows):
+        raise ValueError('Training scene hints required')
     args.output.parent.mkdir(parents=True, exist_ok=True)
     existing = []
     if args.output.exists():
         existing = [json.loads(line) for line in args.output.read_text().splitlines() if line]
     completed = {row["id"] for row in existing}
-    prompt = anchor_prompt() if args.mode == 'opening-v10' else (SCENE_PROMPT if args.mode == 'scene-v3' else PROMPT)
+    prompt = anchor_prompt() if args.mode.startswith('opening-') else (SCENE_PROMPT if args.mode == 'scene-v3' else PROMPT)
+    if args.mode == 'opening-v11':
+        prompt = json.dumps({k: anchor_prompt(k) for k in sorted(OPENINGS)}, sort_keys=True)
     provenance = {'inventory_sha256': hashlib.sha256(args.inventory.read_bytes()).hexdigest(),
                   'mode': args.mode, 'prompt_sha256': hashlib.sha256(prompt.encode()).hexdigest(),
                   'seed': 42, 'temperature': 0.2 if args.mode == 'freeform' else 0.0}
@@ -90,6 +95,13 @@ def main():
             for i, row in enumerate(rows):
                 if row["id"] in completed:
                     continue
+                row_prompt = anchor_prompt(row['scene_hint']) if args.mode == 'opening-v11' and row['scene_hint'] in OPENINGS else prompt
+                if args.mode == 'opening-v11' and row['scene_hint'] not in OPENINGS:
+                    result = {'id': row['id'], 'model': model, 'label': {'keep': False, 'anchor': None},
+                              'seconds': 0.0, 'training_only': True, 'reason': 'unsupported_training_scene'}
+                    output.write(json.dumps(result) + '\n');output.flush()
+                    print(f'Labelled {i + 1}/{len(rows)}; unsupported scene skipped', flush=True)
+                    continue
                 with Image.open(row["path"]) as original:
                     image = ImageOps.exif_transpose(original).convert("RGB")
                     image.thumbnail((768, 768))
@@ -100,7 +112,7 @@ def main():
                 response = json_request("/v1/chat/completions", {
                     "model": model,
                     "messages": [
-                        {"role": "system", "content": prompt},
+                        {"role": "system", "content": row_prompt},
                         {"role": "user", "content": [
                             {"type": "text", "text": "Label this image for local training."},
                             {"type": "image_url", "image_url": {"url": image_url}},
@@ -112,8 +124,8 @@ def main():
                 })
                 text = response["choices"][0]["message"]["content"]
                 label = json.loads(text)
-                if args.mode == 'opening-v10':
-                    label = validate_anchor_label(label)
+                if args.mode.startswith('opening-'):
+                    label = validate_anchor_label(label, row['scene_hint'] if args.mode == 'opening-v11' else None)
                 elif args.mode == 'scene-v3':
                     label = validate_scene_label(label)
                 else:

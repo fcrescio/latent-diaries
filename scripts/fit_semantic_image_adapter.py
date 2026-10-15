@@ -20,6 +20,7 @@ def main():
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--select-alpha', action='store_true', help='Train-group cross-validation only')
     parser.add_argument('--anchor-labels', type=Path, help='Training-only validated visual-anchor labels')
+    parser.add_argument('--anchor-protocol', type=Path, default=Path('configs/research/visual-anchors-v10.json'))
     args = parser.parse_args()
     if not Path('/.dockerenv').exists() or args.output_dir.exists():
         raise ValueError('Use managed worker and a new adapter directory')
@@ -58,9 +59,9 @@ def main():
             'image_dataset_sha256': digest(args.image_dataset), 'design_sha256': digest(args.design),
             'corpus_sha256': digest(args.corpus), 'features_sha256': digest(args.features),
             'source_sha256': digest(Path(__file__)),
-            'protocol_sha256': digest(Path('configs/research/visual-anchors-v10.json' if args.anchor_labels else
-                                          ('configs/research/grounding-adapter-v9.json' if args.select_alpha
-                                           else 'configs/research/semantic-image-adapter-v6.json'))),
+            'protocol_sha256': digest(args.anchor_protocol if args.anchor_labels else
+                                     Path('configs/research/grounding-adapter-v9.json' if args.select_alpha
+                                          else 'configs/research/semantic-image-adapter-v6.json')),
             'calibration_source_sha256': digest(Path('src/latent_diaries/semantic_adapter.py')),
             'adapter_sha256': digest(args.output_dir / 'adapter.safetensors')}
     (args.output_dir / 'manifest.json').write_text(json.dumps(info, indent=2) + '\n')

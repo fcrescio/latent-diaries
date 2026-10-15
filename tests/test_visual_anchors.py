@@ -27,10 +27,11 @@ def test_fixed_training_choices_and_schema():
             validate_anchor_label(invalid)
 
 
-def test_labeler_rejects_nontraining_before_starting_service(tmp_path):
+@pytest.mark.parametrize('mode', ['opening-v10', 'opening-v11'])
+def test_labeler_rejects_nontraining_before_starting_service(tmp_path, mode):
     inventory = tmp_path / 'inventory.json'
     inventory.write_text(json.dumps([{'id': 'held', 'split': 'heldout', 'path': 'unused'}]))
-    result = subprocess.run([sys.executable, 'scripts/label_private_images.py', '--mode', 'opening-v10',
+    result = subprocess.run([sys.executable, 'scripts/label_private_images.py', '--mode', mode,
                              '--inventory', str(inventory), '--output', str(tmp_path / 'labels.jsonl'),
                              '--docker', '/must-not-be-called'], check=False, capture_output=True, text=True)
     assert result.returncode != 0
@@ -44,3 +45,14 @@ def test_adapter_supervision_cannot_include_development_or_duplicates():
     for rows in [[good, good], [good | {'id': 'held1'}], [good | {'training_only': False}]]:
         with pytest.raises(ValueError):
             training_anchor_targets(rows, {'train1'})
+
+
+def test_short_choice_prompt_and_scene_membership():
+    prompt = anchor_prompt('food')
+    assert all(f'food:{i}' in prompt for i in range(6))
+    assert 'vehicles:0' not in prompt
+    assert validate_anchor_label({'keep': True, 'anchor': 'food:0'}, 'food')['keep']
+    with pytest.raises(ValueError):
+        validate_anchor_label({'keep': True, 'anchor': 'food:0'}, 'vehicles')
+    with pytest.raises(ValueError):
+        anchor_prompt('unknown')
