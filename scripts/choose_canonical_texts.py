@@ -20,7 +20,7 @@ def main():
         raise ValueError('Use managed worker and a new output')
     info = json.loads(Path('artifacts/m0_italian.json').read_text())
     snapshot = snapshot_download(info['model_id'], revision=info['model_revision'], local_files_only=True)
-    processor = AutoProcessor.from_pretrained(snapshot)
+    processor = AutoProcessor.from_pretrained(snapshot, fix_mistral_regex=True)
     choices = {}
     for scene in PHRASES:
         by_length = {}
@@ -42,6 +42,7 @@ def main():
               'model_id': info['model_id'], 'model_revision': info['model_revision'],
               'worker_lock_sha256': digest(Path('uv.lock')),
               'supervision_source_sha256': digest(Path('src/latent_diaries/canonical_supervision.py')),
+              'processor_fix_mistral_regex': True,
               'selection': 'shortest common token length; independent of all image labels'}
     args.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps({'scene_count':len(choices),'constant_prefix_length':length}),flush=True)

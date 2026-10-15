@@ -10,7 +10,7 @@ import torch
 from safetensors.torch import load_file, save_file
 
 from latent_diaries.image_query_reader import ImageQueryReader
-from latent_diaries.image_reader import GlobalImageReader
+from latent_diaries.image_reader import GlobalImageReader, validate_image_inputs
 from latent_diaries.inversion import digest, load_backbone, render
 from latent_diaries.sequence_reader import masked_prefix_loss
 from latent_diaries.shared_mapper import validate_split
@@ -83,7 +83,13 @@ def train(args):
         target[i, : len(p)] = p
     features = torch.tensor([r["features"] for r in rows], dtype=torch.float32)
     design = torch.cat([torch.ones(len(rows), 1), features], -1).double()
-    length_coef = torch.linalg.lstsq(design, lengths.double()[:, None]).solution[:, 0].float()
+    if args.fixed_length:
+        if not torch.equal(lengths, lengths[:1].expand_as(lengths)):
+            raise ValueError('Fixed-length supervision requires identical teacher prefix lengths')
+        length_coef = torch.zeros(features.shape[1] + 1)
+        length_coef[0] = int(lengths[0])
+    else:
+        length_coef = torch.linalg.lstsq(design, lengths.double()[:, None]).solution[:, 0].float()
     mean = target[mask].mean(0)
     scale = target[mask].std(0, unbiased=False).clamp_min(1e-4)
     info.update(
@@ -97,13 +103,14 @@ def train(args):
         heldout_ids=[r["id"] for r in tests],
         input_dim=768,
         architecture=args.architecture,
+        fixed_length=args.fixed_length,
         maximum_tokens=maximum,
         width=128,
         seed=42,
         learning_rate=0.001,
         schedule_steps=args.schedule_steps,
         warmup_steps=100,
-        evaluation_scope="exposed-development" if args.architecture == "image-query" else "fresh-test",
+        evaluation_scope=args.evaluation_scope or ("exposed-development" if args.architecture == "image-query" else "fresh-test"),
         qwen_weights_changed=False,
         scope=("Position-sharing global-image query decoder; exposed development" if args.architecture == "image-query" else "Global normalized image-vector MLP; cached teacher-prefix reconstruction"),
         image_features_sha256=dataset["image_features_sha256"],
@@ -178,11 +185,7 @@ def evaluate(args):
         raise ValueError("Reader checksum differs")
     reader = make_reader(info, load_file(str(path)))
     inputs = json.loads(args.inputs.read_text())
-    for row in inputs["rows"]:
-        if set(row) != {"id", "split", "features"}:
-            raise ValueError("Numeric-only evaluation spec required")
-        if row["id"] not in info["train_ids"] + info["heldout_ids"]:
-            raise ValueError("Unknown ID")
+    validate_image_inputs(inputs["rows"], info["train_ids"] + info["heldout_ids"], args.allow_new_images)
     wrapper, builder, speaker = load_backbone(info)
     reader = reader.to(speaker.device).eval()
     chosen = [(r["id"], r["split"], r["features"]) for r in inputs["rows"] if r["id"] in args.ids]
@@ -191,7 +194,7 @@ def evaluate(args):
     results = []
     for label, split, values in chosen:
         with torch.no_grad():
-            prefix, mask, lengths = reader(torch.tensor([values], device=speaker.device))
+            prefix, mask, lengths = reader(torch.tensor([values], device=speaker.device, dtype=torch.float32))
         length = int(lengths[0])
         assert bool(mask[0, :length].all())
         output = render(
@@ -213,6 +216,7 @@ def evaluate(args):
                 "inputs_sha256": digest(args.inputs),
                 "teacher_files_read": False,
                 "image_conditioning": True,
+                "new_image_ids_allowed": args.allow_new_images,
                 "linguistic_labels_read": False,
                 "text_used": False,
                 "results": results,
@@ -233,8 +237,11 @@ def main():
     trainer.add_argument("--steps", type=int, required=True)
     trainer.add_argument("--schedule-steps", type=int, default=1600)
     trainer.add_argument("--resume", action="store_true")
+    trainer.add_argument("--fixed-length", action="store_true")
+    trainer.add_argument("--evaluation-scope", choices=["fresh-test", "exposed-development", "development"])
     trainer.add_argument("--architecture", choices=["global-mlp", "image-query"], default="global-mlp")
     evaluator = sub.add_parser("evaluate")
+    evaluator.add_argument("--allow-new-images", action="store_true")
     evaluator.add_argument("--inputs", type=Path, required=True)
     evaluator.add_argument("--ids", nargs="+", required=True)
     evaluator.add_argument("--output-dir", type=Path, required=True)
