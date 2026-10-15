@@ -8,7 +8,7 @@ from safetensors.torch import load_file, save_file
 
 from latent_diaries.inversion import digest
 from latent_diaries.semantic_adapter import fit_coefficient, select_alpha
-from latent_diaries.visual_anchors import validate_anchor_label
+from latent_diaries.visual_anchors import training_anchor_targets
 
 
 def main():
@@ -36,9 +36,7 @@ def main():
     targets = {r['id']: design[r['id']]['scene'] for r in rows if r['split'] == 'train'}
     if args.anchor_labels:
         labels = [json.loads(line) for line in args.anchor_labels.read_text().splitlines() if line]
-        if len({r['id'] for r in labels}) != len(labels) or any(r['id'] not in targets for r in labels):
-            raise ValueError('Anchor labels must be unique existing training images only')
-        targets = {r['id']: validate_anchor_label(r['label'])['anchor'] for r in labels}
+        targets = training_anchor_targets(labels, set(targets))
     training = [r for r in rows if r['split'] == 'train' and targets.get(r['id']) in means]
     x = torch.tensor([r['features'] for r in training])
     y = torch.stack([means[targets[r['id']]] for r in training])

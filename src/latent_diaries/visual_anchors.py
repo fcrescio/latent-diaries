@@ -31,3 +31,11 @@ def validate_anchor_label(value):
     elif value['anchor'] is not None:
         raise ValueError('Skipped image must have null anchor')
     return value
+
+
+def training_anchor_targets(rows, training_ids):
+    if len({r['id'] for r in rows}) != len(rows) or any(r['id'] not in training_ids for r in rows):
+        raise ValueError('Anchor labels must be unique existing training images only')
+    if any(r.get('training_only') is not True for r in rows):
+        raise ValueError('Explicit training-only label provenance required')
+    return {r['id']: validate_anchor_label(r['label'])['anchor'] for r in rows}

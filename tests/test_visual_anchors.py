@@ -4,7 +4,12 @@ import sys
 
 import pytest
 
-from latent_diaries.visual_anchors import anchor_choices, anchor_prompt, validate_anchor_label
+from latent_diaries.visual_anchors import (
+    anchor_choices,
+    anchor_prompt,
+    training_anchor_targets,
+    validate_anchor_label,
+)
 
 
 def test_fixed_training_choices_and_schema():
@@ -31,3 +36,11 @@ def test_labeler_rejects_nontraining_before_starting_service(tmp_path):
     assert result.returncode != 0
     assert 'training images only' in result.stderr
     assert not (tmp_path / 'labels.jsonl').exists()
+
+
+def test_adapter_supervision_cannot_include_development_or_duplicates():
+    good = {'id': 'train1', 'training_only': True, 'label': {'keep': True, 'anchor': 'food:0'}}
+    assert training_anchor_targets([good], {'train1'}) == {'train1': 'food:0'}
+    for rows in [[good, good], [good | {'id': 'held1'}], [good | {'training_only': False}]]:
+        with pytest.raises(ValueError):
+            training_anchor_targets(rows, {'train1'})
