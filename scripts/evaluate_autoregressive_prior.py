@@ -12,9 +12,10 @@ from latent_diaries.inversion import digest, load_backbone, render
 from latent_diaries.multihypothesis_prior import MultihypothesisPrior
 
 
-def load_prior(weights, recipe='causal-flow'):
+def load_prior(weights, recipe='causal-flow', modes=8):
     reader = MultihypothesisPrior if recipe == 'multihypothesis' else AutoregressivePrior
-    model = reader(*(weights[k] for k in ['mean', 'scale', 'basis', 'latent_scale']))
+    kwargs = {'modes': modes} if recipe == 'multihypothesis' else {}
+    model = reader(*(weights[k] for k in ['mean', 'scale', 'basis', 'latent_scale']), **kwargs)
     model.load_state_dict(weights)
     return model
 
@@ -38,7 +39,7 @@ def main():
     validate_image_inputs(rows, [r['id'] for r in rows], allow_new=True)
     if not set(args.ids) <= {r['id'] for r in rows} or len(set(args.ids)) != len(args.ids):
         raise ValueError('Missing/duplicate requested IDs')
-    model = load_prior(load_file(str(file)), info.get('recipe', 'causal-flow'))
+    model = load_prior(load_file(str(file)), info.get('recipe', 'causal-flow'), info.get('modes', 8))
     if args.adapter:
         adapter_info = json.loads((args.adapter.parent / 'manifest.json').read_text())
         if (digest(args.adapter) != adapter_info['adapter_sha256'] or
@@ -56,7 +57,8 @@ def main():
         features = torch.tensor([row['features']], device=speaker.device, dtype=torch.float32)
         if adapter is not None:
             features = torch.nn.functional.normalize(torch.cat([features.new_ones(1, 1), features], -1) @ adapter, dim=-1)
-        prefix, stop_probabilities = model.sample(features, seed=42)
+        kwargs = {'sample_modes': True} if info.get('robust_semantics') else {}
+        prefix, stop_probabilities = model.sample(features, seed=42, **kwargs)
         result = {'id': row['id'], 'split': row['split'], 'predicted_prefix_length': prefix.shape[1],
                   'prefix_stop_probabilities': stop_probabilities, 'human_listening_status': 'pending',
                   **render(builder, wrapper, prefix, speaker, args.output_dir / f"{row['id']}.wav", 105, 42)}

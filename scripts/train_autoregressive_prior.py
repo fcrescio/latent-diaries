@@ -14,9 +14,10 @@ from latent_diaries.inversion import digest
 from latent_diaries.multihypothesis_prior import MultihypothesisPrior, multihypothesis_loss
 
 
-def make_prior(weights, recipe='causal-flow'):
+def make_prior(weights, recipe='causal-flow', modes=8):
     reader = MultihypothesisPrior if recipe == 'multihypothesis' else AutoregressivePrior
-    model = reader(*(weights[k] for k in ['mean', 'scale', 'basis', 'latent_scale']))
+    kwargs = {'modes': modes} if recipe == 'multihypothesis' else {}
+    model = reader(*(weights[k] for k in ['mean', 'scale', 'basis', 'latent_scale']), **kwargs)
     model.load_state_dict(weights)
     return model
 
@@ -51,8 +52,11 @@ def main():
     parser.add_argument('--resume', action='store_true')
     parser.add_argument('--recipe', choices=['causal-flow', 'multihypothesis'], default='causal-flow')
     parser.add_argument('--initial-run', type=Path)
+    parser.add_argument('--modes', type=int, default=8)
+    parser.add_argument('--robust-semantics', action='store_true')
     args = parser.parse_args()
-    if not Path('/.dockerenv').exists() or not 1 <= args.steps <= 4000:
+    schedule_steps = 6000 if args.robust_semantics else 4000
+    if not Path('/.dockerenv').exists() or not 1 <= args.steps <= schedule_steps:
         raise ValueError('Use managed worker within prescribed4000-step schedule')
     if args.run_dir.exists() and not args.resume:
         raise ValueError('Use fresh run directory or explicit resume')
@@ -71,13 +75,16 @@ def main():
     lengths = torch.tensor([r['length'] for r in corpus['rows']], device=device)
     training_mask = torch.tensor([r['split'] == 'train' for r in corpus['rows']], device=device)
     multi = args.recipe == 'multihypothesis'
-    learning_rate = 5e-4 if multi else 3e-4
+    if args.robust_semantics and (not multi or args.modes != 32):
+        raise ValueError('Robust semantic control prescribes32 continuous candidates')
+    learning_rate = 3e-4 if args.robust_semantics else (5e-4 if multi else 3e-4)
     info = {'corpus_sha256': digest(corpus_file), 'features_sha256': digest(feature_file),
             'prefix_sha256': digest(prefix_file), 'source_sha256': digest(Path(__file__)),
             'reader_source_sha256': digest(Path('src/latent_diaries/autoregressive_prior.py')),
             'lock_sha256': digest(Path('uv.lock')), 'protocol_sha256': digest(Path('configs/research/autoregressive-prefix-v6.json')),
-            'schedule_steps': 4000, 'warmup_steps': 100, 'learning_rate': learning_rate, 'seed': 42,
+            'schedule_steps': schedule_steps, 'warmup_steps': 100, 'learning_rate': learning_rate, 'seed': 42,
             'recipe': args.recipe,
+            'modes': args.modes, 'robust_semantics': args.robust_semantics,
             'source_revision': os.environ.get('LD_CODE_REVISION'), 'scope': 'Causal continuous language prior; training-text supervision',
             **{k: corpus['provenance'][k] for k in ['model_id', 'model_revision']}}
     if multi:
@@ -93,6 +100,8 @@ def main():
         info.update(initial_reader_sha256=digest(initial_file), initial_config_sha256=digest(args.initial_run / 'config.json'),
                     hypothesis_source_sha256=digest(Path('src/latent_diaries/multihypothesis_prior.py')),
                     protocol_sha256=digest(Path('configs/research/multihypothesis-prefix-v7.json')))
+        if args.robust_semantics:
+            info['protocol_sha256'] = digest(Path('configs/research/robust-semantic-prior-v8.json'))
     torch.manual_seed(42)
     if args.resume:
         saved = json.loads((args.run_dir / 'config.json').read_text())
@@ -102,16 +111,32 @@ def main():
         info = saved
         if digest(args.run_dir / 'reader.safetensors') != info['reader_sha256']:
             raise ValueError('Reader checksum differs')
-        model = make_prior(load_file(str(args.run_dir / 'reader.safetensors')), args.recipe).to(device)
+        model = make_prior(load_file(str(args.run_dir / 'reader.safetensors')), args.recipe, args.modes).to(device)
     else:
         if multi:
             initial_weights = load_file(str(initial_file))
             buffers = [initial_weights[k] for k in ['mean', 'scale', 'basis', 'latent_scale']]
             subspace = initial_info['subspace']
-            model = MultihypothesisPrior(*buffers)
-            loaded = model.load_state_dict({k: v for k, v in initial_weights.items() if k in model.state_dict()}, strict=False)
+            model = MultihypothesisPrior(*buffers, modes=args.modes)
+            loaded = model.load_state_dict({k: v for k, v in initial_weights.items()
+                                           if k in model.state_dict() and v.shape == model.state_dict()[k].shape}, strict=False)
             if loaded.unexpected_keys or any(not k.startswith(('candidates.', 'routing.')) for k in loaded.missing_keys):
                 raise ValueError('Causal initialization missed required context weights')
+            if args.robust_semantics:
+                dimension = model.dimension
+                old_modes = initial_weights['routing.bias'].numel()
+                if args.modes % old_modes:
+                    raise ValueError('Expanded candidates must replicate old continuous modes')
+                with torch.no_grad():
+                    for i in range(args.modes // old_modes):
+                        sl = slice(i * old_modes, (i + 1) * old_modes)
+                        model.candidates[-1].weight.reshape(args.modes, dimension, -1)[sl].copy_(
+                            initial_weights['candidates.2.weight'].reshape(old_modes, dimension, -1)
+                            + 0.001 * torch.randn_like(initial_weights['candidates.2.weight']).reshape(old_modes, dimension, -1))
+                        model.candidates[-1].bias.reshape(args.modes, dimension)[sl].copy_(
+                            initial_weights['candidates.2.bias'].reshape(old_modes, dimension))
+                        model.routing.weight[sl].copy_(initial_weights['routing.weight'])
+                        model.routing.bias[sl].copy_(initial_weights['routing.bias'] - math.log(args.modes / old_modes))
             model = model.to(device)
         else:
             buffers, subspace = token_subspace(prefix[training_mask], lengths[training_mask])
@@ -131,16 +156,33 @@ def main():
         if state['cuda_rng']:
             torch.cuda.set_rng_state_all([v.cpu() for v in state['cuda_rng']])
     training = training_mask.nonzero()[:, 0]
+    prototype = None
+    if args.robust_semantics:
+        names = [r['category'] for r in corpus['rows']]
+        categories = sorted(set(names))
+        category_ids = torch.tensor([categories.index(k) for k in names], device=device)
+        means = torch.stack([features[training_mask & (category_ids == i)].mean(0) for i in range(len(categories))])
+        prototype = torch.nn.functional.normalize(means, dim=-1)[category_ids]
     args.run_dir.mkdir(parents=True, exist_ok=True)
     with (args.run_dir / 'loss.jsonl').open('a') as log:
         for step in range(start, args.steps):
             chosen = training[torch.randint(len(training), (16,), device=device)]
-            lr = learning_rate * min(1, (step + 1) / 100) * (0.1 + 0.45 * (1 + math.cos(math.pi * step / 4000)))
+            lr = learning_rate * min(1, (step + 1) / 100) * (0.1 + 0.45 * (1 + math.cos(math.pi * step / schedule_steps)))
             for group in optimizer.param_groups:
                 group['lr'] = lr
             optimizer.zero_grad(set_to_none=True)
             objective = multihypothesis_loss if multi else causal_loss
-            loss, components = objective(model, features[chosen], prefix[chosen], lengths[chosen])
+            semantic = features[chosen]
+            if args.robust_semantics:
+                semantic = semantic.clone()
+                kinds = torch.rand(len(chosen), device=device)
+                mean_mask, jitter_mask, zero_mask = kinds < 0.5, (kinds >= 0.8) & (kinds < 0.9), kinds >= 0.9
+                semantic[mean_mask] = torch.nn.functional.normalize(prototype[chosen][mean_mask]
+                    + 0.01 * torch.randn_like(semantic[mean_mask]), dim=-1)
+                semantic[jitter_mask] = torch.nn.functional.normalize(semantic[jitter_mask]
+                    + 0.015 * torch.randn_like(semantic[jitter_mask]), dim=-1)
+                semantic[zero_mask] = 0
+            loss, components = objective(model, semantic, prefix[chosen], lengths[chosen])
             if not torch.isfinite(loss):
                 raise RuntimeError('Nonfinite causal flow loss')
             loss.backward()

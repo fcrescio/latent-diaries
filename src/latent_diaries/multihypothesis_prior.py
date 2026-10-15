@@ -20,11 +20,11 @@ class MultihypothesisPrior(AutoregressivePrior):
         return means, self.routing(context)
 
     @torch.no_grad()
-    def sample(self, features, seed=42, steps=64):
-        # Greedy continuous mode is deterministic; seed is retained for caller parity.
+    def sample(self, features, seed=42, steps=64, sample_modes=False, temperature=0.5):
         if features.shape != (1, 768) or not torch.isfinite(features).all():
             raise ValueError('Finite batch-one numeric features required')
         previous = features.new_zeros(1, self.dimension)
+        generator = torch.Generator(device=features.device).manual_seed(seed)
         recurrent, values, probabilities = None, [], []
         semantic = self.features(features)
         for i in range(self.maximum + 1):
@@ -35,7 +35,13 @@ class MultihypothesisPrior(AutoregressivePrior):
             if (i > 0 and probability >= 0.5) or i == self.maximum:
                 break
             means, routing = self.predictions(context)
-            previous = means[0, int(routing[0].argmax())][None]
+            if sample_modes:
+                logits, indices = routing[0].topk(min(4, self.modes))
+                selected = int(torch.multinomial((logits / temperature).softmax(-1), 1, generator=generator))
+                index = int(indices[selected])
+            else:
+                index = int(routing[0].argmax())
+            previous = means[0, index][None]
             values.append(previous)
         return self.decode(torch.stack(values, 1)), probabilities
 

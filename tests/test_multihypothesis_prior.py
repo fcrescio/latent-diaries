@@ -20,3 +20,6 @@ def test_continuous_candidates_and_routing_gradients():
     second, _ = model.sample(features[:1])
     torch.testing.assert_close(first, second, rtol=0, atol=0)
     assert 1 <= first.shape[1] <= 4
+    first, _ = model.sample(features[:1], seed=11, sample_modes=True)
+    second, _ = model.sample(features[:1], seed=11, sample_modes=True)
+    torch.testing.assert_close(first, second, rtol=0, atol=0)
