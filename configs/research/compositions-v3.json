@@ -1,0 +1,394 @@
+{
+  "schema": 3,
+  "scope": "Sequence-aware prefix reconstruction, authored numeric factors; not images",
+  "feature_order": [
+    "rain",
+    "sun",
+    "snow",
+    "fog",
+    "wind",
+    "sunset",
+    "opening",
+    "memory"
+  ],
+  "fresh_test_ids": [
+    "w02",
+    "e01"
+  ],
+  "prespecified_training_steps": 1600,
+  "resume_at_step": 800,
+  "width": 128,
+  "layers": 4,
+  "heads": 4,
+  "learning_rate": 0.001,
+  "seed": 42,
+  "decode": "sampled codec0 and residuals, seed42, cap105",
+  "evaluation_ids": [
+    "w00",
+    "w02",
+    "e01"
+  ],
+  "comparison": "Affine prefix/length baseline fitted on same 22 train rows",
+  "rows": [
+    {
+      "id": "c00",
+      "split": "train",
+      "features": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        -1.0
+      ],
+      "teacher_text": "Sotto la pioggia, la finestra sembrava custodire un segreto."
+    },
+    {
+      "id": "c01",
+      "split": "train",
+      "features": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        1.0
+      ],
+      "teacher_text": "Sotto la pioggia, la finestra sembrava ricordare una promessa."
+    },
+    {
+      "id": "c02",
+      "split": "train",
+      "features": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        -1.0
+      ],
+      "teacher_text": "Sotto la pioggia, la porta sembrava custodire un segreto."
+    },
+    {
+      "id": "c03",
+      "split": "train",
+      "features": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "teacher_text": "Sotto la pioggia, la porta sembrava ricordare una promessa."
+    },
+    {
+      "id": "c04",
+      "split": "train",
+      "features": [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        -1.0
+      ],
+      "teacher_text": "Alla luce del sole, la finestra sembrava custodire un segreto."
+    },
+    {
+      "id": "c05",
+      "split": "train",
+      "features": [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        1.0
+      ],
+      "teacher_text": "Alla luce del sole, la finestra sembrava ricordare una promessa."
+    },
+    {
+      "id": "c06",
+      "split": "train",
+      "features": [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        -1.0
+      ],
+      "teacher_text": "Alla luce del sole, la porta sembrava custodire un segreto."
+    },
+    {
+      "id": "c07",
+      "split": "train",
+      "features": [
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "teacher_text": "Alla luce del sole, la porta sembrava ricordare una promessa."
+    },
+    {
+      "id": "s00",
+      "split": "train",
+      "features": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        -1.0
+      ],
+      "teacher_text": "Sotto la neve, la finestra sembrava custodire un segreto."
+    },
+    {
+      "id": "s01",
+      "split": "train",
+      "features": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        -1.0,
+        1.0
+      ],
+      "teacher_text": "Sotto la neve, la finestra sembrava ricordare una promessa."
+    },
+    {
+      "id": "s02",
+      "split": "train",
+      "features": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        -1.0
+      ],
+      "teacher_text": "Sotto la neve, la porta sembrava custodire un segreto."
+    },
+    {
+      "id": "s03",
+      "split": "train",
+      "features": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "teacher_text": "Sotto la neve, la porta sembrava ricordare una promessa."
+    },
+    {
+      "id": "f00",
+      "split": "train",
+      "features": [
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        -1.0
+      ],
+      "teacher_text": "Nella nebbia, la finestra sembrava custodire un segreto."
+    },
+    {
+      "id": "f01",
+      "split": "train",
+      "features": [
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        1.0
+      ],
+      "teacher_text": "Nella nebbia, la finestra sembrava ricordare una promessa."
+    },
+    {
+      "id": "f02",
+      "split": "train",
+      "features": [
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        1.0,
+        -1.0
+      ],
+      "teacher_text": "Nella nebbia, la porta sembrava custodire un segreto."
+    },
+    {
+      "id": "f03",
+      "split": "train",
+      "features": [
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "teacher_text": "Nella nebbia, la porta sembrava ricordare una promessa."
+    },
+    {
+      "id": "w00",
+      "split": "train",
+      "features": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        -1.0,
+        -1.0
+      ],
+      "teacher_text": "Nel vento, la finestra sembrava custodire un segreto."
+    },
+    {
+      "id": "w01",
+      "split": "train",
+      "features": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        -1.0,
+        1.0
+      ],
+      "teacher_text": "Nel vento, la finestra sembrava ricordare una promessa."
+    },
+    {
+      "id": "w02",
+      "split": "heldout",
+      "features": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        -1.0
+      ],
+      "teacher_text": "Nel vento, la porta sembrava custodire un segreto."
+    },
+    {
+      "id": "w03",
+      "split": "train",
+      "features": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "teacher_text": "Nel vento, la porta sembrava ricordare una promessa."
+    },
+    {
+      "id": "e00",
+      "split": "train",
+      "features": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        -1.0,
+        -1.0
+      ],
+      "teacher_text": "Al tramonto, la finestra sembrava custodire un segreto."
+    },
+    {
+      "id": "e01",
+      "split": "heldout",
+      "features": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        -1.0,
+        1.0
+      ],
+      "teacher_text": "Al tramonto, la finestra sembrava ricordare una promessa."
+    },
+    {
+      "id": "e02",
+      "split": "train",
+      "features": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0,
+        -1.0
+      ],
+      "teacher_text": "Al tramonto, la porta sembrava custodire un segreto."
+    },
+    {
+      "id": "e03",
+      "split": "train",
+      "features": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "teacher_text": "Al tramonto, la porta sembrava ricordare una promessa."
+    }
+  ]
+}
