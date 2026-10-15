@@ -5,7 +5,7 @@
   "corpus": "Deterministically authored Italian scene clauses combined with varied independent continuations; no single shared ending; exact duplicates removed",
   "split": "Hold out clause/continuation combinations before fitting, all words may occur in training; max1280 train/160 held; source categories balanced",
   "targets": "Pinned frozen Qwen projected text vectors, up to32 positions; PAD to32 plus joint continuous length scalar",
-  "reader": "Conditional continuous rectified-flow MLP, width256, under25M trainable parameters, no text vocabulary or runtime target lookup",
+  "reader": "Conditional continuous rectified flow over training-fitted PCA prefix coordinates and length; width >= latent dimension, under25M trainable parameters; no text vocabulary or target retrieval",
   "steps": 2400,
   "resume_at": 1200,
   "batch_size": 32,
@@ -16,5 +16,6 @@
   "flow_inference": "64 fixed Euler steps, conditional vector, fixed Gaussian seed42; no category classifier or stored prefix retrieval",
   "evaluation": "Prespecified text-feature training/held diagnostic controls, existing four development images and null; real Qwen sampled audio seed42 cap105",
   "acceptance": "Tensor diagnostics and auxiliary ASR are not acceptance. Human listening and later separate fresh/shuffled image evaluation required",
-  "resources": "Existing local single worker, frozen backbones, no paid jobs or publication of private artifacts"
+  "resources": "Existing local single worker, frozen backbones, no paid jobs or publication of private artifacts",
+  "subspace": "Training-only normalized PCA; choose smallest rank from128,256,512,768,1024,n_train-1 with training raw reconstruction MSE <=1e-7; report held reconstruction independently"
 }

@@ -13,7 +13,8 @@ class FrozenTrainingTextEncoder:
 
         if not re.fullmatch(r'[0-9a-f]{40}', revision):
             raise ValueError('Pin the full upstream revision')
-        snapshot = snapshot_download(MODEL_ID, revision=revision, local_files_only=True)
+        snapshot = snapshot_download(MODEL_ID, revision=revision, local_files_only=True,
+                                     allow_patterns=['*.json', '*.safetensors', '*.model', '*.txt', '*.jinja'])
         config = AutoConfig.from_pretrained(snapshot, trust_remote_code=False)
         config.audio_config = config.vision_config = None
         self.processor = AutoProcessor.from_pretrained(snapshot, trust_remote_code=False)
