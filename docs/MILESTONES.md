@@ -2,7 +2,7 @@
 
 A milestone is complete only with a committed reproduction command, a passing test and run evidence. Progression may stop on a human gate.
 
-2026-10-14 status: M0 baseline and genuine-speech codec round-trip are accepted.
+2026-10-15 status: M0 baseline and genuine-speech codec round-trip are accepted.
 Continuous assembly, frozen-backbone gradients, cache parity and checkpoint
 inference are exercised. M1.1 memorization acceptance is satisfied by two distinct
 human-accepted Italian outputs: run-006 mixed decoding and shared-mapper-001
