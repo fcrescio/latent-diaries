@@ -12,7 +12,13 @@ class SharedMapper(nn.Module):
         self.register_buffer("base", base.detach().clone())
         self.input_dim = input_dim
         self.width = width
-        self.net = nn.Sequential(nn.Linear(input_dim, width), nn.Tanh(), nn.Linear(width, base.numel()))
+        if width < 0:
+            raise ValueError("Width must be nonnegative; zero selects additive factors")
+        self.net = (
+            nn.Sequential(nn.Linear(input_dim, base.numel()))
+            if width == 0
+            else nn.Sequential(nn.Linear(input_dim, width), nn.Tanh(), nn.Linear(width, base.numel()))
+        )
         nn.init.normal_(self.net[-1].weight, std=0.001)
         nn.init.zeros_(self.net[-1].bias)
 

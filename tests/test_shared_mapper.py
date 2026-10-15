@@ -2,6 +2,7 @@ import pytest
 
 torch = pytest.importorskip("torch")
 
+from latent_diaries.prefix_regression import predict_prefix
 from latent_diaries.shared_mapper import SharedMapper, validate_split
 
 
@@ -31,3 +32,27 @@ def test_split_rejects_feature_leakage_and_duplicate_ids():
         validate_split([rows[0], rows[1] | {"features": rows[0]["features"]}])
     with pytest.raises(ValueError, match="unique"):
         validate_split([rows[0], rows[1] | {"id": "a"}])
+
+
+def test_additive_mapper_composes_directions_without_interactions():
+    mapper = SharedMapper(torch.randn(1, 4, 8), width=0)
+    x = torch.tensor([[1.0, -1.0, 0.0]])
+    y = torch.tensor([[0.0, 0.0, 1.0]])
+    torch.testing.assert_close(mapper(x + y), mapper(x) + mapper(y) - mapper(torch.zeros_like(x)))
+    assert sum(p.numel() for p in mapper.parameters()) == 4 * 8 * 4
+    mapper(x).square().mean().backward()
+    assert mapper.net[0].weight.grad.abs().sum() > 0
+    with pytest.raises(ValueError, match="Width"):
+        SharedMapper(torch.zeros(1, 4, 8), width=-1)
+
+
+def test_numeric_prefix_length_preserves_only_predicted_positions():
+    coef = torch.arange(24, dtype=torch.float32).reshape(4, 3, 2)
+    length_coef = torch.tensor([2.0, 1.0, 0.0, 0.0])
+    prefix, length = predict_prefix(torch.tensor([-1.0, 0.0, 0.0]), coef, length_coef)
+    assert length == 1 and prefix.shape == (1, 1, 2)
+    torch.testing.assert_close(prefix[0], (coef[0] - coef[1])[:1])
+    assert predict_prefix(torch.tensor([1.0, 0.0, 0.0]), coef, length_coef)[1] == 3
+    assert predict_prefix(torch.tensor([-9.0, 0.0, 0.0]), coef, length_coef)[1] == 1
+    with pytest.raises(ValueError, match="Finite"):
+        predict_prefix(torch.tensor([float("nan"), 0.0, 0.0]), coef, length_coef)
