@@ -1,0 +1,149 @@
+{
+  "scope": "Continuous language-prior and exposed-development image research; human E6 review pending, no fresh-image acceptance",
+  "worker_image": "sha256:52acc39c5443fa7041b4ee0201fec5db74c97078b55247b53be08f590703a7a3",
+  "execution": "Single existing worker/dependency locks; current source/scripts/tests bound read-only",
+  "crossmodal_text_prototype_diagnostic": {
+    "train": {
+      "count": 239,
+      "accuracy": 0.5774058699607849
+    },
+    "heldout": {
+      "count": 55,
+      "accuracy": 0.6000000238418579
+    }
+  },
+  "text_batch_single_max_abs_error": 6.332993507385254e-08,
+  "corpus": {
+    "authored_train_sentences": 1280,
+    "held_combinations": 160,
+    "continuations": 40,
+    "prefix_length_range": [
+      19,
+      31
+    ],
+    "held_words_may_be_seen_in_training": true
+  },
+  "stages": {
+    "semantic-prior-v5": {
+      "completed_steps": 2400,
+      "trainable_parameters": 2393089,
+      "peak_allocated_vram_bytes": 666806784,
+      "source_revision": "205e605ec8bc6b3b6a215c39eb84ad37d3b580c9",
+      "reader_source_sha256": "03b85555b20f3c73eaadefdc7b88c1cba3051402fb98cc13314b6b35d35a0ba1"
+    },
+    "autoregressive-prior-v6": {
+      "completed_steps": 4000,
+      "trainable_parameters": 2314881,
+      "peak_allocated_vram_bytes": 267660800,
+      "source_revision": "824a745f5b8b18ed8380faf07339f901fc264c51",
+      "reader_source_sha256": "4536c8906a0f0b8e9e68d69d41b7399654a7b66bddca8c5cabc6038f7023d3d6"
+    },
+    "multihypothesis-prior-v7": {
+      "completed_steps": 4000,
+      "trainable_parameters": 3096201,
+      "peak_allocated_vram_bytes": 289100800,
+      "source_revision": "35fa304c30ce7d4d4c65015cae7da6476422284d",
+      "reader_source_sha256": "4536c8906a0f0b8e9e68d69d41b7399654a7b66bddca8c5cabc6038f7023d3d6"
+    },
+    "robust-prior-v8": {
+      "completed_steps": 6000,
+      "trainable_parameters": 9406113,
+      "peak_allocated_vram_bytes": 450451968,
+      "source_revision": "521232dbf385f492ff80266a69dd25643434a383",
+      "reader_source_sha256": "4536c8906a0f0b8e9e68d69d41b7399654a7b66bddca8c5cabc6038f7023d3d6"
+    }
+  },
+  "stage_outcomes": {
+    "v5": "Whole-prefix flow fragmented on auxiliary ASR including training controls; no image acceptance",
+    "v6": "Causal flow improves stopping but auxiliary word content remains fragmented",
+    "v7": "Two fixed text-feature controls have coherent auxiliary transcriptions; calibrated image transfer remains fragmented",
+    "v8": "Robust conditioning recipe generates six real image/control clips; all four development auxiliary transcriptions have distinct endings; pronunciation and artistic judgments pending"
+  },
+  "subspace": {
+    "rank": 512,
+    "training_raw_mse": 6.954057381849856e-16,
+    "candidate_floors": {
+      "64": 0.00017325973021797836,
+      "128": 4.6507462684530765e-05,
+      "192": 1.3566282177635003e-05,
+      "256": 3.953097802877892e-06,
+      "320": 1.036062030834728e-06,
+      "384": 2.0742190542932804e-07,
+      "512": 6.954057381849856e-16
+    }
+  },
+  "numeric_image_adapter": {
+    "training_cases": 191,
+    "training_cases_excluded": 48,
+    "alpha": 1.0
+  },
+  "adapter_supported_categories": 9,
+  "frozen_teacher_forced_condition_diagnostic": {
+    "train": {
+      "exact": {
+        "count": 40,
+        "routed_gold_history_raw_prefix_mse": 1.2416881617127728e-06,
+        "stop_at_gold_eos": 0.9999488815665245,
+        "premature_stop_positions": 0.0
+      },
+      "prototype": {
+        "count": 40,
+        "routed_gold_history_raw_prefix_mse": 0.0001962163119969773,
+        "stop_at_gold_eos": 0.9999601304531097,
+        "premature_stop_positions": 0.0
+      },
+      "zero": {
+        "count": 40,
+        "routed_gold_history_raw_prefix_mse": 0.00027252193012827775,
+        "stop_at_gold_eos": 0.9999291509389877,
+        "premature_stop_positions": 0.0
+      }
+    },
+    "heldout": {
+      "exact": {
+        "count": 40,
+        "routed_gold_history_raw_prefix_mse": 3.5166511324291606e-06,
+        "stop_at_gold_eos": 0.9999979048967361,
+        "premature_stop_positions": 0.0
+      },
+      "prototype": {
+        "count": 40,
+        "routed_gold_history_raw_prefix_mse": 0.0002376007358179777,
+        "stop_at_gold_eos": 0.9999986022710801,
+        "premature_stop_positions": 0.0
+      },
+      "zero": {
+        "count": 40,
+        "routed_gold_history_raw_prefix_mse": 0.00031974832818377764,
+        "stop_at_gold_eos": 0.9999416545033455,
+        "premature_stop_positions": 0.0
+      }
+    }
+  },
+  "standalone_image_inference_reads_teacher_or_text": false,
+  "generated_new_image_control_clips": 6,
+  "non_null_image_clips_reaching_cap": 0,
+  "null_reaches_audio_cap": false,
+  "gallery": {
+    "pairs": 16,
+    "unique_audio_clips": 12,
+    "new_method_matched_development": 4,
+    "new_method_shuffled": 4,
+    "baseline_and_new_training_null_controls": 4,
+    "baseline_matched_development": 4,
+    "blind_labels": "E6-A through E6-P",
+    "human_ratings_created": false
+  },
+  "fresh_candidates_reserved_unlabelled": 96,
+  "human_quality_acceptance": false,
+  "image_grounding_acceptance": false,
+  "private_data_uploaded": false,
+  "paid_jobs_used": false,
+  "label_container_started": false,
+  "tests": {
+    "host": "11 passed /13 ML-module skips",
+    "primary_cpu": "36 passed /3 skips",
+    "primary_cuda": "37 passed /2 vision-runtime skips",
+    "locked_vision_cpu": "4 passed"
+  }
+}

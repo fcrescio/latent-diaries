@@ -1,0 +1,21 @@
+{
+  "scope": "Training-only language-conditioning prior; existing exposed development images, no fresh candidate access",
+  "hypothesis": "A conditional generative distribution over continuous prefixes can preserve coherent alternatives better than pointwise mean regression",
+  "text_features": "Pinned frozen EmbeddingGemma2, no vision/audio towers, official Document task format, normalized 768D; training and separate diagnostic controls only",
+  "corpus": "Deterministically authored Italian scene clauses combined with varied independent continuations; no single shared ending; exact duplicates removed",
+  "split": "Hold out clause/continuation combinations before fitting, all words may occur in training; max1280 train/160 held; source categories balanced",
+  "targets": "Pinned frozen Qwen projected text vectors, up to32 positions; PAD to32 plus joint continuous length scalar",
+  "reader": "Conditional continuous rectified flow over training-fitted PCA prefix coordinates and length; width >= latent dimension, under25M trainable parameters; no text vocabulary or target retrieval",
+  "steps": 2400,
+  "resume_at": 1200,
+  "batch_size": 32,
+  "learning_rate": 0.0002,
+  "schedule": "warmup100 cosine floor0.1 over fixed2400",
+  "objective": "Mean continuous velocity MSE plus joint normalized-length velocity MSE",
+  "seed": 42,
+  "flow_inference": "64 fixed Euler steps, conditional vector, fixed Gaussian seed42; no category classifier or stored prefix retrieval",
+  "evaluation": "Prespecified text-feature training/held diagnostic controls, existing four development images and null; real Qwen sampled audio seed42 cap105",
+  "acceptance": "Tensor diagnostics and auxiliary ASR are not acceptance. Human listening and later separate fresh/shuffled image evaluation required",
+  "resources": "Existing local single worker, frozen backbones, no paid jobs or publication of private artifacts",
+  "subspace": "Training-only normalized PCA; choose smallest rank from128,256,512,768,1024,n_train-1 with training raw reconstruction MSE <=1e-7; report held reconstruction independently"
+}

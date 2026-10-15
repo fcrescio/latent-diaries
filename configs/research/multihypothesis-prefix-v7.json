@@ -1,0 +1,17 @@
+{
+  "scope": "Same text-prior corpus; no fresh-image data or language-vocabulary inference",
+  "hypothesis": "Noise-based continuous prefix samplers stop but miss coherent lexical vectors; context-dependent multi-hypothesis means preserve modes without noisy off-manifold vectors",
+  "initialization": "Causal GRU/semantic context and train-only token subspace from frozen v6 reader; replace flow head",
+  "head": "8 context-dependent continuous next-vector candidates and numeric routing logits; candidate indices have no word or category semantics",
+  "objective": "Best-candidate normalized-prefix MSE +0.1 candidate-routing CE +0.2 numeric EOS BCE; gold previous continuous vectors with noise0.02",
+  "steps": 4000,
+  "resume_at": 2000,
+  "batch_size": 16,
+  "learning_rate": 0.0005,
+  "schedule": "warmup100 cosine floor0.1 fixed4000",
+  "seed": 42,
+  "generation": "Greedy highest-logit continuous candidate, own generated previous vector, EOS0.5 min1 max32; Qwen sampled seed42 cap105",
+  "controls": "Same frozen training/held text-feature controls, separate gold-history and exact-prefix diagnostics; if prior viable existing exposed image/adapter plan",
+  "privacy": "No source-media publication, no paid jobs, no fresh candidate access",
+  "acceptance": "Autoregressive audio and human review; ASR auxiliary only"
+}

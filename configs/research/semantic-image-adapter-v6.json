@@ -1,0 +1,7 @@
+{
+  "scope": "Optional numeric image-to-semantic calibration for frozen v6 prior; existing train images only",
+  "method": "Centered train-only ridge alpha1 mapping normalized image vectors to normalized mean training-text vector for the matching training-supported scene",
+  "inference": "Linear numeric projection plus L2 normalization; no category classifier, labels, text strings, prototype retrieval or tokenizer loaded",
+  "coverage": "Train only overlapping image/corpus categories; report exclusions, evaluate only prespecified development categories with support",
+  "acceptance": "No fresh-test access; human listening and later shuffled/fresh grounding required"
+}

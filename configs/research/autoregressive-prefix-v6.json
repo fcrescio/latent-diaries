@@ -1,0 +1,18 @@
+{
+  "scope": "Factorize prior over continuous prefix positions; same authored corpus and reserved fresh image exclusions",
+  "hypothesis": "Whole-prefix flow underfits coherent sequences; causal next-vector supervision provides many more local transitions",
+  "backbones": "Frozen, cached teacher prefix/text vectors only during reader training",
+  "representation": "Training-only token PCA, smallest rank from64,128,192,256,320,384,512,768,1024 with training raw MSE <=1e-7; latent std clamped0.1",
+  "reader": "Two-layer causal GRU256, context-conditioned continuous next-vector rectified flow width512, numeric EOS head; no runtime text vocabulary or lookup",
+  "objective": "Valid-position velocity MSE +0.2 EOS BCE; shifted gold previous continuous prefix vectors, Gaussian previous-vector noise0.02 in training",
+  "steps": 4000,
+  "resume_at": 2000,
+  "batch_size": 16,
+  "learning_rate": 0.0003,
+  "schedule": "warmup100 cosine floor0.1 over fixed4000",
+  "seed": 42,
+  "sampling": "Causal generated previous vectors;64 Euler steps per vector; fixed Gaussian seed42; EOS threshold0.5, min1 max32 prefix vectors",
+  "flow_skip": "Known isotropic Gaussian bridge velocity coefficient (2t-1)/(t^2+(1-t)^2) times state, plus learned residual",
+  "controls": "Same prespecified training/held text-feature controls and exposed image plan; exact-token-subspace and gold-history diagnostic controls kept separate",
+  "acceptance": "Actual audio and human listening; ASR auxiliary only; no fresh data access or automatic quality claims"
+}
