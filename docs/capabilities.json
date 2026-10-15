@@ -49,5 +49,10 @@
   "acoustic_image_reader_fresh_generalization_verified": false,
   "acoustic_image_reader_development_review_completed": true,
   "acoustic_image_reader_human_improvement_verified": false,
-  "canonical_image_reader_development_intelligibility_observed": true
+  "canonical_image_reader_development_intelligibility_observed": true,
+  "training_only_semantic_text_features_exercised": true,
+  "continuous_language_prior_training_resume_exercised": true,
+  "robust_semantic_prior_image_inference_exercised": true,
+  "robust_semantic_prior_development_review_pending": true,
+  "robust_semantic_prior_fresh_generalization_verified": false
 }

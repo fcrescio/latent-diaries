@@ -21,6 +21,15 @@ training sentences, so this is limited-repertoire progress rather than original
 narration. Fresh test images remain reserved; all private photos, labels,
 features, audio, ratings and checkpoints stay local.
 
+Work continues with a continuous autoregressive language prior trained on varied
+Italian supervision, then calibrated from image vectors. Earlier flow controls
+failed; a robust continuous-candidate reader now generates six new image/control
+clips. Four development auxiliary transcriptions have different endings, but
+pronunciation, originality and grounding still require human judgment.
+The authenticated local gallery has **E6-A through E6-P**, including the retained
+baseline and deliberately repeated audio on shuffled images:
+`http://localhost:18080/#m2-prior-v8-a`. All 96 fresh candidates remain reserved.
+
 ## Artistic brief
 
 Turn opt-in photos from a walk/wearable into an intimate, slightly unreliable oral memory in Italian. Images become a condition for a voice to speak, not an instruction to caption a scene. The work has its own aesthetic judgments (evocation, grounding, voice, surprise), not ASR WER as its aim.

@@ -48,6 +48,17 @@ inside the same worker image: two real images produce normalized 768D vectors
 with repeat/batch parity. The cached image-to-reader training link is exercised; grounding acceptance
 remains open. BF16 cache parity is also open; accepted speech uses FP32 Qwen.
 
+A continuous semantic-language-prior follow-up uses authored Italian training
+sentences and training-only text embeddings. Whole-prefix and causal flows fail
+word-content controls. A continuous-candidate autoregressive reader recovers
+coherent auxiliary text-control transcriptions but initially fails image transfer.
+The subsequent robust-conditioning recipe completes 6,000 updates with real
+midpoint resume, then generates all four existing development cases, training
+and null controls without reading text/teacher targets at inference. Its 16-pair
+E6 gallery includes the retained baseline and shuffled-image assignments.
+Human listening is pending; auxiliary ASR and numerical dependence do not accept
+Italian or grounding. Fresh candidates remain reserved and M2 remains incomplete.
+
 | Milestone | Tasks | Evidence / exit gate |
 |---|---|---|
 | M-1 bootstrap | env, GitHub remote, HF private repos, Docker and review UI | `make test`, `make test-docker`, local browser, no tracked private files |

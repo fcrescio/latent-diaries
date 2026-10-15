@@ -665,3 +665,14 @@ continuous candidates. No candidate index has a fixed word/category meaning.
 Oracle, gold-history and auxiliary ASR controls are not learned-image or human
 quality results. Preserve private transcripts/weights/mappings locally and
 ingest meaningful real image/audio comparisons for actual human assessment.
+
+The current robust-prior comparison is E6-A through E6-P at
+`http://localhost:18080/#m2-prior-v8-a`. `blind_image_comparison.py` accepts
+`--candidate-results` (the older `--acoustic-results` alias remains supported),
+`--candidate-name` and `--include-shuffled`. The latter adds a complete
+derangement of the four new-method development pairs. Six new outputs and six
+retained baseline outputs form sixteen pairs because four new audio clips are
+deliberately reused on wrong images. Explain these repetitions to the reviewer;
+do not count them as independent generations. Existing ratings are preserved,
+with no automatic human scores. Pronunciation, evocation and grounding remain
+pending actual review; all reserved fresh candidates stay excluded.
