@@ -1,0 +1,11 @@
+{
+  "hypothesis": "Gold-history fit does not cover the student's own audio states. Teach the frozen-backbone image reader on diverse generated histories while retaining original gold-policy supervision.",
+  "evidence": "V22 one-training-image codec0 KL grows0.0374 to1.0851 (frozen) and0.0393 to1.5078 (LoRA) on generated histories; disabled-adapter teacher logits match original cache exactly. Across170 training images, first16-frame and EOS errors are smaller than later errors, so do not arbitrarily upweight the beginning or EOS.",
+  "model": "Warm-start calibrated V22 frozen-Talker reader; original Qwen/codec/speaker/vision remain frozen. No LoRA in this control.",
+  "rollout_pool": "Up to6 distinct capture groups per existing training scene category, seeded42 selection, max60 images; no heldout labels or fresh96 access. Batched8 image-only generation, mixed decoding, cap160. Histories are diagnostic generated codes, not gold speech; save no WAVs for the cache.",
+  "supervision": "Frozen original Qwen sees each training-only exact teacher prefix AFTER student history generation, producing detached next-code distributions for that same history. Never pass teacher prefixes to student generation or inference.",
+  "algorithm": "Two fixed policy iterations. Each collects fresh histories from the exact preceding reader checkpoint (collection seeds42 then43), resets optimizer in a fresh run directory, trains1600 with actual800 resume, and samples gold versus generated history with independent Bernoulli probability0.5. Gold choices cover all170 training images; generated choices cover the balanced rollout pool.",
+  "optimization": "Codec0 KL plus residual KL weight1; reader base lr2e-5, output-head multiplier5 (lr1e-4), warm20 cosine floor0.1; normclip1. Unit-scale fixed32 prefix preserved. Checkpoint optimizer/RNG and data/cache/source checksums.",
+  "evaluation": "After two iterations, original4 exposed development images, first training input and null, mixed decoding seed42 cap160, numeric inputs only. No automated quality/grounding approval. Measure new generated-history policy gap separately if needed.",
+  "limits": "The old M1 two-history repair failed; this broader refreshed pool is a new hypothesis, not proof on-policy learning is solved. All artifacts stay local, no paid jobs or uploads."
+}

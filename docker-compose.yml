@@ -23,6 +23,8 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.worker
+      args:
+        WORKER_BASE_IMAGE: ${LD_WORKER_BASE_IMAGE:-python:3.11-slim}
     environment:
       HF_HOME: /cache/hf
       HF_TOKEN: ${HF_TOKEN:-}
