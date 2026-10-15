@@ -24,11 +24,13 @@ features, audio, ratings and checkpoints stay local.
 Work continues with a continuous autoregressive language prior trained on varied
 Italian supervision, then calibrated from image vectors. Earlier flow controls
 failed; a robust continuous-candidate reader now generates six new image/control
-clips. Four development auxiliary transcriptions have different endings, but
-pronunciation, originality and grounding still require human judgment.
-The authenticated local gallery has **E6-A through E6-P**, including the retained
-baseline and deliberately repeated audio on shuffled images:
-`http://localhost:18080/#m2-prior-v8-a`. All 96 fresh candidates remain reserved.
+clips. The available E6 human notes consistently report good Italian and varied
+content, but weak image relevance, including the training control. Fifteen of
+sixteen pairs have saved ratings; image grounding is not accepted. Work now
+isolates contraction in the numeric image adapter while preserving the speech
+reader. The new blinded comparison is **E7-A through E7-P** at
+`http://localhost:18080/#m2-adapter-v9-a`. It includes unchanged v8 and shuffled
+controls; actual review is pending. All 96 fresh candidates remain reserved.
 
 ## Artistic brief
 

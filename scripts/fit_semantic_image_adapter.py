@@ -7,6 +7,7 @@ import torch
 from safetensors.torch import load_file, save_file
 
 from latent_diaries.inversion import digest
+from latent_diaries.semantic_adapter import fit_coefficient, select_alpha
 
 
 def main():
@@ -16,6 +17,7 @@ def main():
     parser.add_argument('--corpus', type=Path, required=True)
     parser.add_argument('--features', type=Path, required=True)
     parser.add_argument('--output-dir', type=Path, required=True)
+    parser.add_argument('--select-alpha', action='store_true', help='Train-group cross-validation only')
     args = parser.parse_args()
     if not Path('/.dockerenv').exists() or args.output_dir.exists():
         raise ValueError('Use managed worker and a new adapter directory')
@@ -27,26 +29,32 @@ def main():
     means = {k: torch.nn.functional.normalize(torch.stack([vectors[i] for i, r in enumerate(text)
              if r['split'] == 'train' and r['category'] == k]).mean(0), dim=0) for k in categories}
     training = [r for r in rows if r['split'] == 'train' and design[r['id']]['scene'] in means]
-    x = torch.tensor([r['features'] for r in training], dtype=torch.float64)
-    y = torch.stack([means[design[r['id']]['scene']] for r in training]).double()
-    center_x, center_y = x.mean(0), y.mean(0)
-    centered = x - center_x
-    weights = centered.T @ torch.linalg.solve(centered @ centered.T + torch.eye(len(x)), y - center_y)
-    coefficient = torch.cat([(center_y - center_x @ weights)[None], weights], 0).float()
+    x = torch.tensor([r['features'] for r in training])
+    y = torch.stack([means[design[r['id']]['scene']] for r in training])
+    alpha, validation = 1.0, None
+    if args.select_alpha:
+        protocol = json.loads(Path('configs/research/grounding-adapter-v9.json').read_text())
+        alpha, validation = select_alpha(x, y, [r['scene_group'] for r in training],
+                                         protocol['alpha_grid'], protocol['folds'], protocol['seed'])
+    coefficient = fit_coefficient(x, y, alpha)
     if not torch.isfinite(coefficient).all():
         raise RuntimeError('Invalid semantic calibration')
     args.output_dir.mkdir(parents=True)
     save_file({'coefficient': coefficient}, str(args.output_dir / 'adapter.safetensors'))
-    info = {'scope': 'Existing training images and training-text means only', 'alpha': 1.0,
+    info = {'scope': 'Existing training images and training-text means only', 'alpha': alpha,
+            'train_group_validation': validation,
             'training_cases': len(training), 'training_cases_excluded': sum(r['split'] == 'train' for r in rows) - len(training),
             'supported_categories': sorted({design[r['id']]['scene'] for r in training}),
             'image_dataset_sha256': digest(args.image_dataset), 'design_sha256': digest(args.design),
             'corpus_sha256': digest(args.corpus), 'features_sha256': digest(args.features),
             'source_sha256': digest(Path(__file__)),
-            'protocol_sha256': digest(Path('configs/research/semantic-image-adapter-v6.json')),
+            'protocol_sha256': digest(Path('configs/research/grounding-adapter-v9.json' if args.select_alpha
+                                         else 'configs/research/semantic-image-adapter-v6.json')),
+            'calibration_source_sha256': digest(Path('src/latent_diaries/semantic_adapter.py')),
             'adapter_sha256': digest(args.output_dir / 'adapter.safetensors')}
     (args.output_dir / 'manifest.json').write_text(json.dumps(info, indent=2) + '\n')
-    print(json.dumps({'training_cases': len(training), 'supported_categories': len(info['supported_categories']),
+    print(json.dumps({'alpha': alpha, 'train_group_validation': validation,
+                      'training_cases': len(training), 'supported_categories': len(info['supported_categories']),
                       'excluded_training_cases': info['training_cases_excluded']}), flush=True)
 
 

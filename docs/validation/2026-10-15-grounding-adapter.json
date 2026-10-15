@@ -1,0 +1,34 @@
+{
+  "scope": "Frozen v8 speech reader with train-group-selected semantic image adapter; exposed development only, human E7 pending",
+  "protocol": "configs/research/grounding-adapter-v9.json",
+  "selected_alpha": 0.1,
+  "train_group_validation": {
+    "0.001": 0.019773782235789673,
+    "0.01": 0.018463057373206655,
+    "0.1": 0.01578696782052205,
+    "1.0": 0.019193051997279623
+  },
+  "training_images": 191,
+  "excluded_unsupported_training_images": 48,
+  "adapter_coefficients": 590592,
+  "speech_reader_updated": false,
+  "new_training_text_or_labels": false,
+  "generated_clips": 6,
+  "clips_reaching_frame_cap": 0,
+  "inference_reads_training_text_or_targets": false,
+  "gallery_pairs": 16,
+  "gallery_unique_audio": 12,
+  "blind_labels": "E7-A through E7-P",
+  "human_review_pending": true,
+  "image_grounding_accepted": false,
+  "fresh_images_accessed": 0,
+  "private_data_uploaded": false,
+  "tests": {
+    "host": "11 passed /14 ML-module skips",
+    "primary_cpu": "37 passed /3 skips",
+    "primary_cuda": "38 passed /2 vision-runtime skips",
+    "locked_vision_cpu": "4 passed",
+    "full_test_docker": "Rebuild failed: Docker disk exhaustion at apt; retry cancelled during dependency downloads"
+  },
+  "worker_execution": "Existing pinned worker with read-only current source overlays; no new worker bake"
+}

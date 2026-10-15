@@ -56,8 +56,11 @@ The subsequent robust-conditioning recipe completes 6,000 updates with real
 midpoint resume, then generates all four existing development cases, training
 and null controls without reading text/teacher targets at inference. Its 16-pair
 E6 gallery includes the retained baseline and shuffled-image assignments.
-Human listening is pending; auxiliary ASR and numerical dependence do not accept
-Italian or grounding. Fresh candidates remain reserved and M2 remains incomplete.
+Fifteen of sixteen E6 pairs now have actual ratings. Available new-method notes
+report good Italian and variety, but weak image relation including training.
+Grounding is not accepted; fresh candidates remain reserved and M2 is incomplete.
+A training-group-calibrated adapter control now isolates semantic shrinkage while
+keeping the speech reader frozen.
 
 | Milestone | Tasks | Evidence / exit gate |
 |---|---|---|
