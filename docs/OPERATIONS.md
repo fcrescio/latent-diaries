@@ -596,3 +596,14 @@ four development images plus training/null controls for each reader. This first
 listening comparison does not supply a shuffled-image grounding benchmark or
 fresh-test acceptance. Exact exercised commands and mappings stay in ignored
 local artifacts; never publish them or the media.
+
+All twelve v4 pairs have now been rated. Private exports and unblinded analysis
+are retained under the ignored listening directory; do not alter ratings or
+rewrite frozen generation manifests. The canonical baseline has three
+development cases described as good Italian and one unclear opening. Acoustic
+fine-tuning has no accepted improvement: mean development voice score is
+3.25/5 for baseline versus 2.5/5 for acoustic, with equal mean grounding 2.75/5.
+These are descriptive scores from one reviewer on four cases per method, not
+statistical or fresh-test evidence. The common generic ending was deliberately
+authored in every canonical target. Preserve the baseline and reserved fresh
+groups; change the supervision/conditioning hypothesis before another run.

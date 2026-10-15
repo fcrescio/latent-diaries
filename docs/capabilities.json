@@ -32,7 +32,7 @@
   "cached_image_conditioned_audio_exercised": true,
   "private_image_gallery_exercised": true,
   "image_grounding_verified": false,
-  "image_reader_scope": "Research script: 50 train / 12 group-disjoint held-out images. Blinded review completed: only training control almost good; all four tested held-out outputs fail intelligibility. M2 rejected; final CLI remains fail-closed.",
+  "image_reader_scope": "Initial freeform pilot fails held-out intelligibility. Later canonical control has user notes indicating good Italian on 3/4 exposed development images, one unclear opening, repetitive authored ending. Acoustic fine-tuning does not improve human results. No fresh/shuffled grounding acceptance; final CLI remains fail-closed.",
   "research_global_image_reader_training_implemented": true,
   "image_reader_pilot_review_completed": true,
   "global_image_reader_fresh_intelligibility_verified": false,
@@ -45,6 +45,9 @@
   "canonical_image_supervision_fresh_test_exercised": false,
   "visual_category_separability_diagnostic_exercised": true,
   "acoustic_image_reader_training_resume_exercised": true,
-  "acoustic_image_reader_development_review_pending": true,
-  "acoustic_image_reader_fresh_generalization_verified": false
+  "acoustic_image_reader_development_review_pending": false,
+  "acoustic_image_reader_fresh_generalization_verified": false,
+  "acoustic_image_reader_development_review_completed": true,
+  "acoustic_image_reader_human_improvement_verified": false,
+  "canonical_image_reader_development_intelligibility_observed": true
 }

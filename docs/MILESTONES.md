@@ -38,8 +38,11 @@ Qwen, with real midpoint resume. A linear visual diagnostic predicts local
 category labels on development images with 84% accuracy, versus 20% majority
 and 18% shuffled-label controls. Development codec0 teacher-forced CE improves
 by 4.7%, while residual CE and prefix error slightly worsen. Twelve blinded
-development clips (E5-A through E5-L) await human listening; these diagnostics
-do not establish intelligibility or fresh-image grounding. Final
+development clips (E5-A through E5-L) have now been reviewed. Baseline notes
+indicate good Italian on three of four development cases, with one unclear
+opening. Acoustic fine-tuning does not improve the human results. The repeated
+generic ending is imposed by the authored control sentences; narrative variety
+remains untested. No fresh-image or shuffled grounding acceptance follows. Final
 `narrate-image` CLI remains fail-closed; research training is exercised. EmbeddingGemma 2 compatibility is now exercised in a separately locked interpreter
 inside the same worker image: two real images produce normalized 768D vectors
 with repeat/batch parity. The cached image-to-reader training link is exercised; grounding acceptance
