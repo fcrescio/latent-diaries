@@ -54,12 +54,13 @@ class PrefixFlow(nn.Module):
         return prefix, lengths
 
     @torch.no_grad()
-    def sample(self, features, seed=42, steps=64):
+    def sample(self, features, seed=42, steps=64, noise_scale=1.0):
         if steps < 1:
             raise ValueError('Positive integration steps required')
         generator = torch.Generator(device=features.device).manual_seed(seed)
         state = torch.randn(len(features), self.dimension + 1,
                             generator=generator, device=features.device, dtype=features.dtype)
+        state = state * noise_scale
         for i in range(steps):
             time = features.new_full((len(features),), i / steps)
             state = state + self.velocity(state, features, time) / steps
