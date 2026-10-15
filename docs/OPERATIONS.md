@@ -514,3 +514,44 @@ MSE <1e-5) failed; no new listening batch or quality acceptance was created.
 Never upload these per-image diagnostics, features or checkpoints. Original
 checkpoint inference remains supported; use the recorded source revision when
 resuming older runs rather than bypassing source-fingerprint protection.
+
+## Canonical supervision / broader-data development control
+
+`configs/research/canonical-image-v3.json` freezes this limited-repertoire
+control. Reserve fresh scene groups before labelling. Pass only train/development
+rows to `label_private_images.py --mode scene-v3`; the helper stops the local
+vision container, including on failure. Choose authored equal-length sentences
+in the CPU worker with `choose_canonical_texts.py --output <private-json>` before
+seeing image labels. It uses the installed Qwen processor options; full-wrapper
+projection later asserts identical lengths.
+
+`build_canonical_design.py` takes `--inventory`, `--labels`, `--canonical-texts`,
+`--archive-root` and a fresh `--output-dir`. It refuses fresh-test rows and
+applies precommitted group/category caps. Extract only new selected images with
+the usual read-only archive mount and vision worker. Then prepare cached
+training targets (all paths below are placeholders for ignored local outputs):
+
+```bash
+worker=(.cache/tools/docker compose --profile gpu run --rm -e HF_HUB_OFFLINE=1 -e LD_REF_TEXT= -v "$PWD/src:/workspace/src:ro" -v "$PWD/scripts:/workspace/scripts:ro")
+"${worker[@]}" experiment-gpu python scripts/prepare_canonical_prefixes.py --design artifacts/private-new/design/design.json --canonical-texts artifacts/private-new/canonical.json --features-dir artifacts/private-old/features --features-dir artifacts/private-new/features --output-dir artifacts/private-new/targets
+"${worker[@]}" experiment-gpu python scripts/image_probe.py train --dataset artifacts/private-new/targets/dataset-expanded.json --run-dir artifacts/private-new/reader-expanded --steps 800 --schedule-steps 1600 --fixed-length --evaluation-scope development
+"${worker[@]}" experiment-gpu python scripts/image_probe.py train --dataset artifacts/private-new/targets/dataset-expanded.json --run-dir artifacts/private-new/reader-expanded --steps 1600 --schedule-steps 1600 --fixed-length --evaluation-scope development --resume
+```
+
+Repeat the two fit commands with `dataset-old.json` and a new `reader-old`
+directory for the original-cohort control. Keep source fixed across resume.
+`diagnose_canonical_reader.py --targets-dir <targets> --old-run <reader-old>
+--expanded-run <reader-expanded> --output <new-private-diagnostic.json>` runs
+in the managed worker, opens cached supervision only for frozen development
+analysis, checks both weight hashes and never generates audio or updates weights.
+Never pass this training dataset to standalone inference. Final research
+inference uses the separate strict numeric `eval-*.json`; category/text targets
+are absent. `--allow-new-images` explicitly permits new IDs without editing a
+frozen checkpoint, but does not waive the experimental fresh-access gate.
+
+The completed local run uses `artifacts/private-photos-002/reproduce.md` and
+`outcome.json`. Both readers completed 1,600 steps with real midpoint resume.
+Expanded training reduces development tensor error by about 22%, but fails the
+fixed gate. No new audio or fresh-test access follows; 96 candidates remain
+unlabelled. This control provides no new speech-quality acceptance. Keep all
+image-dependent files local, including category labels and per-image metrics.

@@ -2,18 +2,16 @@
 
 **Research bootstrap — not yet a trained image-to-speech model.** Intended for an autonomous coding agent (e.g. Codex) to implement and experimentally validate stage by stage. The local listening service, mock gallery, import/export, GitHub repo bootstrap, HF private upload and safe HF Job launcher exist; actual textless training and image-to-speech generation remain research milestones.
 
-Implementation has started: `uv.lock` pins the dependency set. Continuous Qwen
-conditioning, teacher forcing and code generation pass tests using tiny real
-Qwen classes on CPU and CUDA (16 tests pass in the GPU worker). M0 has generated
-an Italian baseline and genuine-speech codec round-trip locally; the user
-confirmed clear Italian and an acceptable voice. Pretrained FP32 assembly and cache controls also pass.
-The user rejected run-002 sampled and greedy speech as unintelligible.
-The user accepts the 32-token run-006 with greedy first-codebook decoding as
-fully intelligible Italian. A second separately learned utterance, run-007 with
-sampling, is almost clear per the user, with half a word unintelligible. These
-are memorization controls; generalization and image conditioning remain
-unverified. M1 is incomplete.
-No trained image-to-speech checkpoint exists. See `docs/DECISIONS.md` for evidence.
+M0 and scoped M1 are accepted: genuine Italian baseline/codec reconstruction,
+continuous-conditioning parity, and intelligible speech on two prespecified
+fresh numeric-factor combinations. This does not establish image generalization.
+Frozen EmbeddingGemma 2 image features and private reader training/resume are
+exercised, but the first image-reader pilot fails held-out intelligibility.
+The exact-text diagnostic speaks clearly; the development query-reader ablation
+does not improve reconstruction. M2 remains incomplete and the final
+`narrate-image` command remains fail-closed. Dependency locks, private local
+checkpoints and aggregate evidence are recorded in `docs/DECISIONS.md` and
+`docs/MILESTONES.md`. No accepted trained image-to-speech model is available.
 
 ## Artistic brief
 
