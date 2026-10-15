@@ -18,6 +18,7 @@ from urllib.request import Request, urlopen
 from PIL import Image, ImageOps
 
 from latent_diaries.canonical_supervision import SCENE_PROMPT, validate_scene_label
+from latent_diaries.visual_anchors import anchor_prompt, validate_anchor_label
 
 PROMPT = """Return one JSON object with exactly these keys:
 keep: boolean; scene: a short generic English scene category; narration_it: string.
@@ -47,25 +48,27 @@ def main():
     parser.add_argument("--inventory", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--limit", type=int, default=192)
-    parser.add_argument("--mode", choices=["freeform", "scene-v3"], default="freeform")
+    parser.add_argument("--mode", choices=["freeform", "scene-v3", "opening-v10"], default="freeform")
     parser.add_argument("--docker", default="docker")
     parser.add_argument("--container", default="qwen-optimization-glp8-backup")
     args = parser.parse_args()
     signal.signal(signal.SIGTERM, lambda *_: (_ for _ in ()).throw(SystemExit(143)))
     rows = json.loads(args.inventory.read_text())[:args.limit]
+    if args.mode == 'opening-v10' and any(r.get('split') != 'train' for r in rows):
+        raise ValueError('Visual-anchor labeling permits training images only')
     args.output.parent.mkdir(parents=True, exist_ok=True)
     existing = []
     if args.output.exists():
         existing = [json.loads(line) for line in args.output.read_text().splitlines() if line]
     completed = {row["id"] for row in existing}
-    prompt = SCENE_PROMPT if args.mode == 'scene-v3' else PROMPT
+    prompt = anchor_prompt() if args.mode == 'opening-v10' else (SCENE_PROMPT if args.mode == 'scene-v3' else PROMPT)
     provenance = {'inventory_sha256': hashlib.sha256(args.inventory.read_bytes()).hexdigest(),
                   'mode': args.mode, 'prompt_sha256': hashlib.sha256(prompt.encode()).hexdigest(),
-                  'seed': 42, 'temperature': 0.0 if args.mode == 'scene-v3' else 0.2}
+                  'seed': 42, 'temperature': 0.2 if args.mode == 'freeform' else 0.0}
     sidecar = args.output.with_suffix('.provenance.json')
     if sidecar.exists() and json.loads(sidecar.read_text()) != provenance:
         raise ValueError('Refuse to resume labels with changed inventory/prompt')
-    if args.mode == 'scene-v3':
+    if args.mode != 'freeform':
         sidecar.write_text(json.dumps(provenance, indent=2)+'\n')
         sidecar.chmod(0o600)
     try:
@@ -109,7 +112,9 @@ def main():
                 })
                 text = response["choices"][0]["message"]["content"]
                 label = json.loads(text)
-                if args.mode == 'scene-v3':
+                if args.mode == 'opening-v10':
+                    label = validate_anchor_label(label)
+                elif args.mode == 'scene-v3':
                     label = validate_scene_label(label)
                 else:
                     if set(label) != {"keep", "scene", "narration_it"} or type(label["keep"]) is not bool:
