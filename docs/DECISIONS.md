@@ -495,3 +495,43 @@ CPU suite57passed/4skips. Save reader and LoRA checksums with optimizer/RNG stat
 real1600-step run resumes at800 and reaches peak5,753,666,560 bytes. Changed
 vendor weights=false; vendor gradients absent. Training results alone are not
 artistic/grounding approval. Source revision5a389fc recorded with file hashes.
+
+## 2026-10-16 — Replace sentence-vector prediction with fixed visual policy distillation
+
+V20 finishes1600 steps and actual800 resume but development ASR remains
+fragmented/looping. Do not promote it or invent artistic failure scores. Preserve
+it as a real matched attention-adaptation control, not a solved image narrator.
+
+Freeze `configs/research/direct-visual-v21.json` before fitting. Its earlier CE
+DRAFT is retained privately; it is amended before any fit after reviewing the
+matched M1 CE/KL ablations. Use fixed32 continuous positions around the mostly
+intelligible learned M1 numeric prefix, zero initial image output weights, and
+no per-image sentence-vector target or predicted text length. Cache170 frozen
+teacher policies on genuine gold audio histories; logits remain detached and
+private. Optimize codec0 KL including EOS plus residual KL weight1, restoring
+the M1 working distribution/mixed-decoding recipe. Compare frozen Talker versus
+rank8 last4 q/v LoRA, with identical fresh reader initialization fingerprints.
+
+V21 both1600-step runs and real800 resumes finish. Reader8,619,776 parameters;
+peak allocated7,422,158,848 bytes frozen /7,426,291,712 LoRA, including policy
+cache. Generated results remain unsuitable by auxiliary diagnostics, including
+training underfit and cap hits. No new quality claim or broad human art request.
+Focused direct/adapter tests6passed; full CUDA61passed/2vision skips.
+
+## 2026-10-16 — Calibrate actual prefix update units before longer fitting
+
+A cheap isolated training-only four-image probe compares the SAME initial prefix
+function and teacher targets. Free-prefix Adam lr0.03 (M1 reference) moves
+0.0299971 RMS; normalized-reader lr1e-4 moves0.000725421. Unit scale at1e-3
+moves0.035667 and decreases mean KL2.044559→1.709363. Unit-scale candidates
+1e-4/3e-4/1e-3/3e-3 are measured once; select the closest-to-M1 physical RMS
+among candidates reducing training KL. This selects output-head multiplier10.
+No development images, captions, scores or ASR enter this selection.
+
+Freeze `configs/research/direct-calibrated-v22.json`: unit output scale, head
+lr1e-3, other reader/optional LoRA1e-4,3200 fixed steps with actual1600 resume,
+same gold-history policy caches, same fresh anchor, same mixed decoding. The
+new parameterization preserves the initial numeric prefix function. Recent
+codec0 KL0.02–0.04 improves fitting; AR and human quality are separate gates.
+A CPU-only input-geometry probe is logged locally and deferred, rather than
+adding another change to the active comparison. No paid jobs or private uploads.

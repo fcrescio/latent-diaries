@@ -865,3 +865,29 @@ source/module layout before generation. Generic backbone loading fails closed
 for LoRA metadata. Optional `--codec0-greedy` is a separate decoding diagnostic;
 residual codebooks remain sampled. Save actual parameter targets, VRAM and
 source revision; never copy original vendor weights into the adapter checkpoint.
+
+## Fixed visual-prefix speech-policy distillation
+
+This path uses no per-image sentence-vector reconstruction or predicted text
+length. Read and freeze `configs/research/direct-visual-v21.json` or the later
+training-only calibrated recipe before fitting. Use the same pinned GPU worker,
+read-only source/script overlays and `LD_REF_TEXT=`:
+
+```
+python scripts/cache_image_teacher_policies.py --teachers <genuine-teachers> --provenance-run <matching-prefix-baseline> --output-dir <new-policy-cache>
+python scripts/train_direct_image_reader.py --dataset <paired-dataset> --teachers <genuine-teachers> --policy-cache <policy-cache> --provenance-run <matching-prefix-baseline> --anchor-run <learned-M1-numeric-prefix> --run-dir <new-direct-run> --lora-rank 0 --schedule-steps 3200 --unit-scale --head-lr-multiplier 10 --steps 1600
+python scripts/train_direct_image_reader.py --dataset <paired-dataset> --teachers <genuine-teachers> --policy-cache <policy-cache> --provenance-run <matching-prefix-baseline> --anchor-run <learned-M1-numeric-prefix> --run-dir <new-direct-run> --lora-rank 0 --schedule-steps 3200 --unit-scale --head-lr-multiplier 10 --steps 3200 --resume
+```
+
+Repeat in a separate fresh directory with `--lora-rank 8` for the matched LoRA
+condition. The provenance run supplies configuration/checksums, never its fitted
+sentence-vector weights. Anchor provenance must match the pinned Qwen/lock.
+Student training does not load training sentence-prefix tensors. The teacher
+cache generator alone reads them to compute frozen audio-code distributions.
+
+For frozen inference use `image_probe.py evaluate --max-frames 160
+--codec0-greedy`; for LoRA use `evaluate_lora_image_reader.py --codec0-greedy`.
+Both accept numeric-only image inputs and generate actual16-codebook audio;
+residual sampling stays enabled. Preserve the initialization fingerprint and
+separate teacher/reader/adapter hashes. Never treat a lower KL, initial anchor
+repetition, waveform difference or auxiliary ASR as artistic approval.

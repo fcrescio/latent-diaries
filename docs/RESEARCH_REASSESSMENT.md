@@ -94,3 +94,48 @@ vision tower, applies `embed_vision` and splits by nonpadding patch counts;
 vectors. A future visual-token ablation must exercise dimensions, masking,
 position semantics and batch parity before training; source availability alone
 is not a validated capability.
+
+## Main pivot: train visual prefixes in the speech domain
+
+The wider word-vector reader and its matched last-attention LoRA variant both
+retain fragmented development ASR. More capacity at that same representation
+has not established transfer. We therefore stop using per-image sentence-vector
+reconstruction as the main learning problem.
+
+The new reader emits32 continuous positions for every image. Its output begins
+at a shared, previously learned M1 language prefix; the image-dependent output
+weights start at zero. The anchor is numeric model initialization, never a
+transcript or per-image target. Both frozen-Talker and last-four-attention LoRA
+runs use the same initialization. They learn from audio-code distributions only;
+there is no predicted sentence length or sentence-vector reconstruction loss.
+A constant repeated anchor is explicitly a grounding failure.
+
+The M1 history also matters: matched hard CE over a sampled codec trajectory
+had diverged from teacher distributions, whereas KL plus greedy codec0/sampled
+residuals produced the human-accepted memorization control. The direct visual
+runs restore that working recipe. A frozen teacher supplies aligned codec0
+(including EOS) and all15 residual-head logits on genuine gold previous audio
+codes. Its training-only text-derived prefixes are used to CACHE teacher
+policies, not as student inputs or vector targets. Student training loads only
+image vectors, audio codes, detached policy targets and its shared numeric
+initialization. Inference loads none of the teacher artifacts.
+
+The first1600-step direct pair still underfits training speech. Before launching
+another fit, a four-training-image optimizer probe compares physical prefix
+updates from the same initial function. The successful M1 free-prefix step
+moves0.029997 RMS, while the inherited normalized reader moves0.000725 RMS,
+about41 times less. Unit output scaling with a1e-3 final-head rate moves0.035667
+RMS and decreases mean training KL2.04456→1.70936. This is a training-only
+parameterization calibration, not a quality metric or development selection.
+
+The calibrated3200-step comparison uses this output scale and head rate, with
+1e-4 on the remaining reader and optional LoRA, actual1600 resume, identical
+fresh anchor initializations, and the same170 cached teacher policies. Recent
+training codec0 KL reaches0.02–0.04; generated speech still requires its own
+assessment. No loss threshold approves Italian or M2.
+
+A separate CPU-only feature-geometry probe finds that training-centering the
+input affine could reduce initial head-gradient cosine0.612→0.140 and design
+condition number249→47 without changing the initial anchor output. This remains
+a deferred initialization alternative, not an exercised speech improvement.
+Do not keep adding changes before inspecting the prescribed generation results.
