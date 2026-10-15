@@ -28,6 +28,7 @@ def main():
     parser.add_argument('--mode', choices=['image', 'training-text-control'], required=True)
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--adapter', type=Path)
+    parser.add_argument('--greedy-candidates', action='store_true')
     args = parser.parse_args()
     if not Path('/.dockerenv').exists() or args.output_dir.exists():
         raise ValueError('Use managed worker and new output directory')
@@ -57,7 +58,7 @@ def main():
         features = torch.tensor([row['features']], device=speaker.device, dtype=torch.float32)
         if adapter is not None:
             features = torch.nn.functional.normalize(torch.cat([features.new_ones(1, 1), features], -1) @ adapter, dim=-1)
-        kwargs = {'sample_modes': True} if info.get('robust_semantics') else {}
+        kwargs = {'sample_modes': not args.greedy_candidates} if info.get('robust_semantics') else {}
         prefix, stop_probabilities = model.sample(features, seed=42, **kwargs)
         result = {'id': row['id'], 'split': row['split'], 'predicted_prefix_length': prefix.shape[1],
                   'prefix_stop_probabilities': stop_probabilities, 'human_listening_status': 'pending',
@@ -70,6 +71,7 @@ def main():
                 'teacher_files_read': False, 'linguistic_labels_read': False,
                 'reader_sha256': info['reader_sha256'], 'inputs_sha256': digest(args.inputs),
                 'adapter_sha256': digest(args.adapter) if args.adapter else None,
+                'continuous_modes_sampled': bool(info.get('robust_semantics') and not args.greedy_candidates),
                 'source_sha256': digest(Path(__file__)), 'results': results}
     (args.output_dir / 'results.json').write_text(json.dumps(manifest, indent=2) + '\n')
 

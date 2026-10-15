@@ -242,3 +242,51 @@ during speech inference. Standalone generation retains the strict numeric-vector
 schema and loads no acoustic targets or linguistic labels. Teacher-forced
 development loss is calculated separately and cannot establish autoregressive
 intelligibility. Blinded listening is required; fresh candidates stay reserved.
+
+## Training-only semantic language priors
+
+The next research path separates continuous language conditioning from image
+calibration. Pinned EmbeddingGemma 2 encodes authored Italian training sentences
+using its documented Document format. Vision/audio towers are disabled in this
+training-only process; final 768D states use the same verified masked-mean/L2
+pooling. The original image-only encoder remains unchanged and never accepts a
+caption. Both interpreters remain in the single locked worker image.
+
+The authored corpus combines scene clauses with forty independent continuations.
+It contains 1,280 training and 160 held-out combinations, with all component words
+potentially seen in training. This is a compositional control, not a new-vocabulary
+or unrestricted storytelling benchmark. There is no mandatory shared ending.
+Frozen Qwen projects training text into continuous 1024D supervision; these
+targets never enter standalone image generation.
+
+Whole-prefix rectified flow (v5) fails even training-feature speech controls.
+Causal next-vector flow (v6) improves stopping but retains fragmented auxiliary
+transcriptions. Exact-prefix/subspace oracle positives are distinct diagnostics;
+one pair produces byte-identical speech. These negative fits are retained.
+
+The v7 alternative uses a causal two-layer GRU over previous continuous vectors,
+numeric position and a semantic vector. It predicts eight context-dependent
+continuous candidates plus routing and numeric stop logits. Training minimizes
+best-candidate reconstruction, routing CE and EOS BCE on shifted gold previous
+vectors; inference uses generated previous vectors. Candidate indices have no
+fixed word/category semantics, and no text vocabulary, pretrained-vocabulary
+quantization or sentence memory bank is loaded. A training-only linear token
+subspace preserves supervision with a measured reconstruction floor. Its basis
+is a learned numeric weight matrix, not a runtime per-example lookup.
+
+Exact-sentence semantic controls yield coherent auxiliary transcriptions, but
+v7 image transfer through category-average semantic calibration fails. V8
+therefore trains on sentence, category-average, jittered and zero semantic
+conditions, with 32 continuous candidates. Primary generation samples among the
+four highest routing logits at fixed seed/temperature, using candidate means
+without Gaussian vector noise. This tests robust conditioning under semantic
+uncertainty; it does not grant speech-quality acceptance.
+
+The numeric ridge image adapter fits training images only and loads as one
+coefficient tensor followed by normalization. Current authored/image category
+overlap supports 191 training cases across nine categories; 48 unsupported
+training images are excluded explicitly. Inference reads strict image-vector
+JSON, reader/adapter weights, fixed Qwen protocol and speaker reference only.
+Text-feature controls are explicitly marked text-conditioned diagnostics.
+Actual image speech and blinded human assessment are required before advancing;
+all 96 fresh image candidates remain reserved.

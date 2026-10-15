@@ -607,3 +607,61 @@ These are descriptive scores from one reviewer on four cases per method, not
 statistical or fresh-test evidence. The common generic ending was deliberately
 authored in every canonical target. Preserve the baseline and reserved fresh
 groups; change the supervision/conditioning hypothesis before another run.
+
+## Continuous semantic language-prior research
+
+These scripts are research controls, not the accepted final narration CLI.
+Keep the original canonical baseline, frozen image split and all fresh candidates.
+Text-feature controls must be labelled text-conditioned diagnostics. All feature
+extraction, target projection, fitting and rendering run inside the same managed
+worker; only JSON/media preparation runs on the host. Current source/scripts
+are bound read-only during development; both dependency locks remain unchanged.
+
+Prepare authored supervision and frozen semantic vectors in separate locked
+interpreters, using the worker array above and fresh ignored directories:
+
+```bash
+"${worker[@]}" experiment-gpu python scripts/prepare_prior_corpus.py --output-dir artifacts/prior-new/corpus
+"${worker[@]}" experiment-gpu /opt/vision/.venv/bin/python scripts/cache_prior_text_features.py --corpus artifacts/prior-new/corpus/corpus.json --output-dir artifacts/prior-new/features
+```
+
+The authored split holds out clause/continuation combinations. Selection is
+independent of private images and generated speech. Training-only text features
+use the pinned Document format and no media tower. The image encoder is unchanged.
+`probe_crossmodal_alignment.py` is a diagnostic only; it cannot become a runtime
+text-prototype retrieval path.
+
+The whole-prefix v5 flow and causal v6 flow are retained negative experiments.
+V6 initializes the causal context/subspace for the next-vector mode objective:
+
+```bash
+"${worker[@]}" experiment-gpu python scripts/train_autoregressive_prior.py --corpus-dir artifacts/prior-new/corpus --features-dir artifacts/prior-new/features --run-dir artifacts/prior-new/v6 --steps 2000
+"${worker[@]}" experiment-gpu python scripts/train_autoregressive_prior.py --corpus-dir artifacts/prior-new/corpus --features-dir artifacts/prior-new/features --run-dir artifacts/prior-new/v6 --steps 4000 --resume
+"${worker[@]}" experiment-gpu python scripts/train_autoregressive_prior.py --corpus-dir artifacts/prior-new/corpus --features-dir artifacts/prior-new/features --run-dir artifacts/prior-new/v7 --initial-run artifacts/prior-new/v6 --recipe multihypothesis --steps 2000
+"${worker[@]}" experiment-gpu python scripts/train_autoregressive_prior.py --corpus-dir artifacts/prior-new/corpus --features-dir artifacts/prior-new/features --run-dir artifacts/prior-new/v7 --initial-run artifacts/prior-new/v6 --recipe multihypothesis --steps 4000 --resume
+"${worker[@]}" experiment-gpu python scripts/train_autoregressive_prior.py --corpus-dir artifacts/prior-new/corpus --features-dir artifacts/prior-new/features --run-dir artifacts/prior-new/v8 --initial-run artifacts/prior-new/v7 --recipe multihypothesis --modes 32 --robust-semantics --steps 3000
+"${worker[@]}" experiment-gpu python scripts/train_autoregressive_prior.py --corpus-dir artifacts/prior-new/corpus --features-dir artifacts/prior-new/features --run-dir artifacts/prior-new/v8 --initial-run artifacts/prior-new/v7 --recipe multihypothesis --modes 32 --robust-semantics --steps 6000 --resume
+```
+
+Use fixed source across each continuation. Historical checkpoints require their
+recorded source revision; do not bypass fingerprint checks when newer source
+changes an objective or signature. Current code reproduces fresh runs with its
+own source fingerprints. Exact exercised commands/source revisions are retained
+privately under each ignored run directory.
+
+`fit_semantic_image_adapter.py` takes the existing image training dataset/design
+and training-text corpus/features. It fits only supported training cases and
+persists a numeric coefficient tensor with pairing hashes. It is not a runtime
+classifier or caption lookup. `evaluate_autoregressive_prior.py` reads a separate
+strict numeric input spec with `--mode image`, optional `--adapter`, prescribed
+`--ids` and a fresh `--output-dir`. It checks reader/lock/adapter pairing and
+does not read training strings, target prefixes or codes. `--mode
+training-text-control` explicitly marks numerical text-feature diagnostics;
+`--greedy-candidates` separates a greedy diagnostic from prescribed sampled
+continuous candidates. No candidate index has a fixed word/category meaning.
+
+`diagnose_prefix_flow.py`, `diagnose_flow_noise.py` and
+`diagnose_mode_prior.py` open cached supervision only for frozen analysis.
+Oracle, gold-history and auxiliary ASR controls are not learned-image or human
+quality results. Preserve private transcripts/weights/mappings locally and
+ingest meaningful real image/audio comparisons for actual human assessment.
