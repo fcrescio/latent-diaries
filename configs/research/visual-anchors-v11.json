@@ -1,0 +1,9 @@
+{
+  "hypothesis": "The60-choice label prompt rejects clearly matchable training scenes; a training-only broad-scene hint plus six within-scene choices can recover useful finer supervision without changing the speech reader",
+  "label_scope": "Same239 existing training images; use pre-existing training-only scene labels to restrict choices; skip unsupported scenes; no development/fresh labels",
+  "annotation": "One best concrete visible subject among six existing openings for the scene; generic vehicles include bicycles and strollers; validate both authored ID and scene membership",
+  "adapter": "Same centered ridge to opening-specific normalized mean training text embedding; same train-group CV alpha grid and five folds; keep originalv10 labels/weights/audio",
+  "evaluation": "Frozen v8 speech reader and same four development images, original-cohort control and null; seed42 cap105; compare actual matched/shuffled listening against retainedv9 if technically meaningful",
+  "scope": "Annotation-method control, not new vocabulary or runtime scene classification; subset and supervision change jointly",
+  "privacy": "Local VLM only, stopped in finally; no private media/weights/labels/individual ratings uploaded; fresh96 remain reserved"
+}
