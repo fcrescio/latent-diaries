@@ -43,5 +43,23 @@
     "worker_cuda_passed": 54,
     "worker_cuda_skipped": 2,
     "label_boundary_passed": 4
+  },
+  "v17": {
+    "training_images_considered": 239,
+    "accepted_image_specific_sentences": 170,
+    "length_exclusions": 2,
+    "other_exclusions": 67,
+    "scene_categories_represented": 10,
+    "local_vision_container_stopped": true,
+    "reserved_fresh_access": false
+  },
+  "v18_rank_control": {
+    "width": 128,
+    "training_examples": 170,
+    "shared_valid_prefix_positions": 14,
+    "achieved_normalized_masked_mse": 0.08564922958612442,
+    "proven_lower_bound_on_full_normalized_masked_mse": 0.056967468453658694,
+    "acoustic_and_generation_cancelled_before_start": true,
+    "teacher_cache_reused_by_v19": true
   }
 }

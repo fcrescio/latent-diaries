@@ -832,3 +832,21 @@ original comparison and run a separate duration control:
 --max-frames 160`. Optional `--codec0-greedy` isolates codec0 sampling. Neither
 control loads teacher files, labels or linguistic strings. Record the reason
 and do not reclassify the original truncated clips as successful complete speech.
+
+For the broader corpus use `--mode instance-v17 --limit 239` on the existing
+training-only inventory. Prepare targets with `prepare_instance_supervision.py`;
+`prepare_acoustic_teachers.py --batch-size 8` caches genuine trajectories for
+variable-length prefixes, with generation-batch membership in the manifest.
+Default batch size remains1. Batch-dependent RNG is expected and recorded.
+
+Before further prefix fitting, check the linear-reader capacity:
+`python scripts/diagnose_reader_rank.py --dataset <targets>/dataset.json
+--run-dir <baseline> --output <new-rank-diagnostic.json>`. It loads only training
+prefixes and verifies their hashes. A bound on reconstruction is not a quality
+metric. `image_probe.py train --width 256` exercises the training-rank correction;
+repeat the same width on resume. Defaults remain128 for historical commands.
+For the longer paired comparison use `train_acoustic_image_reader.py
+--schedule-steps 1600 --steps 800`, then `--steps 1600 --resume`, preserving the
+same schedule. `image_probe.py evaluate --max-frames 160` avoids the shorter
+105-frame cap; historical default remains105. Freeze the exact recipe before
+fitting; do not silently modify a recorded experiment.

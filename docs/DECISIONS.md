@@ -436,3 +436,35 @@ Validation remains8-18 words, no truncation or forced acceptance. Start only
 after V16 GPU work finishes, stop local vision server in finally. This is data
 preparation, not a completed acoustic model or heldout quality claim. Fresh96
 remain untouched; all image-derived artifacts stay local.
+
+## 2026-10-16 — Broader supervision exposes and removes a linear-reader rank floor
+
+V17 labels all239 existing training images locally:170 accepted across all10
+existing categories,2 length exclusions,67 other exclusions. The Italian brief
+asks8-12 words/two concrete details; validation remains8-18 without truncation.
+Labels are training annotations, not human quality judgments. Vision service
+confirmed off before Qwen work. All55 development vectors remain label-free;
+reserved96 are untouched. Full target preparation is exercised in the worker.
+
+V18 width128 prefix fitting completes1600 steps with actual800 resume, but
+stalls at0.085649 normalized masked MSE. A training-only rank calculation on the
+14 positions valid in all170 targets gives a lower bound0.056967 for this final
+linear output head. Centering removes its bias; rank is at most128. Thus simply
+optimizing longer cannot achieve an exact prefix fit. Add a reproducible
+`diagnose_reader_rank.py` and an analytical rank/mask test (1passed).
+
+Amend before the V18 acoustic stages start: suspend only its host dispatcher,
+let the managed Docker teacher-cache worker finish, then terminate the dispatcher
+without launching its planned acoustic/evaluation jobs. Its genuine170-example
+batch8 cache is retained and reused. This is not a failed/finished acoustic run.
+
+Freeze `configs/research/paired-acoustic-v19.json`: increase only reader width
+to256 based on training rank evidence. Fit1600 with actual800 resume reaches
+9.8156e-8 training MSE;8,882,944 parameters,289,692,160 bytes training peak.
+Proceed with the frozen-backbone acoustic comparison over the same paired data,
+1600 steps with actual800 resume, lr2e-5, zero prefix regularization, cap160 for
+both generation controls. Exact source revision fa57a0f plus per-file hashes
+is recorded locally. No result is promoted on training losses alone.
+
+Final-source CPU suite before adding the rank test:54passed/3skipped. The full
+CUDA suite will include the new rank test. No paid resources or media uploads.

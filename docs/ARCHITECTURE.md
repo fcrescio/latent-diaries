@@ -350,3 +350,36 @@ null-mode indices. The bounded numeric control did not improve opening choices;
 it is disabled in the current audio comparison. Do not present its implementation
 as accepted grounding. Native/cuDNN FP32 tests explicitly disable TF32 for the
 comparison; actual sampled generation retains its previous precision settings.
+
+## Image-specific acoustic alignment reassessment
+
+E8 does not establish a useful grounding improvement. Further calibration of
+the 60-opening/40-tail continuous prior is stopped. A seven-pair control shows
+that four image inputs can reproduce their own genuine teacher WAVs exactly
+through the existing textless interface; this is training reproduction only.
+
+Training supervision now includes170 individually annotated training images
+from the existing239-row cohort, with short concrete Italian sentences rather
+than an authored sentence-choice inventory. Qwen teacher generation supports
+variable-prefix batches (up to8): right-pad continuous vectors, supply their
+boolean mask and expand only the fixed speaker vector; the conditioning builder
+compacts/left-pads the full protocol. Preserve per-example code trajectories,
+positive WAVs and batch membership. A per-batch seed does not reproduce the
+single-example RNG stream, so no cross-batch waveform-parity claim follows.
+
+The global reader has a final linear output head. Across N examples its centered
+output matrix has rank at most the hidden width W. On the new170 training
+prefixes, the width128 control reaches normalized masked MSE0.08565, with a
+numerically computed lower bound0.05697 from the common valid positions alone.
+`reader_rank.py` implements this training-only bound, normalized by all valid
+target scalars, and has an analytical orthogonal-axis/masking test. This is a
+reconstruction bound, never a speech-quality bound.
+
+The selected width256 control removes that particular rank restriction and
+reaches9.82e-8 training MSE after1600 steps with actual800 resume, with8,882,944
+parameters. Its direct acoustic comparison uses genuine gold previous audio
+codes, codec0 CE including EOS plus0.1 residual CE, zero prefix-MSE penalty and
+frozen backbones. Both prefill and trailing conditioning remain textless.
+No development or fresh-image success follows from the near-exact training
+fit. The width128 run's unstarted acoustic/evaluation stages are explicitly
+cancelled; its completed genuine teacher cache is reused, not regenerated.
