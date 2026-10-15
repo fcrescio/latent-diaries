@@ -1,0 +1,10 @@
+{
+  "hypothesis": "After the broader frozen-Qwen acoustic reader still fails development intelligibility, let final Talker attention adapt to imperfect visual prefixes rather than only optimizing reader vectors.",
+  "evidence": "V19 prefix reconstruction is near-exact on170 training pairs, but both frozen-decoder variants have fragmented development ASR; acoustic CE gain alone is inadequate. This is auxiliary failure evidence, not invented human judgments.",
+  "initialization": "Same width256 prefix baseline as the V19 frozen acoustic control, NOT its already fine-tuned reader; identical image-reader initialization hash, same170 teachers/data, same1600-step schedule and seed42",
+  "changed_parameters": "Add zero-B LoRA rank8, alpha8 on q_proj and v_proj in last4 Talker attention layers only; reader trainable as in control; original vendor weights, code_predictor, codec, vision and speaker remain frozen",
+  "optimization": "Reader lr2e-5 unchanged; LoRA lr1e-4; warm20 cosine floor0.1 over1600 steps; codec0 CE including EOS plus0.1 residual CE, zero prefix penalty; clip joint norm1; actual resume800",
+  "inference": "Only numeric image vectors, matching reader and LoRA, fixed protocol/speaker; four original exposed development IDs, first training ID and null; sampled seed42 max160. Separate codec0-greedy control allowed after sampled results; residuals remain sampled.",
+  "verification": "Zero-adapter logits exactly match official tiny Qwen; conditioning and adapter gradients nonzero; vendor gradients absent and vendor tensors unchanged in optimizer test; strict LoRA-only serialization and generic-loader fail-closed guard. Actual module names/shapes, trainable counts and VRAM recorded by real run.",
+  "limits": "Development only, no reserved96 access or generalization approval. Do not promote if speech/grounding fails. No public weights/media, no paid job."
+}
