@@ -24,10 +24,11 @@ compositional generalization, not image grounding. An additive audio-KL control
 did not help. Human listening accepts the direct-prefix training control and one
 exposed development case, finds the other almost clear, and rejects null. A fresh
 v2 combinatorial test was frozen before new teacher generation/fit and has now
-generated four blinded clips awaiting listening. The stock teacher-derived
+completed blinded listening: training speech is accepted; both fresh combinations
+start clearly then become unintelligible, and null loops in gibberish. The stock teacher-derived
 prefix is a separate positive protocol control.
 M1.2 failed under audio-KL training; direct-prefix supervision improves exposed
-development cases and awaits fresh-test listening; M2–M5 remain unachieved; BF16 cache parity and EmbeddingGemma 2
+development cases but fails the fresh test; M2–M5 remain unachieved; BF16 cache parity and EmbeddingGemma 2
 compatibility remain open technical questions.
 
 | Milestone | Tasks | Evidence / exit gate |

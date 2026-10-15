@@ -50,7 +50,7 @@
         "id": "s00",
         "split": "train",
         "predicted_prefix_length": 20,
-        "human_listening_status": "pending",
+        "human_listening_status": "accepted_intelligible_italian",
         "frames": 75,
         "sample_rate": 24000,
         "seconds": 6.0,
@@ -64,7 +64,7 @@
         "id": "s01",
         "split": "heldout",
         "predicted_prefix_length": 19,
-        "human_listening_status": "pending",
+        "human_listening_status": "clear_onset_then_unintelligible",
         "frames": 74,
         "sample_rate": 24000,
         "seconds": 5.92,
@@ -78,7 +78,7 @@
         "id": "s02",
         "split": "heldout",
         "predicted_prefix_length": 19,
-        "human_listening_status": "pending",
+        "human_listening_status": "clear_onset_then_unintelligible",
         "frames": 78,
         "sample_rate": 24000,
         "seconds": 6.24,
@@ -92,7 +92,7 @@
         "id": "null",
         "split": "control",
         "predicted_prefix_length": 15,
-        "human_listening_status": "pending",
+        "human_listening_status": "unintelligible_looping",
         "frames": 105,
         "sample_rate": 24000,
         "seconds": 8.4,
@@ -104,7 +104,7 @@
       }
     ]
   },
-  "human_listening_status": "pending",
+  "human_listening_status": "completed_negative_fresh_generalization",
   "generalization_verified": false,
   "m1_complete": false,
   "image_conditioned": false,
@@ -116,5 +116,32 @@
     "gpu_passed": 21
   },
   "media_or_weights_uploaded": false,
-  "paid_jobs": false
+  "paid_jobs": false,
+  "human_summary": {
+    "training_control_accepted": true,
+    "both_fresh_combinations_start_clear_then_become_unintelligible": true,
+    "null_rejected_with_loops": true,
+    "individual_assessments_stored_privately": true
+  },
+  "test_exposure_note": "Fresh at initial evaluation; now exposed development evidence, not reusable as untouched tests",
+  "posttest_diagnostic": {
+    "source_sha256": "82d09cd50f298bab16e05b741e7b21198c425f293170629680797e3736a27ed9",
+    "coefficients_updated": false,
+    "all_lengths_match": true,
+    "train_design_columns": 6,
+    "train_design_rank": 5,
+    "summary": {
+      "train": {
+        "prefix_mse": 0.0001614490302017657,
+        "first_five_positions_mse": 1.0401466364585067e-18,
+        "remaining_positions_mse": 0.00021614671550196363
+      },
+      "heldout": {
+        "prefix_mse": 0.001395569706801325,
+        "first_five_positions_mse": 1.2854262641982167e-18,
+        "remaining_positions_mse": 0.001893987413495779
+      }
+    },
+    "scope": "Prefix tensor reconstruction only; no audio-word alignment or automatic quality score"
+  }
 }

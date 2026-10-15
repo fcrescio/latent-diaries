@@ -318,3 +318,15 @@ Reuse checks sentence fingerprints and writes references to old caches rather
 than duplicating media. Fit opens train rows only. Fresh-test labels identify
 mapper-level combinatorial holdouts, not new vocabulary or unseen images.
 Human listening and condition sensitivity are still needed before accepting M1.2.
+
+
+Read-only post-test diagnosis (after human feedback; no weight updates):
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile experiment run --rm -v "$PWD/scripts:/workspace/scripts:ro" experiment python scripts/diagnose_prefix_regression.py --dataset artifacts/shared-corpus-002/dataset.json --run-dir artifacts/shared-prefix-regression-002 --output artifacts/prefix-regression-002-posttest-diagnostic.json
+```
+
+This compares predicted/teacher continuous vectors and lengths. First-five versus
+remaining-position errors are tensor diagnostics, not word-aligned speech scores.
+The initial fresh test is now exposed after listening; do not reuse its cases as
+untouched evaluation when changing architecture or supervision.
