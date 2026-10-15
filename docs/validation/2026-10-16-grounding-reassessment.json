@@ -20,12 +20,28 @@
     "prefix_steps": 1600,
     "prefix_actual_resume_at": 800,
     "prefix_final_normalized_mse": 8.806158554371547e-15,
-    "scope": "Small training fit only; acoustic stage and human judgments pending"
+    "scope": "Training reproduction and diagnostic evidence only; no human quality or generalization approval",
+    "acoustic_steps": 320,
+    "acoustic_actual_resume_at": 160,
+    "trainable_parameters": 5119616,
+    "peak_allocated_vram_bytes": 5710023680,
+    "training_waveform_identical_to_teachers": 4,
+    "duration_controls_max_frames": 160,
+    "training_oracle_codec0_ce": 0.8075208153043475,
+    "baseline_matched_codec0_ce": 0.8075208067893982,
+    "baseline_shuffled_codec0_ce": 2.2839463097708568,
+    "acoustic_matched_codec0_ce": 0.6842994093894958,
+    "acoustic_shuffled_codec0_ce": 2.285874434879848,
+    "baseline_development_cap_hits": 4,
+    "acoustic_development_cap_hits": 4
   },
   "tests": {
     "host_passed": 19,
     "host_ml_skipped": 17,
     "worker_cpu_passed": 52,
-    "worker_cpu_skipped": 3
+    "worker_cpu_skipped": 3,
+    "worker_cuda_passed": 54,
+    "worker_cuda_skipped": 2,
+    "label_boundary_passed": 4
   }
 }

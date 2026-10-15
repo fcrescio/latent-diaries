@@ -99,6 +99,8 @@ def main():
     provenance = {'inventory_sha256': hashlib.sha256(args.inventory.read_bytes()).hexdigest(),
                   'mode': args.mode, 'prompt_sha256': hashlib.sha256(prompt.encode()).hexdigest(),
                   'seed': 42, 'temperature': 0.2 if args.mode == 'freeform' else 0.0}
+    if args.mode == 'instance-v17':
+        provenance['labeler_source_sha256'] = source_checksum
     sidecar = args.output.with_suffix('.provenance.json')
     if sidecar.exists() and json.loads(sidecar.read_text()) != provenance:
         raise ValueError('Refuse to resume labels with changed inventory/prompt')

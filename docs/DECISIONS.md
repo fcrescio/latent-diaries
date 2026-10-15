@@ -407,3 +407,32 @@ without changing the original comparison or treating truncation as gibberish.
 `probe_instance_decoding.py` implements that numeric-only control and optional
 codec0-greedy isolation. Seven fitted examples cannot establish generalization.
 Managed CPU suite:52passed/3skipped; host19passed/17MLskips.
+
+## 2026-10-16 — Direct acoustic feasibility completed; broaden actual paired supervision
+
+V16 both fitting stages and midpoint resumes finish. Reader5,119,616 parameters;
+Qwen/vision remain frozen; acoustic peak5,710,023,680 bytes. All four prescribed
+training WAVs match their exact teachers byte-for-byte (two require the separate
+160-frame duration control). This is image-interface reproduction only.
+Training oracle/matched/shuffled codec0CE:0.8075208/0.8075208/2.2839463;
+after acoustic fitting matched0.6842994/shuffled2.2858744. The15.3% reduction
+is not a quality gain. Both readers' four development outputs reach105 frames;
+auxiliary ASR remains fragmented in three cases. No M2 promotion or new human
+approval is inferred. Do not send another broad art-review batch on this basis.
+
+Full managed CUDA suite54passed/2vision-interpreter skips, CPU52passed/3skipped;
+new local-labeler boundary tests4passed, including heldout rejection before
+server startup for both instance modes. The two additional tests were added
+after the full suites; CI will exercise the final source. Existing full worker
+rebake remains disk-limited. Original checkpoints are untouched.
+
+Source-only inspection in the pinned vision interpreter confirms upstream
+`get_image_features` and `image_hidden_states` semantics before LM fusion;
+no tensor-shape/patch ablation is claimed. Source trace remains local.
+
+Proceed with V17: frozen labeling-only protocol over all239 original training
+rows, Italian short-sentence prompt, no authored opening/ending inventory.
+Validation remains8-18 words, no truncation or forced acceptance. Start only
+after V16 GPU work finishes, stop local vision server in finally. This is data
+preparation, not a completed acoustic model or heldout quality claim. Fresh96
+remain untouched; all image-derived artifacts stay local.

@@ -60,3 +60,37 @@ Human quality judgments remain required; no automated score will approve M2.
 
 Exact protocol: `configs/research/instance-acoustic-v16.json`. All supervision,
 media, instance outputs and checkpoints remain local. No paid jobs or uploads.
+
+## V16 result and immediate consequence
+
+The bounded control completes both real resumes (prefix800/1600,
+acoustic160/320). Seven image-specific pairs pass validation from24 candidates.
+All four prescribed training images reproduce their own genuine teacher WAVs
+**byte for byte**, after extending two truncated controls to160 frames. This
+establishes reproduction through the image-only interface, not human acceptance
+or new-image generalization.
+
+Training codec0 CE is0.80752 for oracle and fitted image prefixes, versus2.28395
+for cyclically shuffled images. Acoustic fitting reduces matched CE to0.68430
+(15.3%) while shuffled CE remains2.28587. Nevertheless, all four development
+outputs reach the105-frame cap under both readers, and auxiliary transcriptions
+remain fragmented on three cases. These diagnostics do not establish human
+quality, but provide no basis to promote the new model or request another full
+artistic review. Keep the earlier Italian prior as a fallback.
+
+This small fit is deliberately overparameterized (5,119,616 reader parameters)
+and cannot adjudicate generalization mechanisms. It rules out a basic inability
+to learn distinct image-to-speech mappings in the verified frozen interface.
+The next action is image-specific supervision across the existing239 training
+rows, under `configs/research/instance-supervision-v17.json`, not another gain
+sweep or immediate LoRA expansion. Prior synthetic combination counts should
+not be mistaken for image-specific training coverage. V17 prepares data only;
+its labels are untrusted training annotations, not human judgments.
+
+Installed vision-source inspection confirms `get_image_features` runs the
+vision tower, applies `embed_vision` and splits by nonpadding patch counts;
+`forward` exposes the projected features before language-model fusion as
+`image_hidden_states`. They are not interchangeable with final normalized768D
+vectors. A future visual-token ablation must exercise dimensions, masking,
+position semantics and batch parity before training; source availability alone
+is not a validated capability.

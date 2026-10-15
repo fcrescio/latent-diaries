@@ -74,5 +74,9 @@
   "opening_robust_fresh_generalization_verified": false,
   "opening_robust_development_review_completed": true,
   "opening_robust_grounding_accepted": false,
-  "instance_acoustic_training_exercised": false
+  "instance_acoustic_training_exercised": true,
+  "instance_acoustic_resume_exercised": true,
+  "instance_training_waveform_reproduction_exercised": true,
+  "instance_acoustic_development_grounding_accepted": false,
+  "instance_specific_broader_supervision_prepared": false
 }
