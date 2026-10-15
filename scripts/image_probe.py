@@ -9,6 +9,7 @@ from pathlib import Path
 import torch
 from safetensors.torch import load_file, save_file
 
+from latent_diaries.image_query_reader import ImageQueryReader
 from latent_diaries.image_reader import GlobalImageReader
 from latent_diaries.inversion import digest, load_backbone, render
 from latent_diaries.sequence_reader import masked_prefix_loss
@@ -16,7 +17,8 @@ from latent_diaries.shared_mapper import validate_split
 
 
 def make_reader(info, weights):
-    reader = GlobalImageReader(
+    reader_type = ImageQueryReader if info.get("architecture") == "image-query" else GlobalImageReader
+    reader = reader_type(
         info["maximum_tokens"], weights["mean"], weights["scale"],
         weights["length_coef"], info["width"],
     )
@@ -89,20 +91,21 @@ def train(args):
         design_sha256=dataset["design_sha256"],
         source_revision=os.environ.get("LD_CODE_REVISION"),
         source_sha256=digest(Path(__file__)),
-        reader_source_sha256=digest(Path("src/latent_diaries/image_reader.py")),
+        reader_source_sha256=digest(Path("src/latent_diaries/image_query_reader.py" if args.architecture == "image-query" else "src/latent_diaries/image_reader.py")),
         training_prefix_sha256=hashes,
         train_ids=[r["id"] for r in rows],
         heldout_ids=[r["id"] for r in tests],
         input_dim=768,
+        architecture=args.architecture,
         maximum_tokens=maximum,
         width=128,
         seed=42,
         learning_rate=0.001,
         schedule_steps=args.schedule_steps,
         warmup_steps=100,
-        evaluation_scope="fresh-test",
+        evaluation_scope="exposed-development" if args.architecture == "image-query" else "fresh-test",
         qwen_weights_changed=False,
-        scope="Global normalized image-vector MLP; cached teacher-prefix reconstruction",
+        scope=("Position-sharing global-image query decoder; exposed development" if args.architecture == "image-query" else "Global normalized image-vector MLP; cached teacher-prefix reconstruction"),
         image_features_sha256=dataset["image_features_sha256"],
         vision_manifest_sha256=dataset["vision_manifest_sha256"],
     )
@@ -114,7 +117,8 @@ def train(args):
         info = saved
     folder.mkdir(parents=True, exist_ok=True)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    reader = GlobalImageReader(maximum, mean, scale, length_coef).to(device)
+    reader_type = ImageQueryReader if args.architecture == "image-query" else GlobalImageReader
+    reader = reader_type(maximum, mean, scale, length_coef).to(device)
     optimizer = torch.optim.AdamW(reader.parameters(), lr=info["learning_rate"], weight_decay=0.0)
     start = 0
     if args.resume:
@@ -140,7 +144,7 @@ def train(args):
                 group["lr"] = learning_rate
             optimizer.zero_grad(set_to_none=True)
             predicted, predicted_mask, predicted_lengths = reader(features)
-            if not torch.equal(predicted_mask, mask) or not torch.equal(predicted_lengths, lengths):
+            if args.architecture == "global-mlp" and (not torch.equal(predicted_mask, mask) or not torch.equal(predicted_lengths, lengths)):
                 raise ValueError("Numeric length prediction differs from training masks")
             loss = masked_prefix_loss(predicted, target, mask, reader.scale)
             if not torch.isfinite(loss):
@@ -229,6 +233,7 @@ def main():
     trainer.add_argument("--steps", type=int, required=True)
     trainer.add_argument("--schedule-steps", type=int, default=1600)
     trainer.add_argument("--resume", action="store_true")
+    trainer.add_argument("--architecture", choices=["global-mlp", "image-query"], default="global-mlp")
     evaluator = sub.add_parser("evaluate")
     evaluator.add_argument("--inputs", type=Path, required=True)
     evaluator.add_argument("--ids", nargs="+", required=True)

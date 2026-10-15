@@ -35,5 +35,9 @@
   "image_reader_scope": "Research script: 50 train / 12 group-disjoint held-out images. Blinded review completed: only training control almost good; all four tested held-out outputs fail intelligibility. M2 rejected; final CLI remains fail-closed.",
   "research_global_image_reader_training_implemented": true,
   "image_reader_pilot_review_completed": true,
-  "global_image_reader_fresh_intelligibility_verified": false
+  "global_image_reader_fresh_intelligibility_verified": false,
+  "exact_text_image_pilot_positive_verified": true,
+  "image_query_reader_development_exercised": true,
+  "image_query_reader_development_improved": false,
+  "training_only_ridge_length_exercised": true
 }

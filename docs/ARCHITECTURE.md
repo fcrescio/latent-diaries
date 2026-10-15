@@ -189,7 +189,30 @@ The first private global-reader pilot has now failed blinded held-out
 intelligibility: only its training control is almost good. Frozen post-review
 analysis finds near-exact training reconstruction, large held-out vector error
 and mostly incorrect held-out length predictions. A corrected-length diagnostic
-does not establish recovery; the new exact-text positive still awaits human
-assessment. These controls do not change reader weights or establish textless
+does not establish recovery; the new exact-text positive has human acceptance for pronunciation/prosody. These controls do not change reader weights or establish textless
 image generation. Details and aggregate evidence are in DECISIONS; individual
 ratings, vector errors and audio remain private.
+
+
+## Exposed-development image-query control
+
+`ImageQueryReader` projects the same frozen global 768D vector into four learned
+memory tokens, then four width-128 decoder layers predict 30 continuous vectors
+from learned absolute queries. These are projections of one global embedding,
+not upstream visual patch states. Causal query self-attention isolates future
+queries. Prefix computation is independent of length, allowing an isolated
+trimming-head comparison. Gold valid-position masks supervise training; predicted
+length never reveals held-out teacher information to the model.
+
+Analytical ridge leave-one-out selection uses training rows only, with an
+unpenalized intercept and a prescribed positive-alpha grid. CPU tests compare its
+analytic score against explicit refits. Both the original OLS and ridge heads
+are applied to both frozen models for the development diagnostic; file hashes
+verify persisted weights stay unchanged. Experimental length-buffer overrides
+are explicit and do not affect prefix vectors.
+
+The exercised 1,589,760-parameter query reader and ridge head do not improve the
+exposed-development result. The query reader's shared width-128 linear output
+also has a nonzero best-rank training-error floor; this limits fitting but does
+not by itself explain the held-out failure. The prescribed raw MSE audio gate
+fails, so no further speech batch is generated. M2 remains incomplete.

@@ -1,0 +1,17 @@
+{
+  "scope": "Exposed-development diagnostic; no fresh-test acceptance",
+  "training_images": 50,
+  "development_images": 12,
+  "reader_comparison": ["existing_global_mlp", "image_query_decoder"],
+  "length_comparison": ["existing_ols", "train_only_ridge_loocv"],
+  "ridge_alphas": [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0],
+  "decoder": {"width":128,"layers":4,"heads":4,"memory_tokens":4,"causal_queries":true,"length_independent_prefix":true},
+  "steps": 1600,
+  "resume_at": 800,
+  "learning_rate": 0.001,
+  "seed": 42,
+  "development_audio_gate_valid_prefix_mse": 0.00001,
+  "audio_gate_is_quality_acceptance": false,
+  "new_labels_or_backbone_changes": false,
+  "publication": "Generic source and aggregate verification only"
+}

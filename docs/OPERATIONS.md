@@ -491,3 +491,26 @@ the current already-built worker predates this diagnostic helper. Executed
 private evidence is at `postreview-001/diagnostic.json` with source and unchanged
 weight fingerprints. Auxiliary ASR transcripts remain private and are not human
 quality scores. No VLM service restart or reader retraining was needed.
+
+
+## Image-query/length development ablation
+
+The exact-text positive has human acceptance. The following architecture control
+uses only the already exposed 50/12 corpus, and cannot establish fresh-test
+success. It uses the same single worker/dependency locks, with current source
+and scripts bound read-only during development. No label-service restart needed.
+
+```bash
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -v "$PWD/src:/workspace/src:ro" -v "$PWD/scripts:/workspace/scripts:ro" experiment-gpu python scripts/image_probe.py train --dataset artifacts/private-photos-001/prefixes-001/dataset.json --run-dir artifacts/private-photos-001/query-reader-new --steps 800 --schedule-steps 1600 --architecture image-query
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -v "$PWD/src:/workspace/src:ro" -v "$PWD/scripts:/workspace/scripts:ro" experiment-gpu python scripts/image_probe.py train --dataset artifacts/private-photos-001/prefixes-001/dataset.json --run-dir artifacts/private-photos-001/query-reader-new --steps 1600 --schedule-steps 1600 --architecture image-query --resume
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm -e HF_HUB_OFFLINE=1 -e LD_REF_TEXT= -v "$PWD/src:/workspace/src:ro" -v "$PWD/scripts:/workspace/scripts:ro" experiment-gpu python scripts/diagnose_image_development.py --dataset artifacts/private-photos-001/prefixes-001/dataset.json --design artifacts/private-photos-001/split-001/design.json --baseline-dir artifacts/private-photos-001/reader-001 --query-dir artifacts/private-photos-001/query-reader-new --plan artifacts/private-photos-001/evaluation-plan.json --output-dir artifacts/private-photos-001/development-new
+```
+
+Exact completed private results are in `query-reader-001` and `development-v2`.
+The v2 protocol was committed before fitting. OLS/ridge comparison changes only
+length trimming, with train-only ridge alpha selection. Oracle target texts are
+opened for frozen development diagnostics only. The audio gate (valid-position
+MSE <1e-5) failed; no new listening batch or quality acceptance was created.
+Never upload these per-image diagnostics, features or checkpoints. Original
+checkpoint inference remains supported; use the recorded source revision when
+resuming older runs rather than bypassing source-fingerprint protection.
