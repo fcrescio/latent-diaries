@@ -396,3 +396,14 @@ Select first24 existing training IDs with distinct scene groups; user-authorized
 local vision service labels only those images, then stops in finally. No uploads.
 `make test`:19 passed/16 ML skips. Full image rebuild remains disk-limited as
 recorded previously; use the pinned worker with read-only source overlays.
+
+V16 preparation:24 group-distinct existing training candidates,7 accepted local
+vision narrations,16 excluded for length and1 other exclusion. Vision container
+confirmed stopped. Prefix fit completes1600 steps with actual800 resume and
+normalized masked MSE8.81e-15. Seven genuine16-codebook teachers are retained.
+Several teacher utterances exceed the prescribed105-frame generation cap; add
+an explicitly separate160-frame duration control for capped training outputs,
+without changing the original comparison or treating truncation as gibberish.
+`probe_instance_decoding.py` implements that numeric-only control and optional
+codec0-greedy isolation. Seven fitted examples cannot establish generalization.
+Managed CPU suite:52passed/3skipped; host19passed/17MLskips.

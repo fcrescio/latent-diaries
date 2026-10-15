@@ -824,3 +824,11 @@ requires teacher length parity. Both frozen backbones, all16 codebooks, EOS and
 the two-path textless conditioning protocol are preserved. No reserved fresh
 images, labels or linguistic strings are loaded at inference. Do not interpret
 successful memorization as held-out grounding.
+
+If an image-specific teacher exceeds the original105-frame cap, keep the
+original comparison and run a separate duration control:
+`python scripts/probe_instance_decoding.py --run-dir <reader> --inputs
+<numeric-inputs> --ids <capped-training-ids> --output-dir <new-duration-control>
+--max-frames 160`. Optional `--codec0-greedy` isolates codec0 sampling. Neither
+control loads teacher files, labels or linguistic strings. Record the reason
+and do not reclassify the original truncated clips as successful complete speech.
