@@ -1,0 +1,12 @@
+{
+  "hypothesis": "Broad category means erase the salient visible anchor; train numeric modality calibration against the specific existing opening clause best supported by each training image",
+  "label_scope": "Existing239 training images only; no development labels or fresh candidate access",
+  "labels": "User-authorized local vision service chooses one of60 existing authored opening anchors or skips; no identity, OCR, new vocabulary, inference captions or text",
+  "adapter": "Centered ridge to normalized mean training-text embedding per opening; alpha selected from0.001/0.01/0.1/1 by five training-group-disjoint folds, then refit",
+  "first_control": "Frozen v8 prior with new adapter; same four development images, training/null, seed42 and cap105; check actual outputs before further fitting",
+  "fallback_hypothesis": "If specific-anchor semantic controls fragment, warm-start v8 and expose it to opening-specific ambiguity:45% opening-mean+jitter0.01,25% coarse-category-mean+jitter0.01,25% exact sentence,5% null;3000 steps, resume1500,lr1e-4; preserve all other losses and32 continuous candidates",
+  "inference": "Image768D -> learned numeric projection/L2 -> continuous reader -> frozen Qwen; no label decisions, anchor lookup, caption strings or teacher targets at runtime",
+  "acceptance": "Human matched/shuffled/null listening required; no automatic grounding approval or ASR artistic metric",
+  "private_outputs": "All labels, vectors, image-derived weights, audio and individual ratings stay local; vision service stopped in finally",
+  "fresh_access": false
+}

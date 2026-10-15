@@ -5,6 +5,14 @@ import torch
 from torch.nn import functional as F
 
 
+def scale_semantic_deviation(coefficient, target_mean, gain):
+    if gain <= 0 or target_mean.shape != coefficient.shape[1:]:
+        raise ValueError('Positive semantic gain and aligned training mean required')
+    result = coefficient * gain
+    result[0] += target_mean * (1 - gain)
+    return result
+
+
 def fit_coefficient(x, y, alpha):
     if alpha <= 0 or x.ndim != 2 or y.ndim != 2 or len(x) != len(y) or len(x) < 2:
         raise ValueError('Positive regularization and aligned training matrices required')

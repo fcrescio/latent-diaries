@@ -1,0 +1,16 @@
+{
+  "hypothesis": "Clean specific opening means work, but image-estimated semantic vectors still trigger generic or malformed branches; expand the prior's robust training distribution around specific openings while retaining broad/exact/null conditions",
+  "data": "Same1280 authored training sentences and cached vectors; existing141-image v11 adapter stays frozen; no new labels, vocabulary or fresh access",
+  "initialization": "Exact warm-start of v8 prior,32 continuous modes; preserve every initial weight, no mode expansion perturbation",
+  "feature_augmentation": "45% normalized opening-mean+jitter0.01;25% normalized broad-category-mean+jitter0.01;25% exact training-sentence vector;5% zero. All means use training rows only",
+  "objective": "Unchanged best continuous candidate reconstruction +0.1 routing CE +0.2 numeric EOS BCE; shifted gold previous vectors with noise0.02",
+  "steps": 3000,
+  "resume_at": 1500,
+  "learning_rate": 0.0001,
+  "batch_size": 16,
+  "schedule": "warmup100 cosine floor0.1 over3000",
+  "seed": 42,
+  "inference": "Frozen v11 numeric image adapter, new continuous prior, unchanged Qwen sampledseed42 cap105; primary candidate sampler unchanged top4 temperature0.5 seed42, guidance disabled",
+  "evaluation": "Same exposed four images plus original training/null, explicit text-feature anchor controls if needed; no teacher inputs to image inference. Actual human matched/shuffled review required",
+  "scope": "Reader fine-tuning only; preserve accepted-v8 fallback. No vendor backbone/voice changes, remote spend or private uploads; all96 fresh images remain reserved"
+}

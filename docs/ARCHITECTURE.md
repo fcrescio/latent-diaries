@@ -302,3 +302,51 @@ and L2 normalization, with no labels, classifier, prototype retrieval or text.
 This addresses contraction toward the global mean, not fine visual specificity:
 broad training categories and authored opening clauses still limit grounding.
 The development comparison is not fresh generalization or human acceptance.
+
+## Training-only visual anchors
+
+V10 uses the same sixty authored opening clauses and their existing training
+sentence embeddings. The local training-label service selects a visibly
+supported opening subject or skips an image. The adapter's target is the
+normalized mean of training sentence vectors for that specific opening, rather
+than its broad scene category. No new vocabulary, caption generator, classifier
+or target lookup enters inference. The initial control keeps the v8 continuous
+speech prior frozen. Because unsupported images are skipped, this changes the
+training subset along with supervision and cannot isolate granularity alone.
+The reserved fresh split remains excluded; human grounding assessment is needed.
+
+The shorter v11 training annotation provides the previously available broad
+scene hint and only six within-scene choices. This hint is training supervision,
+never an inference classifier. It increases accepted coverage to 141 images/34
+anchors, but vector regression alone still produces mixed development speech.
+V12 therefore freezes all 9,406,113 language-prior parameters and trains only the
+590,592 affine image coefficients through continuous opening-vector likelihood.
+A mixture over the existing context-dependent continuous candidates scores gold
+opening vectors, with shifted gold previous vectors and valid-position masks.
+Opening boundaries come from the exact shared prefix across training-only
+continuations. First eight positions receive extra weight; different-anchor
+image negatives and drift from the initial adapter regularize the fit.
+
+No text vocabulary logits or tokenizer are added. The frozen GRU uses its native
+forward during calibration because cuDNN evaluation does not retain backward
+reserve for input gradients. CPU/CUDA tests check nonzero adapter gradients,
+absent prior gradients, causal isolation and native/cuDNN FP32 forward agreement (TF32 disabled in the parity control).
+Standalone generation retains the same numeric projection, frozen prior and
+Qwen path; it uses generated previous vectors and reads no training targets.
+
+The exercised v14 fallback fine-tunes the continuous reader on opening-specific,
+broad-scene, exact-sentence and zero conditions while keeping vendor models
+frozen. V15 addresses remaining semantic shrinkage with a scalar deviation gain:
+`b' = gain*b + (1-gain)*training_target_mean`, `W' = gain*W`. It is folded into
+the affine tensor, so runtime still loads no target mean or label. Five training
+scene-group folds refit ridge without their validation images and select gain
+by macro opening NLL; the selected value is1.5. The gain-grid motivation used
+exposed development diagnostics and cannot be called untouched-test evidence.
+Actual human matched/shuffled assessment and later fresh evaluation remain open.
+
+Optional v13 continuous-density guidance compares actual candidate vectors
+under conditioned/null neural mixtures, so its result is invariant to arbitrary
+null-mode indices. The bounded numeric control did not improve opening choices;
+it is disabled in the current audio comparison. Do not present its implementation
+as accepted grounding. Native/cuDNN FP32 tests explicitly disable TF32 for the
+comparison; actual sampled generation retains its previous precision settings.

@@ -18,6 +18,8 @@ from urllib.request import Request, urlopen
 from PIL import Image, ImageOps
 
 from latent_diaries.canonical_supervision import SCENE_PROMPT, validate_scene_label
+from latent_diaries.prior_corpus import OPENINGS
+from latent_diaries.visual_anchors import anchor_prompt, validate_anchor_label
 
 PROMPT = """Return one JSON object with exactly these keys:
 keep: boolean; scene: a short generic English scene category; narration_it: string.
@@ -47,25 +49,32 @@ def main():
     parser.add_argument("--inventory", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--limit", type=int, default=192)
-    parser.add_argument("--mode", choices=["freeform", "scene-v3"], default="freeform")
+    parser.add_argument("--mode", choices=["freeform", "scene-v3", "opening-v10", "opening-v11"], default="freeform")
     parser.add_argument("--docker", default="docker")
     parser.add_argument("--container", default="qwen-optimization-glp8-backup")
     args = parser.parse_args()
     signal.signal(signal.SIGTERM, lambda *_: (_ for _ in ()).throw(SystemExit(143)))
     rows = json.loads(args.inventory.read_text())[:args.limit]
+    if args.mode.startswith('opening-') and any(r.get('split') != 'train' for r in rows):
+        raise ValueError('Visual-anchor labeling permits training images only')
+    if args.mode == 'opening-v11' and any(not isinstance(r.get('scene_hint'), str) for r in rows):
+        raise ValueError('Training scene hints required')
+    source_checksum = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     existing = []
     if args.output.exists():
         existing = [json.loads(line) for line in args.output.read_text().splitlines() if line]
     completed = {row["id"] for row in existing}
-    prompt = SCENE_PROMPT if args.mode == 'scene-v3' else PROMPT
+    prompt = anchor_prompt() if args.mode.startswith('opening-') else (SCENE_PROMPT if args.mode == 'scene-v3' else PROMPT)
+    if args.mode == 'opening-v11':
+        prompt = json.dumps({k: anchor_prompt(k) for k in sorted(OPENINGS)}, sort_keys=True)
     provenance = {'inventory_sha256': hashlib.sha256(args.inventory.read_bytes()).hexdigest(),
                   'mode': args.mode, 'prompt_sha256': hashlib.sha256(prompt.encode()).hexdigest(),
-                  'seed': 42, 'temperature': 0.0 if args.mode == 'scene-v3' else 0.2}
+                  'seed': 42, 'temperature': 0.2 if args.mode == 'freeform' else 0.0}
     sidecar = args.output.with_suffix('.provenance.json')
     if sidecar.exists() and json.loads(sidecar.read_text()) != provenance:
         raise ValueError('Refuse to resume labels with changed inventory/prompt')
-    if args.mode == 'scene-v3':
+    if args.mode != 'freeform':
         sidecar.write_text(json.dumps(provenance, indent=2)+'\n')
         sidecar.chmod(0o600)
     try:
@@ -87,6 +96,14 @@ def main():
             for i, row in enumerate(rows):
                 if row["id"] in completed:
                     continue
+                row_prompt = anchor_prompt(row['scene_hint']) if args.mode == 'opening-v11' and row['scene_hint'] in OPENINGS else prompt
+                if args.mode == 'opening-v11' and row['scene_hint'] not in OPENINGS:
+                    result = {'id': row['id'], 'model': model, 'label': {'keep': False, 'anchor': None},
+                              'seconds': 0.0, 'training_only': True, 'reason': 'unsupported_training_scene',
+                              'labeler_source_sha256': source_checksum}
+                    output.write(json.dumps(result) + '\n');output.flush()
+                    print(f'Labelled {i + 1}/{len(rows)}; unsupported scene skipped', flush=True)
+                    continue
                 with Image.open(row["path"]) as original:
                     image = ImageOps.exif_transpose(original).convert("RGB")
                     image.thumbnail((768, 768))
@@ -97,7 +114,7 @@ def main():
                 response = json_request("/v1/chat/completions", {
                     "model": model,
                     "messages": [
-                        {"role": "system", "content": prompt},
+                        {"role": "system", "content": row_prompt},
                         {"role": "user", "content": [
                             {"type": "text", "text": "Label this image for local training."},
                             {"type": "image_url", "image_url": {"url": image_url}},
@@ -108,10 +125,19 @@ def main():
                     "chat_template_kwargs": {"enable_thinking": False},
                 })
                 text = response["choices"][0]["message"]["content"]
-                label = json.loads(text)
+                rejection = None
+                if args.mode.startswith('opening-'):
+                    try:
+                        label = validate_anchor_label(json.loads(text), row['scene_hint'] if args.mode == 'opening-v11' else None)
+                    except (ValueError, TypeError):
+                        # Untrusted malformed output is excluded, never coerced to a choice.
+                        label = {'keep': False, 'anchor': None}
+                        rejection = 'invalid_model_anchor_response'
+                else:
+                    label = json.loads(text)
                 if args.mode == 'scene-v3':
                     label = validate_scene_label(label)
-                else:
+                elif args.mode == 'freeform':
                     if set(label) != {"keep", "scene", "narration_it"} or type(label["keep"]) is not bool:
                         raise ValueError("Unexpected training label schema")
                     if not all(isinstance(label[k], str) for k in ["scene", "narration_it"]):
@@ -122,6 +148,10 @@ def main():
                         label["rejection"] = "sentence_length"
                 result = {"id": row["id"], "model": model, "label": label,
                           "seconds": time.monotonic() - start, "training_only": True}
+                if args.mode.startswith('opening-'):
+                    result['labeler_source_sha256'] = source_checksum
+                    if rejection:
+                        result['validation_rejection'] = rejection
                 output.write(json.dumps(result, ensure_ascii=False) + "\n")
                 output.flush()
                 print(f"Labelled {i + 1}/{len(rows)}; accepted={label['keep']}", flush=True)

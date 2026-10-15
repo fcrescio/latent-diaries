@@ -1,5 +1,5 @@
 {
-  "scope": "Frozen v8 speech reader with train-group-selected semantic image adapter; exposed development only, human E7 pending",
+  "scope": "Frozen-reader adapter development control; all16 E7 pairs reviewed, stable Italian but weak grounding",
   "protocol": "configs/research/grounding-adapter-v9.json",
   "selected_alpha": 0.1,
   "train_group_validation": {
@@ -19,7 +19,7 @@
   "gallery_pairs": 16,
   "gallery_unique_audio": 12,
   "blind_labels": "E7-A through E7-P",
-  "human_review_pending": true,
+  "human_review_pending": false,
   "image_grounding_accepted": false,
   "fresh_images_accessed": 0,
   "private_data_uploaded": false,
@@ -30,5 +30,17 @@
     "locked_vision_cpu": "4 passed",
     "full_test_docker": "Rebuild failed: Docker disk exhaustion at apt; retry cancelled during dependency downloads"
   },
-  "worker_execution": "Existing pinned worker with read-only current source overlays; no new worker bake"
+  "worker_execution": "Existing pinned worker with read-only current source overlays; no new worker bake",
+  "human_review": {
+    "rated_pairs": 16,
+    "reviewers": 1,
+    "matched_per_method": 4,
+    "candidate_grounding_mean": 1.75,
+    "previous_v8_grounding_mean": 1.75,
+    "candidate_shuffled_grounding_mean": 1,
+    "voice_mean_all_pairs": 3,
+    "candidate_training_grounding": 3,
+    "previous_training_grounding": 1,
+    "scope": "Descriptive exposed-development review; no fresh grounding acceptance"
+  }
 }
