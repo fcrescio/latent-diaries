@@ -1,0 +1,23 @@
+{
+  "scope": "Coarse scene-conditioned speech control, limited narrative repertoire; not unrestricted storytelling",
+  "supervision": "12 predefined scene classes mapped deterministically to authored equal-token-length Italian sentences; VLM categories used only during training preparation",
+  "final_inference": "image -> frozen normalized 768D embedding -> global MLP -> continuous prefix -> frozen Qwen audio; no classifier, scene strings or template lookup at inference",
+  "new_candidates": 768,
+  "old_cohort": "previous 62 images for a matched canonical-supervision diagnostic",
+  "reserved_fresh_candidates": 96,
+  "development_candidates": 96,
+  "fresh_exclusion": "all earlier inventory capture-day groups and earlier selected perceptual neighbors; exact duplicates removed",
+  "fresh_access_rule": "no fresh labels, features, target projection or performance checks until development gate passes",
+  "training_selection": {"maximum_per_scene_group":2,"minimum_training_per_class":8,"maximum_training_per_class":48,"seed":42},
+  "length_policy": "one common teacher token length chosen before seeing image labels; constant head, no padding or length regression",
+  "models": ["canonical_old_cohort_global_mlp", "canonical_expanded_global_mlp"],
+  "architecture": "same width128 LayerNorm/global MLP; frozen vision and Qwen",
+  "steps": 1600,
+  "resume_at": 800,
+  "learning_rate": 0.001,
+  "schedule": "warmup100, cosine floor0.1 over fixed1600",
+  "development_audio_gate_mean_raw_prefix_mse": 0.00001,
+  "audio_gate_is_quality_acceptance": false,
+  "speaker_and_generation_seed": "same local reference, seed42, sampled codec0/residuals, cap105",
+  "publication": "only generic source and aggregate verification; all image-derived artifacts remain local"
+}

@@ -5,6 +5,7 @@ and logs must remain in ignored private storage. The server is stopped in finall
 """
 import argparse
 import base64
+import hashlib
 import io
 import json
 import signal
@@ -15,6 +16,8 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 from PIL import Image, ImageOps
+
+from latent_diaries.canonical_supervision import SCENE_PROMPT, validate_scene_label
 
 PROMPT = """Return one JSON object with exactly these keys:
 keep: boolean; scene: a short generic English scene category; narration_it: string.
@@ -44,6 +47,7 @@ def main():
     parser.add_argument("--inventory", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--limit", type=int, default=192)
+    parser.add_argument("--mode", choices=["freeform", "scene-v3"], default="freeform")
     parser.add_argument("--docker", default="docker")
     parser.add_argument("--container", default="qwen-optimization-glp8-backup")
     args = parser.parse_args()
@@ -54,6 +58,16 @@ def main():
     if args.output.exists():
         existing = [json.loads(line) for line in args.output.read_text().splitlines() if line]
     completed = {row["id"] for row in existing}
+    prompt = SCENE_PROMPT if args.mode == 'scene-v3' else PROMPT
+    provenance = {'inventory_sha256': hashlib.sha256(args.inventory.read_bytes()).hexdigest(),
+                  'mode': args.mode, 'prompt_sha256': hashlib.sha256(prompt.encode()).hexdigest(),
+                  'seed': 42, 'temperature': 0.0 if args.mode == 'scene-v3' else 0.2}
+    sidecar = args.output.with_suffix('.provenance.json')
+    if sidecar.exists() and json.loads(sidecar.read_text()) != provenance:
+        raise ValueError('Refuse to resume labels with changed inventory/prompt')
+    if args.mode == 'scene-v3':
+        sidecar.write_text(json.dumps(provenance, indent=2)+'\n')
+        sidecar.chmod(0o600)
     try:
         subprocess.run([args.docker, "start", args.container], check=True, stdout=subprocess.DEVNULL)
         ready = False
@@ -83,26 +97,29 @@ def main():
                 response = json_request("/v1/chat/completions", {
                     "model": model,
                     "messages": [
-                        {"role": "system", "content": PROMPT},
+                        {"role": "system", "content": prompt},
                         {"role": "user", "content": [
                             {"type": "text", "text": "Label this image for local training."},
                             {"type": "image_url", "image_url": {"url": image_url}},
                         ]},
                     ],
-                    "temperature": 0.2, "seed": 42, "max_tokens": 256,
+                    "temperature": provenance["temperature"], "seed": 42, "max_tokens": 256,
                     "response_format": {"type": "json_object"},
                     "chat_template_kwargs": {"enable_thinking": False},
                 })
                 text = response["choices"][0]["message"]["content"]
                 label = json.loads(text)
-                if set(label) != {"keep", "scene", "narration_it"} or type(label["keep"]) is not bool:
-                    raise ValueError("Unexpected training label schema")
-                if not all(isinstance(label[k], str) for k in ["scene", "narration_it"]):
-                    raise ValueError("Invalid label strings")
-                count = len(label["narration_it"].split())
-                if label["keep"] and not 8 <= count <= 18:
-                    label["keep"] = False
-                    label["rejection"] = "sentence_length"
+                if args.mode == 'scene-v3':
+                    label = validate_scene_label(label)
+                else:
+                    if set(label) != {"keep", "scene", "narration_it"} or type(label["keep"]) is not bool:
+                        raise ValueError("Unexpected training label schema")
+                    if not all(isinstance(label[k], str) for k in ["scene", "narration_it"]):
+                        raise ValueError("Invalid label strings")
+                    count = len(label["narration_it"].split())
+                    if label["keep"] and not 8 <= count <= 18:
+                        label["keep"] = False
+                        label["rejection"] = "sentence_length"
                 result = {"id": row["id"], "model": model, "label": label,
                           "seconds": time.monotonic() - start, "training_only": True}
                 output.write(json.dumps(result, ensure_ascii=False) + "\n")
