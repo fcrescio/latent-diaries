@@ -381,3 +381,12 @@ PYMERGE
 Private mappings are 0600; no ratings are synthesized. Both methods use seed 42,
 sampled primary/residual codebooks and cap105. Compare fresh cases and controls
 through human listening before updating generalization capability flags.
+
+
+2026-10-15 listening is complete: the frozen sequence checkpoint passes both
+prespecified fresh combinations and the training control; null is rejected.
+This accepts scoped M1.2 for numeric factors at seed 42. The affine comparison
+does not pass fresh intelligibility. Preserve this checkpoint and split; all
+reviewed test cases are now exposed. Image grounding and seed robustness remain
+unverified. Sanitized evidence is in `validation/2026-10-15-sequence-reader.json`;
+individual judgments and audio fingerprints remain in ignored local artifacts.

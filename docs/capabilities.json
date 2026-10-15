@@ -13,14 +13,15 @@
   "human_review_service_implemented": true,
   "hf_private_checkpoint_publish_implemented": true,
   "learned_prefix_italian_intelligibility_verified": true,
-  "learned_prefix_intelligibility_scope": "One 32-token memorized utterance, codec-0 greedy/residuals sampled, seed 42; generalization unverified",
+  "learned_prefix_intelligibility_scope": "M1 numeric probe: distinct memorized speech and two prespecified fresh factor combinations accepted; sequence reader, sampled seed 42. No images, unseen vocabulary or broad seed robustness established.",
   "shared_numeric_mapper_training_exercised": true,
-  "shared_numeric_mapper_generalization_verified": false,
+  "shared_numeric_mapper_generalization_verified": true,
   "m1_1_distinct_memorized_utterances_accepted": true,
   "continuous_teacher_prefix_regression_exercised": true,
   "continuous_teacher_prefix_regression_generalization_verified": false,
   "sequence_reader_training_exercised": true,
   "sequence_reader_checkpoint_resume_exercised": true,
   "sequence_reader_numeric_inference_exercised": true,
-  "sequence_reader_fresh_generalization_verified": false
+  "sequence_reader_fresh_generalization_verified": true,
+  "m1_2_numeric_composition_accepted": true
 }
