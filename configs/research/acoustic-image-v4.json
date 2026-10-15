@@ -1,0 +1,19 @@
+{
+  "scope": "Existing canonical development corpus only; limited scene repertoire, no fresh-test access",
+  "visual_diagnostic": "Train-only centered ridge alpha1 classifier and cosine nearest-centroid; same fixed-seed permuted-label ridge control; report accuracy and macro recall",
+  "acoustic_initialization": "Frozen expanded canonical global MLP checkpoint",
+  "backbones": "EmbeddingGemma2 and Qwen frozen; gradients through Qwen to reader",
+  "teacher": "One genuine frozen-Qwen generated codec trajectory per training-supported canonical sentence, seed42, cap160; decoded positive controls retained locally",
+  "objective": "codec0 CE including EOS + 0.1 residual-codebook CE + 0.1 normalized prefix MSE",
+  "sampling": "Batch1; cycle sorted training-supported classes, seeded random training row within class",
+  "steps": 320,
+  "resume_at": 160,
+  "learning_rate": 0.00002,
+  "schedule": "warmup20 cosine floor0.1 over fixed320",
+  "seed": 42,
+  "development_plan": "First row by ID in each of first four supported development categories; first training row; null. Freeze IDs before fitting; compare same baseline and acoustic model",
+  "generation": "sampled codec0 and residuals, seed42 cap105; no target/text/category files at inference",
+  "audio_gate": "Generate prescribed bounded development comparison after finite completed acoustic run regardless of prefix MSE; MSE is a diagnostic, not intelligibility acceptance",
+  "human_gate": "Blinded listening required; keep 96 fresh candidates reserved until development evidence justifies a separate protocol",
+  "publication": "Generic code and aggregate evidence only; all media-derived data and weights remain local"
+}
