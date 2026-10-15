@@ -1,0 +1,18 @@
+{
+  "hypothesis": "Euclidean semantic-vector regression can land between incompatible language conditions; calibrate image vectors through frozen continuous-prefix likelihood for specific visible training anchors",
+  "data": "Same accepted v11 training images and existing authored training corpus; no new labels, vocabulary, development targets or fresh access",
+  "initialization": "v11 numeric ridge adapter; freeze every v8 continuous-prior and vendor backbone weight",
+  "trainable_parameters": 590592,
+  "objective": "Opening-only continuous mixture NLL at normalized-prefix squared-error temperature0.01; first8 positions weight2; plus0.5 hinge matched-vs-different-anchor NLL margin0.2; plus20 squared semantic drift from initial adapter, including null",
+  "opening_boundary": "Longest exactly shared prefix among training sentence vectors for each opening; no tokenizer or new Qwen projection required",
+  "sampling": "Uniform accepted training anchors, random training image and training sentence within anchor; negatives prefer another anchor in the same broad category, otherwise another category",
+  "steps": 1000,
+  "resume_at": 500,
+  "batch_size": 16,
+  "learning_rate": 0.00005,
+  "schedule": "warmup50 cosine floor0.1 over1000",
+  "seed": 42,
+  "evaluation": "Same fixed four exposed development images plus original training/null; unchanged sampled decoder seed42 cap105; actual autoregressive audio and human matched/shuffled review required",
+  "inference": "Same numeric affine tensor plus L2 normalization, unchanged v8 continuous prior and Qwen; no label, prototype, caption or training target lookup",
+  "acceptance": "Training likelihood or ASR cannot establish intelligibility or grounding; preserve v10/v11 negatives and all96 fresh candidates"
+}
