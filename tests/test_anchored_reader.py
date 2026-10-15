@@ -12,6 +12,9 @@ def test_fixed_numeric_anchor_and_image_gradient():
     before, mask, lengths = reader(features)
     torch.testing.assert_close(before, anchor[None].expand(2, -1, -1), atol=1e-6, rtol=1e-6)
     assert mask.all() and lengths.tolist() == [5, 5]
+    unit_reader = make_anchored_reader(anchor, width=16, unit_scale=True)
+    torch.testing.assert_close(unit_reader(features)[0], before, atol=1e-6, rtol=1e-6)
+    assert torch.equal(unit_reader.scale, torch.ones(1024))
     checksum = initialization_fingerprint(reader)
     # Opposing audio-domain gradients can open the initially zero image residual.
     loss = (before[0] * torch.randn_like(anchor)).mean() - (before[1] * torch.randn_like(anchor)).mean()

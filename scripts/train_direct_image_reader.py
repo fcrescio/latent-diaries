@@ -24,13 +24,15 @@ def main():
     parser.add_argument('--provenance-run', type=Path, required=True)
     parser.add_argument('--run-dir', type=Path, required=True)
     parser.add_argument('--steps', type=int, required=True)
+    parser.add_argument('--unit-scale', action='store_true')
+    parser.add_argument('--head-lr-multiplier', type=float, choices=[1., 3., 10., 30.], default=1.)
     parser.add_argument('--lora-rank', type=int, choices=[0, 8], default=8)
     parser.add_argument('--lora-layers', type=int, choices=[4], default=4)
     parser.add_argument('--schedule-steps', type=int, default=320)
     parser.add_argument('--resume', action='store_true')
     args = parser.parse_args()
-    if not Path('/.dockerenv').exists() or not 1 <= args.steps <= args.schedule_steps <= 1600:
-        raise ValueError('Use managed worker, within a fixed schedule of at most1600 steps')
+    if not Path('/.dockerenv').exists() or not 1 <= args.steps <= args.schedule_steps <= 3200:
+        raise ValueError('Use managed worker, within a fixed schedule of at most3200 steps')
     if args.run_dir.exists() and not args.resume:
         raise ValueError('Use a fresh run directory or explicit resume')
     info = json.loads((args.provenance_run / 'config.json').read_text())
@@ -71,7 +73,8 @@ def main():
         raise ValueError('Teacher policy coverage differs')
     if len(policy_by_key) != len(policies['records']):
         raise ValueError('Duplicate teacher policy keys')
-    info.update(policy_manifest_sha256=digest(policies_path), provenance_reader_sha256=digest(initial_path), completed_steps=0,
+    info.update(unit_scale=args.unit_scale, head_lr_multiplier=args.head_lr_multiplier,
+                policy_manifest_sha256=digest(policies_path), provenance_reader_sha256=digest(initial_path), completed_steps=0,
                 teacher_manifest_sha256=digest(teacher_manifest),
                 provenance_config_sha256=digest(args.provenance_run / 'config.json'),
                 source_sha256=digest(Path(__file__)),
@@ -109,13 +112,17 @@ def main():
         raise ValueError('LoRA target module layout differs')
     info.update(lora_modules=modules, lora_trainable_parameters=sum(p.numel() for p in adapted))
     torch.manual_seed(42)
-    reader = make_anchored_reader(anchor, width=256).to(speaker.device).train()
+    reader = make_anchored_reader(anchor, width=256, unit_scale=args.unit_scale).to(speaker.device).train()
     initial_checksum = initialization_fingerprint(reader)
     if args.resume and info['initialization_sha256'] != initial_checksum:
         raise ValueError('Direct reader initialization differs')
     info.update(initialization_sha256=initial_checksum,
                 trainable_parameters=sum(p.numel() for p in reader.parameters()))
-    optimizer = torch.optim.AdamW([{'params': list(reader.parameters()), 'lr_multiplier': 1.0},
+    head = list(reader.network[-1].parameters())
+    head_ids = {id(p) for p in head}
+    other = [p for p in reader.parameters() if id(p) not in head_ids]
+    optimizer = torch.optim.AdamW([{'params': other, 'lr_multiplier': 1.0},
+                                   {'params': head, 'lr_multiplier': args.head_lr_multiplier},
                                    {'params': adapted, 'lr_multiplier': 1.0}], lr=1e-4, weight_decay=0)
     targets = {}
     for record in teachers['records']:
@@ -192,7 +199,7 @@ def main():
             optimizer.step()
             metric = {'step': step + 1, 'loss': float(loss.detach()),
                       **{k: float(v.detach()) for k, v in metrics.items()},
-                      'gradient_norm': float(norm), 'learning_rate': lr, 'lora_learning_rate': lr if adapted else 0.0,
+                      'gradient_norm': float(norm), 'learning_rate': lr, 'head_learning_rate': lr * args.head_lr_multiplier, 'lora_learning_rate': lr if adapted else 0.0,
                       'elapsed_seconds': time.monotonic() - started, 'training_id': row['id']}
             log.write(json.dumps(metric) + '\n');log.flush()
             if step % 10 == 0 or step + 1 == args.steps:

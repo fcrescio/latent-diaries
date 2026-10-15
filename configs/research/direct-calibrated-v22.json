@@ -1,0 +1,9 @@
+{
+  "hypothesis": "V21 fails to fit even training speech; inherited reconstruction normalization and conservative reader LR produce much smaller physical prefix updates than the accepted M1 optimization. Calibrate the output head in prefix units before interpreting model capacity.",
+  "training_only_probe": "First4 existing training images, same anchor and frozen teacher policies; one matched Adam step with clip1, comparing free-prefix M1 lr0.03, normalized reader lr1e-4, and unit-scale reader rates1e-4/3e-4/1e-3/3e-3. No development data used.",
+  "measured_updates": "M1 free-prefix RMS0.0299971; inherited normalized reader0.000725421; unit-scale lr1e-3 RMS0.0356670 with mean training KL2.04456 to1.70936. Choose closest-to-M1 RMS among unit-scale candidates decreasing mean training KL: multiplier10.",
+  "reader": "Same fixed32-position anchored reader and identical numerical initialization function as V21; unit output scale, last projection LR10x, remaining reader LR1e-4. No sentence-vector regression or predicted text length.",
+  "training": "Same170 genuine audio-code policy targets, gold previous16 codes; codec0 KL plus residual KL weight1, frozen vs rank8 last4 q/v LoRA, same fresh anchor initialization per pair.3200 fixed schedule actual1600 resume; warm20 cosine floor0.1; optional LoRA lr1e-4, head1e-3, other reader1e-4; joint clip1.",
+  "evaluation": "Same4 exposed development inputs, first training input and null; mixed decoding codec0 greedy/residual sampled seed42 cap160. Separate human quality gate; no automated acceptance or fresh96 access.",
+  "limits": "Update-size calibration is an optimizer diagnostic, not proof of speech or grounding. Every new physical update is exercised locally in the pinned worker. No uploads or paid jobs."
+}

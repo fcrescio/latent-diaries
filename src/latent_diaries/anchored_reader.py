@@ -6,11 +6,11 @@ import torch
 from .image_reader import GlobalImageReader
 
 
-def make_anchored_reader(anchor, width=256):
+def make_anchored_reader(anchor, width=256, *, unit_scale=False):
     if anchor.ndim != 2 or anchor.shape[1] != 1024 or not len(anchor) or not torch.isfinite(anchor).all():
         raise ValueError('Expected finite [K,1024] numeric language anchor')
     mean = anchor.mean(0)
-    scale = anchor.std(0, unbiased=False).clamp_min(1e-4)
+    scale = torch.ones_like(mean) if unit_scale else anchor.std(0, unbiased=False).clamp_min(1e-4)
     lengths = anchor.new_zeros(769)
     lengths[0] = len(anchor)
     reader = GlobalImageReader(len(anchor), mean, scale, lengths, width=width)
