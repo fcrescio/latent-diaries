@@ -125,8 +125,13 @@
   "audio_semantic_feedback_independent_speaker_robustness_verified": false,
   "audio_semantic_feedback_no_training_reranking_exercised": true,
   "audio_semantic_feedback_blinded_pairs": 28,
-  "audio_semantic_feedback_human_review_pending": true,
+  "audio_semantic_feedback_human_review_pending": false,
   "audio_semantic_feedback_reranker_promoted": false,
   "audio_semantic_feedback_temporal_reader_implemented": false,
-  "audio_semantic_feedback_temporal_training_started": false
+  "audio_semantic_feedback_temporal_training_started": false,
+  "audio_semantic_feedback_human_review_completed": true,
+  "audio_semantic_feedback_human_rated_pairs": 28,
+  "audio_semantic_feedback_limited_pilot_grounding_gain_observed": true,
+  "audio_semantic_feedback_artistic_improvement_accepted": false,
+  "audio_semantic_feedback_repertoire_expansion_verified": false
 }
