@@ -1,0 +1,9 @@
+{
+  "purpose": "Localize failure using the existing V24 checkpoint without training or changing historical artifacts.",
+  "scope": "Two previously annotated training images p0003 (vehicles), p0006 (flowers); image-only exposed development q0052; no reserved fresh access.",
+  "ladder": "L0 stock exact training text; L1 exact cached continuous prefix; L2 exact training sentence semantic vector; L3 normalized training-only image narrative mean; L4 unchanged historical image adapter; L5 distinct zero-image, zero-semantic, training mean and cyclic image shuffle.",
+  "controlled": "Same FP32 pinned backbones and fixed reference speaker, same 160 audio-frame cap, seeds41/42/43, sampled codec0 and15 residuals, same prior and adapter throughout.",
+  "prior_interventions": "Gold-history, free-run and each single oracle previous-vector replacement at all positions, preserving recurrent state; aligned traces ignore stop, actual WAV generation uses unmodified stopping.",
+  "offline": "D1/D2/D3 geometry, retrieval margins, extended ridge alpha characterization through100 without replacing historical adapter; actual V23 sampling logs; training-only narrative audit.",
+  "constraints": "No training, paid jobs, private uploads or fresh labels. ASR and numerical diagnostics do not substitute for human assessment. V25 proposal only, no automatic launch."
+}
