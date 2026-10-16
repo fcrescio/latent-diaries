@@ -101,5 +101,15 @@
   "grounded_narrative_prior_training_resume_exercised": true,
   "grounded_narrative_prior_image_inference_exercised": true,
   "grounded_narrative_prior_development_review_pending": false,
-  "grounded_narrative_prior_intelligibility_improvement_verified": false
+  "grounded_narrative_prior_intelligibility_improvement_verified": false,
+  "explicit_image_and_semantic_null_controls_exercised": true,
+  "image_text_numeric_provenance_guard_exercised": true,
+  "oracle_ladder_training_controls_exercised": true,
+  "oracle_prior_gold_free_interventions_exercised": true,
+  "actual_decoding_processor_policy_comparison_exercised": true,
+  "training_narrative_vision_audit_exercised": true,
+  "oracle_diagnostic_listening_clips": 18,
+  "oracle_diagnostic_human_review_pending": true,
+  "oracle_diagnostic_human_quality_verified": false,
+  "v25_proposed_not_started": true
 }

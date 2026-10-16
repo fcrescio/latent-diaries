@@ -131,3 +131,16 @@ Auxiliary results remain fragmented, with1/4 development clips reaching the
 160-frame cap. No gallery or human approval is created; the candidate is not
 promoted. The original Italian-stable baseline is retained. Full CUDA suite
 65passed/2skips; worker CPU62passed/4skips and vision4passed. M2 remains open.
+
+### Independent-review recovery (2026-10-16)
+
+Confirmed affine-null and numeric-input provenance defects are corrected with
+regression tests; historical results stay unchanged. The no-training oracle
+ladder produces48 genuine WAVs across three seeds, plus four offline
+routing/candidate controls. Six exact stock/continuous-prefix pairs are
+byte-identical. Continuous-prior drift is already evident with exact training
+sentence semantics, before image adaptation. See `REVIEW_RESPONSE_20261016.md`
+for limits and processed-policy analysis. Eighteen blinded diagnostic clips
+OD-A–OD-R await human listening; these are not an approved image-only candidate.
+V25 remains a single conditional proposal and is not started. M2 is unaccepted,
+`narrate-image` stays fail-closed and all96 fresh images remain reserved.
