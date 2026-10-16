@@ -6,6 +6,7 @@ from pathlib import Path
 import torch
 from safetensors.torch import load_file
 
+VISION_REVISION = '914f7f89142e33e77833254d9c9b90c3cef7303b'
 
 def checksum(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -17,6 +18,7 @@ def verify_image_features(rows, folders):
         manifest_path, weights = folder / 'manifest.json', folder / 'features.safetensors'
         manifest = json.loads(manifest_path.read_text())
         if (manifest.get('model_id') != 'google/embeddinggemma-2'
+                or manifest.get('model_revision') != VISION_REVISION
                 or manifest.get('variable_text_used') is not False
                 or checksum(weights) != manifest['features_sha256']):
             raise ValueError('Verified image-only encoder cache required')
@@ -42,9 +44,13 @@ def verify_text_features(rows, folder, corpus_sha256):
     manifest = json.loads((folder / 'manifest.json').read_text())
     weights = folder / 'features.safetensors'
     if (manifest['corpus_sha256'] != corpus_sha256
+            or manifest.get('model_revision') != VISION_REVISION
+            or manifest.get('format') != 'title: none | text: {training sentence}'
             or checksum(weights) != manifest['features_sha256']):
         raise ValueError('Training text cache provenance differs')
     vectors = load_file(str(weights))['embeddings']
+    if len(manifest['ids']) != len(set(manifest['ids'])) or vectors.shape != (len(manifest['ids']), 768):
+        raise ValueError('Unique text cache IDs and aligned vectors required')
     indexed = dict(zip(manifest['ids'], vectors, strict=True))
     for row in rows:
         if row['id'] not in indexed or not torch.equal(torch.tensor(row['features']), indexed[row['id']]):
