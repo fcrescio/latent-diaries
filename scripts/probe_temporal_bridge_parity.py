@@ -37,15 +37,15 @@ def main():
         captured = {}
         original = wrapper.model.talker.generate
 
-        def capture(**kwargs):
+        def capture(_original=original, _captured=captured, **kwargs):
             for key, value in prefill.items():
                 torch.testing.assert_close(value, kwargs[key], rtol=0, atol=0)
-            result = original(**kwargs)
+            result = _original(**kwargs)
             frames = [h[-1] for h in result.hidden_states if h[-1] is not None]
             codes = torch.stack(frames, dim=1)[0]
             eos = wrapper.model.config.talker_config.codec_eos_token_id
             stop = (codes[:, 0] == eos).nonzero()
-            captured["codes"] = codes[: int(stop[0]) if len(stop) else len(codes)][:240].cpu()
+            _captured["codes"] = codes[: int(stop[0]) if len(stop) else len(codes)][:240].cpu()
             return result
 
         wrapper.model.talker.generate = capture
