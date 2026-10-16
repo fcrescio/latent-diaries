@@ -92,6 +92,9 @@ attributes, negations and two synthetic reference-voice conditions. All30
 original text-projection prefixes match their historical teacher prefixes
 bit-for-bit. No contrast waveform reaches its160-frame cap. The initial cache
 contains912 vectors across28 groups, not912 independent examples.
+The historical teacher sentences come from automatic visual annotations; their
+per-image factual correctness has not been human validated. Retrieval agreement
+with these references is not proof of faithful visual detail or artistic value.
 
 | Question | Result | Uncertainty / interpretation |
 | --- | ---: | --- |

@@ -77,6 +77,7 @@ def main():
                       'mean_image_conditioned_max_minus_null_max': sum(null_margins)/len(null_margins),
                       'human_quality_improvement_verified': False},
         'limits': ['Training teachers are not unseen image generalization.',
+                   'Historical teacher captions are automatic annotations, not per-image human truth.',
                    'Additional confirmation cases can share capture groups with the pilot.',
                    'Fixed-catalog cluster bootstrap does not establish unseen-data error bounds.',
                    'Rated gibberish controls contain only two source images.',

@@ -1,6 +1,6 @@
 {
   "scope": "Frozen offline semantic feasibility and an unapproved no-training selection pilot",
-  "report_source_sha256": "e4bbae2e381da9a653b8be3d072bfb7edcb7e308a8fe0ad4e3abd288a5b27a98",
+  "report_source_sha256": "3ac09251a9d64c09acbde830d480f42525349d59c9d14f2b5a610c7240ed975e",
   "private_evidence_sha256": {
     "primary": "b7bb16a2242a3885120f7d846d29d70a1c3df5dc182e4a91cf9fed0ac598d538",
     "confirmation": "9f601c7fb6ab89aeb033b5b390d197bb439c6fa545376ed514ef6e81e2f66d8b",
@@ -1134,6 +1134,7 @@
   },
   "limits": [
     "Training teachers are not unseen image generalization.",
+    "Historical teacher captions are automatic annotations, not per-image human truth.",
     "Additional confirmation cases can share capture groups with the pilot.",
     "Fixed-catalog cluster bootstrap does not establish unseen-data error bounds.",
     "Rated gibberish controls contain only two source images.",
