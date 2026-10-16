@@ -19,9 +19,14 @@ def main():
     for name in ['corpus', 'protocol', 'output-dir']:
         p.add_argument('--'+name, type=Path, required=True)
     p.add_argument('--resume', action='store_true')
+    p.add_argument('--batch-size', type=int, choices=[1,4], default=4)
+    p.add_argument('--codec0-sampling', action='store_true', help='Use official stock first-codebook sampling globally, never per-case retries')
+    p.add_argument('--fixed-seed', action='store_true', help='Restart the same baseline seed for every isolated utterance')
     args = p.parse_args()
     if not Path('/.dockerenv').exists() or (args.output_dir.exists() and not args.resume):
         raise ValueError('Managed worker and fresh/resumable teacher output required')
+    if args.fixed_seed and args.batch_size != 1:
+        raise ValueError('Fixed per-utterance seed requires isolated batch size1')
     corpus = json.loads(args.corpus.read_text());protocol = json.loads(args.protocol.read_text())
     if corpus['protocol_sha256'] != digest(args.protocol) or len(corpus['rows']) != 24:
         raise ValueError('Frozen24-sequence corpus required')
@@ -34,8 +39,9 @@ def main():
         'source_sha256': digest(Path(__file__)), 'worker_lock_sha256': digest(Path('uv.lock')),
         'source_revision': os.environ.get('LD_CODE_REVISION'), 'model_id': info['model_id'],
         'model_revision': info['model_revision'], 'reference_sha256': digest(Path(os.environ['LD_REF_AUDIO'])),
-        'batch_size': 4, 'seed': 42, 'max_frames': protocol['teacher']['max_frames'],
-        'codec0_greedy': True, 'residuals_sampled': True, 'text_used_offline': True,
+        'batch_size': args.batch_size, 'seed': 42, 'max_frames': protocol['teacher']['max_frames'],
+        'fixed_per_utterance_seed': args.fixed_seed,
+        'codec0_greedy': not args.codec0_sampling, 'residuals_sampled': True, 'text_used_offline': True,
         'reference_transcript_used': False, 'training_started': False, 'human_validated': False}
     path = args.output_dir/'manifest.json';old = json.loads(path.read_text()) if path.exists() else None
     if old:
@@ -44,6 +50,8 @@ def main():
                 raise ValueError('Changed teacher resume provenance: '+key)
     records = old['records'] if old else []
     for record in records:
+        if record['reached_cap']:
+            raise ValueError('Failed teacher batch requires diagnosis, never an adaptive resume')
         if digest(Path(record['audio'])) != record['audio_sha256'] or digest(Path(record['codes'])) != record['codes_sha256']:
             raise ValueError('Completed teacher artifact changed')
     wrapper, _, speaker = load_backbone(info)
@@ -56,13 +64,14 @@ def main():
               'text': text, 'split': r['split']} for r in corpus['rows'] for i, text in enumerate(r['fragments'])]
     complete = {r['id'] for r in records};started = time.monotonic()
     with torch.inference_mode():
-        for start in range(0, len(tasks), 4):
-            batch = tasks[start:start+4]
+        for start in range(0, len(tasks), args.batch_size):
+            batch = tasks[start:start+args.batch_size]
             if all(r['id'] in complete for r in batch):
                 continue
             if any(r['id'] in complete for r in batch):
                 raise ValueError('Partial completed batch; preserve RNG and inspect')
             captured = {};original = wrapper.model.generate
+            seed = 42 if args.fixed_seed else 42+start
             def capture_generate(*values, _original=original, _captured=captured, **kwargs):
                 output = _original(*values, **kwargs)
                 _captured['codes'] = [c.detach().cpu() for c in output[0]]
@@ -70,10 +79,11 @@ def main():
             wrapper.model.generate = capture_generate
             try:
                 with torch.random.fork_rng(devices=[speaker.device.index or 0]):
-                    torch.manual_seed(42+start)
+                    torch.manual_seed(seed)
                     wavs, rate = wrapper.generate_voice_clone(text=[r['text'] for r in batch], language='Italian',
                         voice_clone_prompt=voice_prompt, non_streaming_mode=True,
-                        do_sample=False, repetition_penalty=1.05, subtalker_dosample=True,
+                        do_sample=args.codec0_sampling, top_k=50, top_p=1.0, temperature=.9,
+                        repetition_penalty=1.05, subtalker_dosample=True,
                         subtalker_top_k=50, subtalker_top_p=1.0, subtalker_temperature=.9,
                         max_new_tokens=meta['max_frames']+1, min_new_tokens=2)
             finally:
@@ -82,8 +92,8 @@ def main():
             if not len(wavs) == len(codes) == len(batch):
                 raise ValueError('Official batch boundaries changed')
             for task, wave, code in zip(batch, wavs, codes, strict=True):
-                if code.ndim != 2 or code.shape[1] != 16 or not 1 <= len(code) < meta['max_frames']:
-                    raise ValueError('Invalid/empty/frame-capped teacher; never silently replace')
+                if code.ndim != 2 or code.shape[1] != 16 or len(code) < 1:
+                    raise ValueError('Invalid/empty teacher codes; inspect before proceeding')
                 if rate != 24000 or not np.isfinite(wave).all():
                     raise ValueError('Genuine finite24kHz teacher waveform required')
                 folder = args.output_dir/task['id'];folder.mkdir()
@@ -92,11 +102,13 @@ def main():
                 records.append({k: task[k] for k in ['id','sequence_id','fragment_index','split']} | {
                     'audio': str(audio), 'audio_sha256': digest(audio), 'codes': str(codefile),
                     'codes_sha256': digest(codefile), 'frames': len(code), 'codebooks': 16,
-                    'seconds': len(wave)/rate, 'sample_rate': rate, 'seed': 42+start,
-                    'batch_start': start, 'batch_size': len(batch), 'reached_cap': False})
+                    'seconds': len(wave)/rate, 'sample_rate': rate, 'seed': seed,
+                    'batch_start': start, 'batch_size': len(batch), 'reached_cap': len(code)>=meta['max_frames']})
             path.write_text(json.dumps({**meta, 'records': records, 'elapsed_seconds': time.monotonic()-started,
                 'peak_vram_bytes': torch.cuda.max_memory_allocated()}, indent=2)+'\n')
             print(json.dumps({'utterances': len(records), 'total': 48}), flush=True)
+            if any(r['reached_cap'] for r in records):
+                raise ValueError('Frame-capped teacher batch retained with all results; diagnose before further synthesis')
     print('Official teacher baseline complete; human corpus validation still pending', flush=True)
 
 
