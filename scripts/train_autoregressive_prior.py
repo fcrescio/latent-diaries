@@ -48,6 +48,7 @@ def main():
     parser.add_argument('--corpus-dir', type=Path, required=True)
     parser.add_argument('--features-dir', type=Path, required=True)
     parser.add_argument('--run-dir', type=Path, required=True)
+    parser.add_argument('--protocol', type=Path)
     parser.add_argument('--steps', type=int, required=True)
     parser.add_argument('--resume', action='store_true')
     parser.add_argument('--recipe', choices=['causal-flow', 'multihypothesis'], default='causal-flow')
@@ -110,6 +111,8 @@ def main():
             if initial_info.get('modes') != 32 or not initial_info.get('robust_semantics'):
                 raise ValueError('Opening control requires the completed robust32-mode initialization')
             info['protocol_sha256'] = digest(Path('configs/research/opening-robust-prior-v14.json'))
+    if args.protocol:
+        info['protocol_sha256'] = digest(args.protocol)
     torch.manual_seed(42)
     if args.resume:
         saved = json.loads((args.run_dir / 'config.json').read_text())

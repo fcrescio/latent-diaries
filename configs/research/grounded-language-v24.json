@@ -1,0 +1,9 @@
+{
+  "hypothesis": "The accepted semantic prior already preserves Italian; expand its image-specific vocabulary and narrative coverage rather than rebuilding speech robustness from170 audio pairs.",
+  "data": "Paraphrase only the170 existing accepted training-image annotations through the authorized local service: original plus up to8 short Italian narrative variants preserving two visible details. No new images or heldout labels. Validate8-18 words and reject protocol markers/newlines; Qwen-token cap32. Keep groups with at least5 distinct valid strings. Merge the untouched1440-sentence replay corpus.",
+  "split": "Within each training-image narrative group reserve1 variant, or2 if8+ survive, for LANGUAGE diagnostics only. These are not heldout-image claims. Adapter targets average training-language features only. No reserved96 access.",
+  "models": "Repeat the previously exercised causal4000, multihypothesis8-mode4000, robust32-mode6000 training curriculum on the new corpus, with actual mid-run resumes2000/2000/3000. Both original backbones remain frozen; no caption at inference. Keep prior Italian-stable checkpoints as fallback.",
+  "features": "Pinned EmbeddingGemma2 training-only Document features; original image caches remain unchanged. Fit a centered numeric ridge image adapter to per-image training-narrative means, selecting alpha on existing five training-group folds only. No hard caption/prototype lookup at inference.",
+  "evaluation": "Same original4 exposed development image vectors, first training image and null; seed42, continuous-candidate sampling as accepted robust prior, sampled audio codebooks cap160. Blinded matched/shuffled review only for an actual viable candidate; no automated artistic scores.",
+  "privacy": "All narratives, images, prefixes, features, weights and audio local; local annotation container stops in finally before any GPU worker. No paid jobs or media uploads."
+}

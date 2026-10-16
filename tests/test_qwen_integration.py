@@ -150,3 +150,17 @@ def test_pinned_talker_gradient_and_cache_parity(device):
     torch.testing.assert_close(mixed_first[0], mixed_second[0], rtol=0, atol=0)
     assert mixed_first[0].shape[1] == 16
     assert 0 < len(mixed_first[0]) <= 3
+
+    # Replay every actual generate() step, including EOS prediction. This catches
+    # generation-only position/cache differences beyond the first stepped frame.
+    observed = []
+    hook = talker.register_forward_hook(
+        lambda module, args, output: observed.append(output.logits[:, -1].detach().clone()))
+    try:
+        traced = builder.generate_codes(condition, max_frames=3, seed=41, codec0_greedy=True)[0]
+    finally:
+        hook.remove()
+    with torch.no_grad():
+        replayed = talker(**builder.build_teacher_forced(condition, traced[None]))
+    aligned = replayed.logits[:, length-1:length+len(traced)]
+    torch.testing.assert_close(aligned, torch.stack(observed, dim=1), rtol=1e-4, atol=1e-4)
