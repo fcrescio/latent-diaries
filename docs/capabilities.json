@@ -86,5 +86,16 @@
   "broader_frozen_acoustic_grounding_accepted": false,
   "talker_attention_lora_unit_parity_exercised": true,
   "talker_attention_lora_training_exercised": true,
-  "talker_attention_lora_grounding_accepted": false
+  "talker_attention_lora_grounding_accepted": false,
+  "talker_attention_lora_training_resume_exercised": true,
+  "talker_attention_lora_image_inference_exercised": true,
+  "direct_visual_policy_distillation_training_resume_exercised": true,
+  "direct_visual_policy_distillation_image_inference_exercised": true,
+  "direct_visual_policy_distillation_grounding_accepted": false,
+  "actual_multistep_generation_replay_parity_exercised": true,
+  "student_history_policy_repair_training_resume_exercised": true,
+  "student_history_policy_repair_image_inference_exercised": true,
+  "student_history_policy_repair_grounding_accepted": false,
+  "grounded_narrative_replay_corpus_prepared": true,
+  "grounded_narrative_prior_grounding_accepted": false
 }

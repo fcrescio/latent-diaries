@@ -109,3 +109,19 @@ fits and losses improve while development auxiliary transcriptions still fail.
 Final-attention rank8 LoRA is therefore tested under a separately frozen protocol;
 its original vendor tensors remain frozen. M2 and fresh generalization remain
 unaccepted pending actual speech/grounding evidence and human assessment.
+
+### 2026-10-16 critical reassessment (M2 still incomplete)
+
+E8 human review reports no significant improvement. Repeated development
+exposure does not justify a fresh-test claim. Image-specific acoustic fitting,
+a wider reader, last-attention LoRA, direct frozen policy distillation and two
+student-history repair iterations are exercised without demonstrated quality
+improvement. Actual24-step generation/replay parity passes within3.2e-5; low
+gold-history loss is insufficient evidence for intelligible generated speech.
+
+V24 instead repeats the previously Italian-stable continuous-language curriculum
+on a richer training-only narrative corpus, with original-corpus replay and
+training-group-CV image adaptation. The prepared corpus has2927 utterances and
+168 usable training-image groups. Its490 language-held-out rows are paraphrases
+of training images, not held-out-image evidence. No quality or grounding gate
+is passed by preparation or loss. All96 reserved images remain untouched.

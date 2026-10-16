@@ -27,11 +27,18 @@ training control improves, while fresh-image grounding remains unaccepted.
 E8 is also fully reviewed: the user reports no significant improvement, with
 only a few acceptable cases. Further template-prior calibration is stopped.
 [The reassessment](docs/RESEARCH_REASSESSMENT.md) compares alternatives and
-finds a linear-reader rank bottleneck and moves to170 image-specific
-training utterances with genuine acoustic supervision. Wider-reader and frozen
-Qwen controls still fail development transfer; a bounded final-attention LoRA
-comparison is exercised next. No captions or scene labels enter inference. All 96 fresh candidates
-remain reserved, and M2 remains unaccepted.
+finds that more precise training fits do not establish useful image-to-speech
+transfer. Wider readers, bounded last-attention LoRA, direct audio-policy
+supervision and generated-history repair are exercised negative controls.
+Actual multistep generation/replay parity passes; training-policy accuracy
+still degrades on generated histories.
+
+The next comparison preserves the previously Italian-stable continuous language
+recipe and expands its training-only narrative corpus: 2,927 utterances with
+168 image-specific groups and original-corpus replay. An image adapter is fit
+using training-group cross-validation. Inference reads no captions, linguistic
+labels or teacher files. All private artifacts stay local; all 96 fresh
+candidates remain reserved. M2 remains unaccepted.
 
 ## Artistic brief
 

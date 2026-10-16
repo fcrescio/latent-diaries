@@ -36,10 +36,10 @@
     "acoustic_development_cap_hits": 4
   },
   "tests": {
-    "host_passed": 19,
-    "host_ml_skipped": 17,
-    "worker_cpu_passed": 52,
-    "worker_cpu_skipped": 3,
+    "host_passed": 21,
+    "host_ml_skipped": 21,
+    "worker_cpu_passed": 62,
+    "worker_cpu_skipped": 4,
     "worker_cuda_passed": 54,
     "worker_cuda_skipped": 2,
     "label_boundary_passed": 4
@@ -61,5 +61,122 @@
     "proven_lower_bound_on_full_normalized_masked_mse": 0.056967468453658694,
     "acoustic_and_generation_cancelled_before_start": true,
     "teacher_cache_reused_by_v19": true
+  },
+  "v19": {
+    "completed_steps": 1600,
+    "trainable_parameters": 8882944,
+    "peak_allocated_vram_bytes": 5749210112,
+    "source_revision": "fa57a0fcc921df43ba4b7b1316c1617770ee0206",
+    "human_quality_improvement_verified": false,
+    "m2_accepted": false
+  },
+  "v20": {
+    "completed_steps": 1600,
+    "trainable_parameters": 8882944,
+    "peak_allocated_vram_bytes": 5753666560,
+    "source_revision": "5a389fca2f66ca0a0422f4081bf5741db8b9c089",
+    "human_quality_improvement_verified": false,
+    "m2_accepted": false
+  },
+  "v21_frozen": {
+    "completed_steps": 1600,
+    "trainable_parameters": 8619776,
+    "peak_allocated_vram_bytes": 7422158848,
+    "source_revision": "60cad8b9f8b363145f82ba5f19aff58a1d6bcf8d",
+    "human_quality_improvement_verified": false,
+    "m2_accepted": false
+  },
+  "v21_lora": {
+    "completed_steps": 1600,
+    "trainable_parameters": 8619776,
+    "peak_allocated_vram_bytes": 7426291712,
+    "source_revision": "60cad8b9f8b363145f82ba5f19aff58a1d6bcf8d",
+    "human_quality_improvement_verified": false,
+    "m2_accepted": false
+  },
+  "v22_frozen": {
+    "completed_steps": 3200,
+    "trainable_parameters": 8619776,
+    "peak_allocated_vram_bytes": 7420901376,
+    "source_revision": "8fdaccea5b75bf2657d8ce68f1dc13c0f6dfebd5",
+    "human_quality_improvement_verified": false,
+    "m2_accepted": false
+  },
+  "v22_lora": {
+    "completed_steps": 3200,
+    "trainable_parameters": 8619776,
+    "peak_allocated_vram_bytes": 7425447936,
+    "source_revision": "8fdaccea5b75bf2657d8ce68f1dc13c0f6dfebd5",
+    "human_quality_improvement_verified": false,
+    "m2_accepted": false
+  },
+  "v23_first": {
+    "completed_steps": 1600,
+    "trainable_parameters": 8619776,
+    "peak_allocated_vram_bytes": 8884202496,
+    "source_revision": "22683c7ecf70c677304522c92bd4afc26d7a3854",
+    "human_quality_improvement_verified": false,
+    "m2_accepted": false
+  },
+  "v23_second": {
+    "completed_steps": 1600,
+    "trainable_parameters": 8619776,
+    "peak_allocated_vram_bytes": 8996404736,
+    "source_revision": "22683c7ecf70c677304522c92bd4afc26d7a3854",
+    "human_quality_improvement_verified": false,
+    "m2_accepted": false
+  },
+  "full_generation_parity": {
+    "scope": "Actual full generation trace versus gold-history forward, not speech-quality evidence",
+    "results": {
+      "exact_teacher": {
+        "frames": 24,
+        "max_abs_logit_difference": 3.1948089599609375e-05,
+        "actual_generate_teacher_forcing_parity": true
+      },
+      "learned_image": {
+        "frames": 24,
+        "max_abs_logit_difference": 2.09808349609375e-05,
+        "actual_generate_teacher_forcing_parity": true
+      }
+    }
+  },
+  "v24": {
+    "prepared_image_groups": 168,
+    "corpus_utterances": 2927,
+    "training_utterances": 2437,
+    "language_heldout_utterances": 490,
+    "language_heldout_is_heldout_images": false,
+    "reserved_fresh_access": false,
+    "private_media_published": false,
+    "local_annotation_container_stopped": true,
+    "m2_accepted": false
+  },
+  "worker_runtime_validation": {
+    "image_id": "sha256:0d7ee55762b08aab0aef1327cc6b96442c460141cdba4245121736d9da3f6ba7",
+    "build": "Same worker Dockerfile, previous verified worker runtime base, both locked syncs, current source baked",
+    "clean_dependency_install_claimed": false,
+    "vision_tests_passed": 4
+  },
+  "generated_history_gap_training_control": {
+    "scope": "One existing training image; teacher/gold used only after standalone image generation, no quality approval",
+    "results": {
+      "frozen": {
+        "gold_codec0_kl": 0.03738570585846901,
+        "gold_residual_kl": 0.07384300976991653,
+        "generated_frames": 102,
+        "own_codec0_kl": 1.0851185321807861,
+        "own_residual_kl": 0.2735665738582611,
+        "disabled_adapter_teacher_max_abs_error": 0.0
+      },
+      "lora": {
+        "gold_codec0_kl": 0.03928818181157112,
+        "gold_residual_kl": 0.07931476831436157,
+        "generated_frames": 94,
+        "own_codec0_kl": 1.5077970027923584,
+        "own_residual_kl": 0.3254481554031372,
+        "disabled_adapter_teacher_max_abs_error": 0.0
+      }
+    }
   }
 }

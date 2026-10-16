@@ -891,3 +891,50 @@ Both accept numeric-only image inputs and generate actual16-codebook audio;
 residual sampling stays enabled. Preserve the initialization fingerprint and
 separate teacher/reader/adapter hashes. Never treat a lower KL, initial anchor
 repetition, waveform difference or auxiliary ASR as artistic approval.
+
+### Grounded language corpus comparison (V24)
+
+Use `configs/research/grounded-language-v24.json` as the frozen protocol. All
+inputs/outputs below are private local artifacts, never publication payloads.
+The local augmentation command starts and stops the authorized annotation
+container; finish it before running a CUDA worker:
+
+```bash
+.venv/bin/python scripts/augment_private_narratives.py \
+  --dataset artifacts/grounded-language-v24/input-dataset.json \
+  --labels artifacts/instance-supervision-v17/labels.jsonl \
+  --output artifacts/grounded-language-v24/narratives.jsonl \
+  --docker "$PWD/.cache/tools/docker"
+```
+
+Inside the same GPU worker, run `prepare_grounded_prior_corpus.py --narratives
+artifacts/grounded-language-v24/narratives.jsonl --dataset
+artifacts/grounded-language-v24/input-dataset.json --replay-corpus
+artifacts/semantic-prior-v5/corpus --output-dir
+artifacts/grounded-language-v24/corpus`. Then use `/opt/vision/.venv/bin/python
+scripts/cache_prior_text_features.py --corpus
+artifacts/grounded-language-v24/corpus/corpus.json --output-dir
+artifacts/grounded-language-v24/features` in that worker image.
+
+Train `scripts/train_autoregressive_prior.py --corpus-dir <corpus> --features-dir
+<features> --protocol configs/research/grounded-language-v24.json` with fresh
+`--run-dir` per stage: causal2000 then4000 `--resume`; `--recipe multihypothesis
+--modes 8 --initial-run <causal>`2000 then4000 resume; `--recipe multihypothesis
+--modes 32 --robust-semantics --initial-run <multi8>`3000 then6000 resume.
+The initial runs must use this same new corpus and feature cache.
+
+Fit `fit_semantic_image_adapter.py` with the existing training image dataset,
+design, new corpus/features, `--caption-groups --select-alpha --protocol
+configs/research/grounded-language-v24.json`. These targets are training-only
+per-image narrative means, not inference labels. Use
+`evaluate_autoregressive_prior.py --run-dir <robust32> --adapter <adapter>
+--inputs artifacts/private-photos-002/targets/eval-expanded.json --ids p0003
+q0052 p0055 p0046 q0002 --mode image --max-frames 160 --output-dir <fresh-output>`.
+Set `LD_REF_TEXT=`. Inference reads none of the corpus/text-feature/teacher files.
+Every executed command is retained privately as a stage `.command.json`.
+
+If dependency-layer disk space is constrained, a verified existing worker can
+be reused as the runtime base, using the same Dockerfile and both locked syncs:
+`LD_WORKER_BASE_IMAGE=latent-diaries-worker:local make
+DOCKER=.cache/tools/docker test-docker`. This is a warm build; it does not claim
+a fresh dependency installation. The default base remains `python:3.11-slim`.

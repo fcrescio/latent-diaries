@@ -403,3 +403,16 @@ validates the matching adapter, then freezes everything for image-only inference
 No strings, transcript or linguistic labels are introduced. The fixed Italian,
 role/speaker/BOS/EOS/attention protocol and the two-path replacement are preserved.
 This is an experimental adaptation, not an accepted image narrator.
+
+### Grounded continuous-language comparison
+
+V24 retains the Italian-stable continuous autoregressive prior architecture.
+Training-only image-specific narrative variants are combined with original
+corpus replay. A frozen Document encoder supplies semantic training vectors;
+per-image means use only training-language rows. Training-group CV fits the
+numeric image adapter. Inference uses only frozen image features, adapter and
+continuous prior weights, followed by Qwen audio generation. No generated
+caption, stored sentence lookup, teacher or text-feature cache is consulted.
+Language-held-out variants of training images are not image-held-out evidence.
+Direct visual speech-policy and last-attention LoRA controls are implemented
+and exercised but have not established intelligible development transfer.

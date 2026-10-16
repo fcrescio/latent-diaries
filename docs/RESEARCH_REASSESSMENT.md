@@ -139,3 +139,46 @@ input affine could reduce initial head-gradient cosine0.612→0.140 and design
 condition number249→47 without changing the initial anchor output. This remains
 a deferred initialization alternative, not an exercised speech improvement.
 Do not keep adding changes before inspecting the prescribed generation results.
+
+## What the completed controls actually establish
+
+V22 reduces gold-history policy error without restoring useful autoregressive
+speech. On one training case, codec0 KL grows from0.0374 on gold histories to
+1.0851 on generated histories (LoRA0.0393→1.5078). A24-step actual-generation
+replay agrees within3.2e-5, so the observed gap is not explained by an embedding
+shift or cached-generation indexing mismatch. Across170 training cases, early
+and EOS errors do not justify arbitrary frame weighting.
+
+V23 tests the exposure-bias explanation directly: two fixed iterations collect
+image-only histories from60 training images balanced across10 scene categories,
+then consult the frozen text-conditioned teacher on those histories. Each repair
+stage mixes gold and collected histories and actually resumes800→1600 steps.
+The resulting generated clips remain fragmented by auxiliary inspection. This
+is useful negative evidence, not human quality scores. Neither this repair nor
+the frozen/LoRA direct fits replaces the Italian-stable reference.
+
+## Selected next alternative: richer supervision, proven language curriculum
+
+The direct-speech route asks170 examples to teach both a visual mapping and a
+stable speech policy. It has not done so. More optimizer changes are a weaker
+next bet than addressing the known narrow vocabulary of the previously
+intelligible semantic prior. V24 keeps that continuous autoregressive language
+recipe, expands its training-only corpus using the170 image-specific annotations,
+and replays all1440 original corpus rows. Local paraphrases retain concrete
+visible details while varying the narrative association. They are supervision,
+never inference captions. The local annotation service is stopped afterward.
+
+After token-length and diversity checks,168 image groups survive; the merged
+corpus has2927 utterances:2437 training and490 language-held-out paraphrases.
+These are NOT held-out images: all new labels come from the existing training
+split. The4 repeatedly exposed development images and96 reserved fresh images
+receive no language supervision. Reproduce the4000-step causal,4000-step8-mode,
+and6000-step robust32-mode curriculum, with real halfway resumes, then fit the
+image adapter using training-group cross-validation. Inference remains numeric
+image features → continuous reader → frozen Qwen audio generation, with no
+caption retrieval, text encoder, teacher or linguistic labels.
+
+A positive development review is required before exposing the reserved set.
+Losses, adapter fit and ASR cannot establish M2. If intelligibility again fails,
+this richer corpus is not a successful replacement either; preserve the working
+baseline and report that limitation rather than opening another tuning loop.

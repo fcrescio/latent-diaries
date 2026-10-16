@@ -535,3 +535,40 @@ new parameterization preserves the initial numeric prefix function. Recent
 codec0 KL0.02–0.04 improves fitting; AR and human quality are separate gates.
 A CPU-only input-geometry probe is logged locally and deferred, rather than
 adding another change to the active comparison. No paid jobs or private uploads.
+
+## 2026-10-16 — Test generated-history repair, then stop direct-speech escalation
+
+V22 gold-history fit does not survive autoregressive histories: one training
+control codec0 KL0.0374→1.0851 (LoRA0.0393→1.5078). Actual24-step generation
+and replay differ by at most3.2e-5; teacher-cache logits match exactly when the
+adapter is disabled. Across170 training cases, early/EOS errors do not support
+ad hoc frame weighting. Freeze `configs/research/policy-repair-v23.json` and
+exercise two collection/repair iterations:60 training images balanced across
+10 scene categories, generated histories only, detached teacher distributions,
+50% gold/generated mixing,1600 steps with actual800 resume each. Speech remains
+fragmented in auxiliary diagnostics. Full CUDA suite63passed/2vision skips.
+No new human judgments, quality approval, paid jobs or media publication.
+
+## 2026-10-16 — Expand grounded narratives while preserving the language recipe
+
+Freeze `configs/research/grounded-language-v24.json`. Use the170 existing
+training-only image annotations to request locally varied Italian narratives;
+stop the user-authorized annotation container afterward. Preserve all original
+1440 corpus rows as replay. Reject special tokens, duplicate/unknown/non-training
+IDs and overlong strings. Require at least5 surviving variants per image group.
+Preparation retains168 image groups and2927 utterances (2437 training,
+490 language-held-out); language-held-out paraphrases are not held-out images.
+Train the existing causal→8-mode→robust32-mode curriculum with actual halfway
+resumes, fit a training-group-CV image adapter against per-image narrative means,
+and generate the same exposed development controls without reading text.
+The Italian-stable reference is retained. All96 fresh candidates remain unused.
+
+The Docker daemon lacks space for a fresh dependency layer. The same worker
+Dockerfile now accepts `WORKER_BASE_IMAGE`, defaulting to the original clean
+Python base. Reusing our verified worker runtime skips already satisfied system
+prerequisites but still runs both locked dependency syncs and bakes current
+source. Exact validation command:
+`LD_WORKER_BASE_IMAGE=latent-diaries-worker:local make DOCKER=.cache/tools/docker test-docker`.
+The first warm build yields image sha256:d55d525a58886fc486f4c08c1ee511a17e74589ab5982b87255d2a878509302b,
+CPU58passed/4skips and vision4passed. This verifies a warm runtime build, not a
+clean-from-scratch dependency installation. No unrelated caches/images deleted.
