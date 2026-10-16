@@ -780,3 +780,15 @@ make DOCKER=.cache/tools/docker test-docker`74passed/4skips plus locked vision
 compileall and whitespace checks pass. Private media, labels, transcripts,
 ratings, tensors and weights stay local. No cloud spend, HF upload or new
 capture; all96 fresh images untouched, labeling container stopped, M2 unaccepted.
+
+
+## 2026-10-16 — user-authorized gallery network binding
+
+The user explicitly requests0.0.0.0 instead of localhost for the existing
+gallery. Parameterize the Compose review binding through REVIEW_BIND_ADDRESS,
+retaining127.0.0.1 as the source/example default. Set only the ignored local
+.env value to0.0.0.0 and recreate review with compose up -d --no-build review.
+Docker confirms0.0.0.0:18080 maps to container8080. HTTP verification returns
+401 without credentials and200 with configured credentials. Existing Basic
+authentication, media authorization and ratings are unchanged. This explicit
+user instruction authorizes the binding exception to the loopback default.
