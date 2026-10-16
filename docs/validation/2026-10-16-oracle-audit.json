@@ -200,5 +200,13 @@
     "matched_policy_and_supplement": "sha256:72f317f78b218b12ff6787bafabd51e30934c755eace364dc3bf8a19ed30aae7",
     "final_baked_worker": "sha256:87d537b52f97cc1112e3d757ddc94b786213fef137715df299d76db4bed00140",
     "clean_dependency_install_claimed": false
+  },
+  "standalone_image_evaluation": {
+    "generated_wavs": 4,
+    "byte_identical_to_ladder": 4,
+    "text_used": false,
+    "teacher_files_read": false,
+    "linguistic_labels_read": false,
+    "null_control": "zero_semantic_after_adapter"
   }
 }

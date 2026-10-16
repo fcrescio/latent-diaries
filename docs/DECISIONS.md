@@ -665,3 +665,10 @@ runtime, not claims of clean dependency installation. Rendering-only Matplotlib
 3.10.7 uses its own committed script lock and loads no models. Changed-file Ruff,
 compileall, whitespace and tracked-secret/data-path guards pass. Public plots
 contain only aggregate numerical curves, never private images, words or audio.
+
+Final autonomous-path check uses the baked worker and the provenance-checked
+`evaluate_autoregressive_prior.py` on two training vectors, one exposed
+image-only development vector and semantic-null. All four WAVs match the ladder
+byte-for-byte, while no corpus/text-feature/teacher file is loaded. Private
+`standalone-parity.json` records the comparison. This verifies the isolated L4
+path rather than relying on an oracle-containing process to assert autonomy.

@@ -29,7 +29,9 @@ vendor backbones unchanged. No labels, images, LoRA, language vocabulary,
 text-token projection/retrieval or learned backbone changes.
 
 Two bounded continuation arms start from the identical existing V24 checkpoint,
-with the same reset optimizer/schedule and prespecified minibatch/semantic draws:
+with the same reset AdamW (weight decay0), batch16, gradient clip1, seed42,
+learning rate3e-5 with20-step warmup and cosine decay to3e-6 over400 updates,
+and identical prespecified minibatch/semantic draws:
 
 - Control: existing gold-previous-vector objective.
 - Treatment:80% identical gold-history objective and20% fresh on-policy
@@ -37,7 +39,9 @@ with the same reset optimizer/schedule and prespecified minibatch/semantic draws
   terms and weights. Target vectors remain training supervision only.
 
 Generate histories from the current student at each update; no offline history
-bank. Use bounded truncated gradients and an independent sampling RNG so changing
+bank. Detach each generated previous vector before its next use; retain recurrent
+backpropagation through the existing32-position sequence. Use an independent
+sampling RNG so changing
 history generation does not silently change training minibatches or augmentation.
 Never replace inference histories with gold vectors. Save checkpoint/RNG/optimizer
 state, actual resume200→400 steps per arm, and exact changed-parameter provenance.
@@ -45,8 +49,9 @@ No further step, width, mode, alpha or LoRA sweep is part of this proposal.
 
 ## Benchmark and stop rules
 
-Before fitting, freeze four additional already annotated training-image groups,
-selected without looking at outputs, plus the two diagnostic groups. Use exact
+Prespecify four additional already annotated training-image groups p0008, p0010,
+p0018 and p0030, selected in existing corpus order without looking at new model
+outputs, plus diagnostic groups p0003/p0006. Use exact
 training semantics L2 and oracle means L3 to isolate the prior; language-held-out
 paraphrases remain within training-image groups, not held-out images. Test
 seeds41/42/43. Reuse the fixed acoustic decoder, speaker and160-frame cap.

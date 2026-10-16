@@ -209,3 +209,12 @@ patch-token/resampler work is deferred because it cannot explain failure at L2.
 histories, holding corpus, subspace, width, modes and acoustic/visual backbones
 fixed. It is conditional on listening and explicit instruction; it is not run.
 The earlier Italian-stable reference is preserved. M2 remains unaccepted.
+
+A final standalone image-only evaluator run loads no corpus, training text
+features or teacher tensors. All four WAVs (two training-image controls, exposed
+development and exact semantic-null) are byte-identical to their ladder
+counterparts at seed42. Its manifest records the verified original image caches,
+`text_used=false`, `teacher_files_read=false`, `linguistic_labels_read=false`
+and `null_control=zero_semantic_after_adapter`. This separates co-located oracle
+diagnostics from the actual autonomous image path. It establishes parity, not
+an intelligibility improvement.
