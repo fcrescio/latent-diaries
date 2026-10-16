@@ -828,3 +828,106 @@ all28 genuine ratings; score/identity/method counts are checked and repeat group
 reported. Changed-file Ruff and whitespace checks pass. No dependency changes
 or ML runtime changes; the preceding actual worker CPU/vision/CUDA checks
 remain applicable to the unchanged ML implementation.
+
+
+## 2026-10-16 — authorized two-fragment teacher-corpus upper bound
+
+The user approves the bounded preparation described in
+`ASFL_TWO_FRAGMENT_PILOT.md`: twelve existing training images, two branches per
+image and two genuine progressive fragments per branch. Freeze selection from
+the original accepted170-image cohort before drafting: one image per ten
+historical scenes plus two hash-selected extras, twelve capture groups and
+eight/four internal train/diagnostic-validation images. The eight review
+sequence identities are fixed before any story or audio exists. No original
+development or reserved96 image is accessed for this preparation. The tiny
+internal split is not an unseen-image generalization test.
+
+Run `make test` first:22passed/27 optional ML skips. Initial warm worker rebuild
+fails at Docker layer depth (117 existing layers). Retain the log; no unrelated
+images, containers or cache are pruned. An attempted FROM local sha256 image ID
+is interpreted as a registry repository/tag and fails; retain that log too.
+Tag the previously verified same-Dockerfile image87d537b52f97cc1112e3d757ddc94b786213fef137715df299d76db4bed00140
+as latent-diaries-worker:runtime-20261016 (89 layers) and rebuild fresh sources
+from it. The locked runtime is unchanged. Final source worker6e03d6aa8eb6ac03465512bda47a59c131381ffa60d634131c0907eac5a53510
+has103 layers. This recovers the bootstrap without a different dependency image
+or a claim of clean reinstall. Document the safe warm-base procedure in OPERATIONS.
+
+The authorized local VLM drafts from twelve selected, metadata-stripped images.
+Store raw responses, selection hashes, prompt/source hashes and the
+service-reported model identity locally. Its upstream weight revision is not
+independently pinned; do not claim independent vendor provenance. The service
+image isbc077ffe4c76e0b9cbf3b59460e2b5adedd6d680cdbfecb3fc1c3b45f4686baf.
+Raw branch schemas are malformed/missing labels: retain them, normalize only
+through an explicit editorial file, and never infer human approval from schema
+repair. Inspect a private contact sheet; remove unsupported objects and replace
+weak descriptive paraphrases with branch-specific consequences. First-person
+microevents are authored artistic imaginings, not assertions about the owner.
+
+Freeze corpus v1, run a correlated machine visual/progression audit on12 images,
+and preserve all flags. Make one explicit editorial revision on six images and
+freeze corpus v2, then re-audit only those six. The judge also incorrectly
+objects to imagined actions because objects are at rest in a photograph and
+treats figurative boundaries literally. Do not optimize until every machine
+flag passes or present its output as human judgment. Raw drafts, both corpora,
+editorial reasoning, flags and responses remain local and immutable by version.
+The vision container is stopped in finally after each stage and before Qwen.
+
+Read the installed official Qwen generate_voice_clone path. Synthesize through
+that official TEXT-CONDITIONED wrapper, not a trained reader; observe its
+model.generate result without changing it to retain original16-codebook targets.
+Use the pinned Base0.6B revision5d83992436eae1d760afd27aff78a71d676296fc,
+consented speaker x-vector only, Italian language marker and no reference
+transcript. A first greedy batch4 stops at its fourth validity guard. Three
+WAV/code outputs are retained and inspected. The combined guard did not save
+the fourth tensor, so exact invalid/empty/cap subtype is unavailable; do not
+retrospectively assert its frame count. Improve retention for future capped
+batches. Two isolated same-fragment controls terminate with118 frames greedy
+and77 sampled. These do not isolate padding from residual-RNG batch coupling.
+
+Amend the synthesis recipe globally to the previously accepted official M0
+single-utterance sampled baseline with seed42 restarted for every utterance,
+not per-case retries or seed selection. Keep failed outputs, controls and recipe
+amendment separate. All48 fixed fragments now complete with no caps, durations
+5.12–9.60s and peak allocated4,883,211,264B. The diagnostic sampled WAV is
+byte-identical when reproduced in the full census. Teacher runtime image
+a6bb9116190f4b55c2a35a2ea5b9e64dae7b6e9dc3014edd2ebbb1d4a1766eb5 uses
+read-only source overlays; actual source hashes and revisions are recorded.
+No optimizer, reader training or vendor-weight modification occurs.
+
+Corpus v2 has24 sequences and48 distinct fragments,12–18 words each (mean15.5).
+Maximum repeated three-word opening is2; no three-word ending repeats. These
+mechanical counts do not establish artistic diversity. A strict media-only
+export strips all story text, captions and transcripts. The frozen FP32 media
+encoder caches48 audio vectors and verifies12 historical image vectors against
+the pinned image-only caches. All are768D; input schemas exclude linguistic
+fields. Histories are genuine teacher histories, not generated-reader histories.
+Whisper Small973afd24965f72e36ca33b3055d56a652f456b4d runs locally afterward:
+auxiliary word-edit ratio1.06%, never a human score or a selection/filter.
+
+Assemble exactly eight prespecified A1/pause/A2 WAVs (0.45s pause), both branches
+for two training and two internal-validation images: four source images, three
+historical categories, four sequences per partition. Import as
+asfl-teacher-corpus-20261016, TC-01–TC-08. Create zero ratings; retain source
+condition mapping privately. Authentication returns401 without credentials and
+200 with credentials, all eight labels visible. Preserve the previously
+user-authorized0.0.0.0 binding. Human feedback must assess Italian, image relation
+and whether A2 genuinely continues A1 before any temporal training.
+
+Private root `artifacts/asfl-two-fragment-20261016/` retains manifests, exact
+stage argv where orchestrated, executed-source snapshots, editorial versions,
+logs, raw WAVs/codes, media tensors and review mapping. Ownership recovery is
+scoped to this new root; completed GPU jobs are not repeated for host-read
+permissions. Publish generic source and the whitelisted aggregate
+`validation/2026-10-16-asfl-two-fragment-corpus.json` only. No private stories,
+images, audio, vectors, ratings or weights are published; no paid job or HF
+upload. The user proposal remains unchanged and untracked.
+
+Reproduction: `ASFL_TWO_FRAGMENT_PILOT.md`, frozen
+`configs/research/asfl-two-fragment.json`, private editorial/corpus inputs and
+`*.command.json` stage manifests. All ML uses the same worker Dockerfile; Qwen
+uses Transformers4.57.3/qwen-tts0.1.1/Torch2.14.1+cu130, media uses locked
+Transformers5.19.0 in its separate interpreter. Final validation: host25passed/
+27 optional ML skips; worker CPU77passed/4skips; locked vision4passed; actual
+CUDA80passed/2vision skips. Changed-file Ruff, compileall, whitespace and
+private-data/credential guards pass. M2 remains unaccepted; corpus human review
+is pending and neural training has not started.

@@ -1,0 +1,79 @@
+{
+  "scope": "Text-conditioned teacher upper bound and frozen media preparation, not trained textless narration",
+  "source_sha256": "94a46d854aa2698ea2aa18d455135fafc328fc6e0704b3a51b067cad5c21cac1",
+  "private_evidence_sha256": {
+    "selection": "eb277f3583694fa53e6ab3fa076c1c7c30df27cfb64561c7568b174fdca68d25",
+    "corpus": "67b878f46ecbef680ee8c2d43e878c3c2d5ea2d632285fe009e641be89d51ddb",
+    "teachers": "ad6f5ae59c99c05dac55a74fdf9a11dda9e18eaae8435d3737e5eaed825145d3",
+    "review": "1bc2e5bc2d84597f81e69bef698ca2830726ca2653f2751cd79c81bf9f0183e9",
+    "media_cache": "c347c1e5dcf51f54d53afc1020b826df2438489488b0830e72dd700bcfd230c1",
+    "asr": "470c41122672babb0faaabeae0cad9c9951025cee74d9d92db193ab5487f0b4c",
+    "audit_original": "9d53744a4f90d276846ccbaea0f4938a98fe7efdd26379a25946ac49c9ef010a",
+    "audit_revision": "4e070d90d1083d9a0fed902984cd37c9542cec51a7e1ca28ef92123c8837cd5e"
+  },
+  "images": 12,
+  "independent_capture_groups": 12,
+  "original_source_partition": "Existing authorized training cohort only",
+  "train_images": 8,
+  "diagnostic_validation_images": 4,
+  "historical_scene_categories": 10,
+  "sequences": 24,
+  "fragments": 48,
+  "distinct_fragment_strings": 48,
+  "word_count_range": [
+    12,
+    18
+  ],
+  "mean_word_count": 15.5,
+  "maximum_repeated_three_word_opening": 2,
+  "maximum_repeated_three_word_ending": 1,
+  "lexical_counts_do_not_certify_narrative_diversity": true,
+  "teacher": {
+    "model_id": "Qwen/Qwen3-TTS-12Hz-0.6B-Base",
+    "model_revision": "5d83992436eae1d760afd27aff78a71d676296fc",
+    "worker_lock_sha256": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+    "reference_transcript_used": false,
+    "codec0_greedy": false,
+    "residuals_sampled": true,
+    "batch_size": 1,
+    "seed": 42,
+    "max_frames": 240,
+    "peak_vram_bytes": 4883211264
+  },
+  "teacher_duration_seconds_range": [
+    5.12,
+    9.6
+  ],
+  "teacher_frame_caps": 0,
+  "blinded_review_sequences": 8,
+  "blinded_review_source_images": 4,
+  "blinded_review_historical_categories": 3,
+  "blinded_review_train_sequences": 4,
+  "blinded_review_validation_sequences": 4,
+  "review_pause_seconds": 0.45,
+  "review_run": "asfl-teacher-corpus-20261016",
+  "local_machine_audit_images": 12,
+  "explicitly_revised_and_reaudited_images": 6,
+  "machine_audit_is_fallible_correlated_and_not_human_validation": true,
+  "media_cache": {
+    "images": 12,
+    "audio": 48,
+    "dimension": 768,
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "variable_text_used": false
+  },
+  "auxiliary_asr": {
+    "model_id": "openai/whisper-small",
+    "revision": "973afd24965f72e36ca33b3055d56a652f456b4d",
+    "utterances": 48,
+    "micro_word_edit_ratio": 0.010596026490066225,
+    "never_used_for_selection": true,
+    "not_a_human_intelligibility_or_artistic_score": true
+  },
+  "human_subset_validation_pending": true,
+  "neural_training_started": false,
+  "m2_accepted": false,
+  "reserved_fresh_access": false,
+  "private_uploads": false,
+  "public_report_contains_no_stories_notes_media_vectors_or_mapping": true
+}

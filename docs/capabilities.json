@@ -133,5 +133,14 @@
   "audio_semantic_feedback_human_rated_pairs": 28,
   "audio_semantic_feedback_limited_pilot_grounding_gain_observed": true,
   "audio_semantic_feedback_artistic_improvement_accepted": false,
-  "audio_semantic_feedback_repertoire_expansion_verified": false
+  "audio_semantic_feedback_repertoire_expansion_verified": false,
+  "two_fragment_training_corpus_prepared": true,
+  "two_fragment_source_images": 12,
+  "two_fragment_teacher_sequences": 24,
+  "two_fragment_official_teacher_utterances": 48,
+  "two_fragment_blinded_review_sequences": 8,
+  "two_fragment_human_corpus_review_pending": true,
+  "two_fragment_human_corpus_validated": false,
+  "two_fragment_media_only_cache_exercised": true,
+  "two_fragment_official_teacher_synthesis_exercised": true
 }

@@ -25,6 +25,8 @@ def main():
              'audit_original': root/'machine-audit/audit.json', 'audit_revision': root/'machine-audit-v2/audit.json'}
     data = {k: json.loads(v.read_text()) for k, v in files.items()}
     corpus, teacher = data['corpus'], data['teachers']
+    by_sequence = {r['id']: r for r in corpus['rows']}
+    reviewed = [by_sequence[r['sequence_id']] for r in data['review']['mapping']]
     if teacher['corpus_sha256'] != sha(files['corpus']) or len(teacher['records']) != 48:
         raise ValueError('Sealed complete teacher corpus required')
     texts = [t for r in corpus['rows'] for t in r['fragments']]
@@ -57,6 +59,10 @@ def main():
                                           max(r['seconds'] for r in teacher['records'])],
         'teacher_frame_caps': sum(r['reached_cap'] for r in teacher['records']),
         'blinded_review_sequences': len(data['review']['mapping']),
+        'blinded_review_source_images': len({r['image_id'] for r in reviewed}),
+        'blinded_review_historical_categories': len({r['scene'] for r in reviewed}),
+        'blinded_review_train_sequences': sum(r['split']=='train' for r in reviewed),
+        'blinded_review_validation_sequences': sum(r['split']=='validation' for r in reviewed),
         'review_pause_seconds': .45, 'review_run': 'asfl-teacher-corpus-20261016',
         'local_machine_audit_images': len(data['audit_original']['records']),
         'explicitly_revised_and_reaudited_images': len(data['audit_revision']['records']),

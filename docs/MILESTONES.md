@@ -167,3 +167,14 @@ competence is established. Keep encoder feasibility separate from narrative
 quality. `ASFL_TWO_FRAGMENT_PILOT.md` proposes validating genuinely progressive
 teacher stories before optimization; no new sequential corpus or training is
 started. M2 remains unaccepted.
+
+
+Two-fragment preparation is authorized and exercised: twelve original training
+images, twelve capture groups, frozen8/4 internal image split, two narrative
+branches per image. All48 official text-conditioned teacher utterances and
+codec targets are generated; normalized media-only audio histories and verified
+image features are cached. Eight fixed full sequences are ingested as TC-01–TC-08
+for human validation of voice, image relation and genuine continuation. This is
+a teacher-story upper bound, not textless student generation or new-image
+generalization. No reader training is started; human corpus review is pending,
+M2 unaccepted, all96 fresh images untouched and all private media/data local.

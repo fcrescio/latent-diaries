@@ -64,6 +64,14 @@ promoted; no temporal reader is trained. The [next proposed control](docs/ASFL_T
 requires genuinely progressive supervision and teacher-story validation before
 optimization. M2 remains unaccepted; all private artifacts stay local.
 
+The user authorized [two-fragment corpus preparation](docs/ASFL_TWO_FRAGMENT_PILOT.md).
+Twelve original training images yield24 two-fragment sequences and48 genuine
+official text-conditioned teacher WAVs. Eight prespecified sequences are in the
+gallery as **TC-01–TC-08**, awaiting validation of Italian, image relation and
+actual progression. These are teacher upper bounds, not a trained textless
+narrator. Media-only features and codec targets are cached; reader training
+remains gated on the human corpus review.
+
 ## Artistic brief
 
 Turn opt-in photos from a walk/wearable into an intimate, slightly unreliable oral memory in Italian. Images become a condition for a voice to speak, not an instruction to caption a scene. The work has its own aesthetic judgments (evocation, grounding, voice, surprise), not ASR WER as its aim.
