@@ -16,10 +16,12 @@ def main():
     parser.add_argument("audio", nargs="+", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--revision")
+    parser.add_argument("--model-id", choices=["openai/whisper-tiny", "openai/whisper-small"],
+                        default="openai/whisper-tiny")
     args = parser.parse_args()
     if not Path("/.dockerenv").exists():
         raise RuntimeError("Use the managed worker")
-    model_id = "openai/whisper-tiny"
+    model_id = args.model_id
     revision = HfApi().model_info(model_id, revision=args.revision or "main").sha
     snapshot = snapshot_download(
         model_id, revision=revision, allow_patterns=["*.json", "*.txt", "model.safetensors"]

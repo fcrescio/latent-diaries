@@ -1,0 +1,1149 @@
+{
+  "scope": "Frozen offline semantic feasibility and an unapproved no-training selection pilot",
+  "report_source_sha256": "e4bbae2e381da9a653b8be3d072bfb7edcb7e308a8fe0ad4e3abd288a5b27a98",
+  "private_evidence_sha256": {
+    "primary": "b7bb16a2242a3885120f7d846d29d70a1c3df5dc182e4a91cf9fed0ac598d538",
+    "confirmation": "9f601c7fb6ab89aeb033b5b390d197bb439c6fa545376ed514ef6e81e2f66d8b",
+    "translation": "608ab8c056408d3f0ce98c1319ced1258b18f66ded874ed40d43dac5cec796dc",
+    "order": "b8b7436473e34bbfeabb8b78ad55cd67770994b6ba3e9efe6bdff162cc031973",
+    "detail": "a1c8599addfc17ab99e256f5896feebdb8a5fae716e829dd53d9df5cecd92617",
+    "selection": "5de70071fa11d19400e2baab052a3f5d256076f43f3980fca0319a8cdef9f62c",
+    "smoke_fp32": "4a04c7922ec3af116d0fb9ccaabfd5c42a4be8063780d23426ba7c24b477c6dc",
+    "smoke_bf16": "36960af412145c20e2ad3d4a47d03c51dd7c8e60e0391dc24a74a4f0a64a3278",
+    "asr_tiny": "0ca657d6c14a20512eb86e9e8cc5514d07c90feb8bba08aa4b851bc182af5ccd",
+    "asr_small": "1c71170a0a94b16f94e0b009858be36c1fa47d6858e592507353002904671764"
+  },
+  "phase0": {
+    "smoke_fp32": {
+      "model_id": "google/embeddinggemma-2",
+      "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+      "dtype": "float32",
+      "parameter_count": 744371488,
+      "all_parameters_frozen": true,
+      "peak_allocated_vram_bytes": 4891603456,
+      "metrics": {
+        "image_cache_max_abs_error": 0.0,
+        "audio_repeat_max_abs_error": 0.0,
+        "audio_batch_max_abs_error": 3.3779069781303406e-06,
+        "joint_batch_max_abs_error": 2.823770046234131e-06,
+        "live_legacy_max_abs_error": 0.0
+      },
+      "torch_version": "2.14.1+cu130",
+      "transformers_version": "5.19.0",
+      "vision_lock_sha256": "00a7220f351e6b0b761575f3a173133582ef9aee4193164b5347fae57f232467",
+      "worker_lock_sha256": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+      "variable_text_used": false
+    },
+    "smoke_bf16": {
+      "model_id": "google/embeddinggemma-2",
+      "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+      "dtype": "bfloat16",
+      "parameter_count": 744371488,
+      "all_parameters_frozen": true,
+      "peak_allocated_vram_bytes": 1659621888,
+      "metrics": {
+        "image_cache_max_abs_error": 0.0018170177936553955,
+        "audio_repeat_max_abs_error": 0.0,
+        "audio_batch_max_abs_error": 0.0013716723769903183,
+        "joint_batch_max_abs_error": 0.0019908053800463676
+      },
+      "torch_version": "2.14.1+cu130",
+      "transformers_version": "5.19.0",
+      "vision_lock_sha256": "00a7220f351e6b0b761575f3a173133582ef9aee4193164b5347fae57f232467",
+      "worker_lock_sha256": "00fa3219f1b832bae343131a16f6c33a1258efddb482cc439847bebacca64e80",
+      "variable_text_used": false
+    }
+  },
+  "pilot_cases": 30,
+  "pilot_capture_groups": 30,
+  "audio_text_top1": {
+    "mean": 1.0,
+    "ci95": [
+      1.0,
+      1.0
+    ],
+    "source_clusters": 30,
+    "observations": 30,
+    "bootstrap_replicates": 2000,
+    "seed": 20261016,
+    "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+    "wilson95": [
+      0.8864866068260312,
+      0.9999999999999999
+    ],
+    "source_cluster_any_positive_wilson95": [
+      0.8864866068260312,
+      0.9999999999999999
+    ],
+    "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+  },
+  "attribute_pairs": {
+    "balanced_audio_to_text_accuracy": {
+      "mean": 0.9333333333333333,
+      "ci95": [
+        0.8666666666666667,
+        0.9833333333333333
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+    },
+    "joint_assignment_accuracy": {
+      "mean": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "original_margin": {
+      "mean": 0.024106627987850238,
+      "ci95": [
+        0.01901413876222857,
+        0.029081059926825775
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+    },
+    "changed_margin": {
+      "mean": 0.02401958713586375,
+      "ci95": [
+        0.019282374186823503,
+        0.028821817587042275
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+    },
+    "chance_balanced_accuracy": 0.5
+  },
+  "negation_pairs": {
+    "balanced_audio_to_text_accuracy": {
+      "mean": 0.9833333333333333,
+      "ci95": [
+        0.95,
+        1.0
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+    },
+    "joint_assignment_accuracy": {
+      "mean": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "original_margin": {
+      "mean": 0.021327518525369873,
+      "ci95": [
+        0.019031959749145157,
+        0.02369110710572864
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+    },
+    "changed_margin": {
+      "mean": 0.015979765024674502,
+      "ci95": [
+        0.012799646320845912,
+        0.01923413912127181
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+    },
+    "chance_balanced_accuracy": 0.5
+  },
+  "image_audio_top1": {
+    "mean": 0.8666666666666667,
+    "ci95": [
+      0.7333333333333333,
+      0.9666666666666667
+    ],
+    "source_clusters": 30,
+    "observations": 30,
+    "bootstrap_replicates": 2000,
+    "seed": 20261016,
+    "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+    "wilson95": [
+      0.703186733179637,
+      0.9469034451594526
+    ],
+    "source_cluster_any_positive_wilson95": [
+      0.703186733179637,
+      0.9469034451594526
+    ],
+    "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+  },
+  "within_scene_image_audio_top1": {
+    "mean": 0.9,
+    "ci95": [
+      0.7666666666666667,
+      1.0
+    ],
+    "source_clusters": 30,
+    "observations": 30,
+    "bootstrap_replicates": 2000,
+    "seed": 20261016,
+    "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+    "wilson95": [
+      0.7437891742081593,
+      0.9654001112526658
+    ],
+    "source_cluster_any_positive_wilson95": [
+      0.7437891742081593,
+      0.9654001112526658
+    ],
+    "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+  },
+  "visual_attribute_preference": {
+    "mean": 0.8666666666666667,
+    "ci95": [
+      0.7333333333333333,
+      0.9666666666666667
+    ],
+    "source_clusters": 30,
+    "observations": 30,
+    "bootstrap_replicates": 2000,
+    "seed": 20261016,
+    "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+    "wilson95": [
+      0.703186733179637,
+      0.9469034451594526
+    ],
+    "source_cluster_any_positive_wilson95": [
+      0.703186733179637,
+      0.9469034451594526
+    ],
+    "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+  },
+  "isolated_batch_max_abs_error": 0.0,
+  "isolated_single_max_abs_error": 1.8328428268432617e-05,
+  "perturbation_audio_text_top1": {
+    "clean": {
+      "mean": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "attribute": {
+      "mean": 0.9666666666666667,
+      "ci95": [
+        0.9,
+        1.0
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.8332960900859082,
+        0.9940914096183874
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.8332960900859082,
+        0.9940914096183874
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "negation": {
+      "mean": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "gain_half": {
+      "mean": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "noise20": {
+      "mean": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "speed09": {
+      "mean": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "speed11": {
+      "mean": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "pad_half_second": {
+      "mean": 1.0,
+      "ci95": [
+        1.0,
+        1.0
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "reverse": {
+      "mean": 0.03333333333333333,
+      "ci95": [
+        0.0,
+        0.1
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.005908590381612455,
+        0.16670390991409173
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.005908590381612455,
+        0.16670390991409173
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "shuffle100ms": {
+      "mean": 0.1,
+      "ci95": [
+        0.0,
+        0.2
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.03459988874733419,
+        0.25621082579184085
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.03459988874733419,
+        0.25621082579184085
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "phase_scramble": {
+      "mean": 0.03333333333333333,
+      "ci95": [
+        0.0,
+        0.1
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.005908590381612455,
+        0.16670390991409173
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.005908590381612455,
+        0.16670390991409173
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "crop1s": {
+      "mean": 0.6333333333333333,
+      "ci95": [
+        0.4666666666666667,
+        0.8
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.4551356365479487,
+        0.7812607919389929
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.4551356365479487,
+        0.7812607919389929
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "crop2s": {
+      "mean": 0.8666666666666667,
+      "ci95": [
+        0.7333333333333333,
+        0.9666666666666667
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.703186733179637,
+        0.9469034451594526
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.703186733179637,
+        0.9469034451594526
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "crop4s": {
+      "mean": 0.9333333333333333,
+      "ci95": [
+        0.8333333333333334,
+        1.0
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.7867654163738308,
+        0.9815229762087295
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.7867654163738308,
+        0.9815229762087295
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    },
+    "last2s": {
+      "mean": 0.6,
+      "ci95": [
+        0.43333333333333335,
+        0.7666666666666667
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+      "wilson95": [
+        0.42320360253322475,
+        0.7540937188319815
+      ],
+      "source_cluster_any_positive_wilson95": [
+        0.42320360253322475,
+        0.7540937188319815
+      ],
+      "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+    }
+  },
+  "rated_gibberish_preference": {
+    "mean": 0.0,
+    "ci95": [
+      0.0,
+      0.0
+    ],
+    "source_clusters": 2,
+    "observations": 8,
+    "bootstrap_replicates": 2000,
+    "seed": 20261016,
+    "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+    "source_cluster_any_positive_wilson95": [
+      0.0,
+      0.6576197724933469
+    ],
+    "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+  },
+  "joint_shared_image_diagnostics": {
+    "matched": {
+      "cosine_to_original_image": {
+        "mean": 0.8139106351617894,
+        "ci95": [
+          0.8054536417431668,
+          0.8224842780791137
+        ],
+        "source_clusters": 30,
+        "observations": 30,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+      },
+      "cosine_to_original_audio": {
+        "mean": 0.8740920704698263,
+        "ci95": [
+          0.8682753004214647,
+          0.8796402832653688
+        ],
+        "source_clusters": 30,
+        "observations": 30,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+      },
+      "cosine_to_matched_joint": {
+        "mean": 0.9999999867124638,
+        "ci95": [
+          0.9999999662357354,
+          1.0000000081010547
+        ],
+        "source_clusters": 30,
+        "observations": 30,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+      }
+    },
+    "same_scene_wrong_audio": {
+      "cosine_to_original_image": {
+        "mean": 0.7800563678567313,
+        "ci95": [
+          0.770785324245373,
+          0.7890014931643057
+        ],
+        "source_clusters": 30,
+        "observations": 30,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+      },
+      "cosine_to_original_audio": {
+        "mean": 0.7397325876020162,
+        "ci95": [
+          0.726754307828468,
+          0.75287202098877
+        ],
+        "source_clusters": 30,
+        "observations": 30,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+      },
+      "cosine_to_matched_joint": {
+        "mean": 0.8836057416951651,
+        "ci95": [
+          0.8734098717875263,
+          0.8943669960110134
+        ],
+        "source_clusters": 30,
+        "observations": 30,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+      }
+    },
+    "other_scene_wrong_audio": {
+      "cosine_to_original_image": {
+        "mean": 0.7627255308049321,
+        "ci95": [
+          0.7514123754675838,
+          0.772133601076153
+        ],
+        "source_clusters": 30,
+        "observations": 30,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+      },
+      "cosine_to_original_audio": {
+        "mean": 0.7299186862860079,
+        "ci95": [
+          0.7204396817577247,
+          0.7388634440065407
+        ],
+        "source_clusters": 30,
+        "observations": 30,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+      },
+      "cosine_to_matched_joint": {
+        "mean": 0.8692636389441204,
+        "ci95": [
+          0.8607402064771738,
+          0.8773383546016417
+        ],
+        "source_clusters": 30,
+        "observations": 30,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+      }
+    },
+    "same_audio_wrong_image": {
+      "cosine_to_original_image": {
+        "mean": 0.6671063677480995,
+        "ci95": [
+          0.6543754424686717,
+          0.6796006258001452
+        ],
+        "source_clusters": 30,
+        "observations": 30,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+      },
+      "cosine_to_original_audio": {
+        "mean": 0.8608657021764052,
+        "ci95": [
+          0.8538284068986001,
+          0.8674842696631138
+        ],
+        "source_clusters": 30,
+        "observations": 30,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+      },
+      "cosine_to_matched_joint": {
+        "mean": 0.8962174792491875,
+        "ci95": [
+          0.8876465847366539,
+          0.9049488886716687
+        ],
+        "source_clusters": 30,
+        "observations": 30,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+      }
+    }
+  },
+  "confirmation_cases": 170,
+  "confirmation_unique_strings": 169,
+  "confirmation": {
+    "all": {
+      "strict_audio_text_top1": {
+        "mean": 0.9764705882352941,
+        "ci95": [
+          0.9476667686658506,
+          1.0
+        ],
+        "source_clusters": 145,
+        "observations": 170,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+        "source_cluster_any_positive_wilson95": [
+          0.9619722689544055,
+          0.9987815501294883
+        ],
+        "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+      },
+      "duplicate_reference_aware_audio_text_top1": {
+        "mean": 0.9882352941176471,
+        "ci95": [
+          0.9707602339181286,
+          1.0
+        ],
+        "source_clusters": 145,
+        "observations": 170,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+        "source_cluster_any_positive_wilson95": [
+          0.9741909354347176,
+          1.0
+        ],
+        "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+      },
+      "strict_image_audio_top1": {
+        "mean": 0.7529411764705882,
+        "ci95": [
+          0.6909978598180846,
+          0.8165680473372781
+        ],
+        "source_clusters": 145,
+        "observations": 170,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+        "source_cluster_any_positive_wilson95": [
+          0.7275317058266229,
+          0.8569828554342078
+        ],
+        "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+      },
+      "fixed_catalog_size": 170
+    },
+    "pilot": {
+      "strict_audio_text_top1": {
+        "mean": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "source_clusters": 30,
+        "observations": 30,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+        "wilson95": [
+          0.8864866068260312,
+          0.9999999999999999
+        ],
+        "source_cluster_any_positive_wilson95": [
+          0.8864866068260312,
+          0.9999999999999999
+        ],
+        "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+      },
+      "duplicate_reference_aware_audio_text_top1": {
+        "mean": 1.0,
+        "ci95": [
+          1.0,
+          1.0
+        ],
+        "source_clusters": 30,
+        "observations": 30,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+        "wilson95": [
+          0.8864866068260312,
+          0.9999999999999999
+        ],
+        "source_cluster_any_positive_wilson95": [
+          0.8864866068260312,
+          0.9999999999999999
+        ],
+        "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+      },
+      "strict_image_audio_top1": {
+        "mean": 0.6333333333333333,
+        "ci95": [
+          0.4666666666666667,
+          0.8
+        ],
+        "source_clusters": 30,
+        "observations": 30,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+        "wilson95": [
+          0.4551356365479487,
+          0.7812607919389929
+        ],
+        "source_cluster_any_positive_wilson95": [
+          0.4551356365479487,
+          0.7812607919389929
+        ],
+        "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+      },
+      "fixed_catalog_size": 170
+    },
+    "additional": {
+      "strict_audio_text_top1": {
+        "mean": 0.9714285714285714,
+        "ci95": [
+          0.9315068493150684,
+          1.0
+        ],
+        "source_clusters": 119,
+        "observations": 140,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+        "source_cluster_any_positive_wilson95": [
+          0.9539321145669224,
+          0.9985150569599106
+        ],
+        "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+      },
+      "duplicate_reference_aware_audio_text_top1": {
+        "mean": 0.9857142857142858,
+        "ci95": [
+          0.9645390070921985,
+          1.0
+        ],
+        "source_clusters": 119,
+        "observations": 140,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+        "source_cluster_any_positive_wilson95": [
+          0.9687283197580606,
+          1.0
+        ],
+        "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+      },
+      "strict_image_audio_top1": {
+        "mean": 0.7785714285714286,
+        "ci95": [
+          0.7142857142857143,
+          0.8432835820895522
+        ],
+        "source_clusters": 119,
+        "observations": 140,
+        "bootstrap_replicates": 2000,
+        "seed": 20261016,
+        "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+        "source_cluster_any_positive_wilson95": [
+          0.7546185865114623,
+          0.8884867686220401
+        ],
+        "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+      },
+      "fixed_catalog_size": 170
+    }
+  },
+  "translated_reference_audio_text_top1": {
+    "mean": 1.0,
+    "ci95": [
+      1.0,
+      1.0
+    ],
+    "source_clusters": 30,
+    "observations": 30,
+    "bootstrap_replicates": 2000,
+    "seed": 20261016,
+    "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog",
+    "wilson95": [
+      0.8864866068260312,
+      0.9999999999999999
+    ],
+    "source_cluster_any_positive_wilson95": [
+      0.8864866068260312,
+      0.9999999999999999
+    ],
+    "uncertainty_note": "Degenerate bootstrap bounds at0/1 do not imply zero risk on unseen images; cluster-any-positive is a separate event rate."
+  },
+  "translated_attribute_pair_accuracy": {
+    "mean": 0.9333333333333333,
+    "ci95": [
+      0.8666666666666667,
+      0.9833333333333333
+    ],
+    "source_clusters": 30,
+    "observations": 30,
+    "bootstrap_replicates": 2000,
+    "seed": 20261016,
+    "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+  },
+  "translation_human_validated": false,
+  "auxiliary_lexical_audits": {
+    "asr_tiny": {
+      "model": "openai/whisper-tiny",
+      "aggregate": {
+        "attribute": {
+          "cases": 30,
+          "micro_word_edit_ratio": 0.3323076923076923,
+          "exact_reference_match_fraction": 0.1,
+          "changed_attribute_present_fraction": 0.5666666666666667,
+          "old_attribute_present_fraction": 0
+        },
+        "negation": {
+          "cases": 30,
+          "micro_word_edit_ratio": 0.39759036144578314,
+          "exact_reference_match_fraction": 0.03333333333333333,
+          "negation_marker_recognized_fraction": 0.6
+        },
+        "original": {
+          "cases": 30,
+          "micro_word_edit_ratio": 0.27076923076923076,
+          "exact_reference_match_fraction": 0.1
+        },
+        "synthetic_reference_11_10": {
+          "cases": 10,
+          "micro_word_edit_ratio": 0.41509433962264153,
+          "exact_reference_match_fraction": 0.1
+        },
+        "synthetic_reference_9_10": {
+          "cases": 10,
+          "micro_word_edit_ratio": 0.32075471698113206,
+          "exact_reference_match_fraction": 0.2
+        }
+      },
+      "changed_selection_or_gates": false,
+      "human_pronunciation_validated": false
+    },
+    "asr_small": {
+      "model": "openai/whisper-small",
+      "aggregate": {
+        "attribute": {
+          "cases": 30,
+          "micro_word_edit_ratio": 0.12307692307692308,
+          "exact_reference_match_fraction": 0.6333333333333333,
+          "changed_attribute_present_fraction": 0.9333333333333333,
+          "old_attribute_present_fraction": 0
+        },
+        "negation": {
+          "cases": 30,
+          "micro_word_edit_ratio": 0.043373493975903614,
+          "exact_reference_match_fraction": 0.6333333333333333,
+          "negation_marker_recognized_fraction": 1
+        },
+        "original": {
+          "cases": 30,
+          "micro_word_edit_ratio": 0.1076923076923077,
+          "exact_reference_match_fraction": 0.6666666666666666
+        },
+        "synthetic_reference_11_10": {
+          "cases": 10,
+          "micro_word_edit_ratio": 0.08490566037735849,
+          "exact_reference_match_fraction": 0.6
+        },
+        "synthetic_reference_9_10": {
+          "cases": 10,
+          "micro_word_edit_ratio": 0.08490566037735849,
+          "exact_reference_match_fraction": 0.5
+        }
+      },
+      "changed_selection_or_gates": false,
+      "human_pronunciation_validated": false
+    }
+  },
+  "order_diagnostics": {
+    "AB_BA_cosine": {
+      "mean": 0.9731246292591095,
+      "ci95": [
+        0.9700872491300105,
+        0.9761957614123821
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+    },
+    "AB_last_minus_first_similarity": {
+      "mean": -0.04648175835609436,
+      "ci95": [
+        -0.06142292519410451,
+        -0.031128763407468805
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+    },
+    "BA_last_minus_first_similarity": {
+      "mean": -0.04717557032903035,
+      "ci95": [
+        -0.062212718079487486,
+        -0.03263810828328133
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+    },
+    "last_segment_preference_balanced": {
+      "mean": 0.15,
+      "ci95": [
+        0.06666666666666667,
+        0.23333333333333334
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+    },
+    "AA_single_cosine": {
+      "mean": 0.976741619904836,
+      "ci95": [
+        0.9728653465708097,
+        0.9804225896795591
+      ],
+      "source_clusters": 30,
+      "observations": 30,
+      "bootstrap_replicates": 2000,
+      "seed": 20261016,
+      "scope": "Source-cluster bootstrap conditional on this fixed candidate catalog"
+    }
+  },
+  "numeric_gates": {
+    "audio_memory": {
+      "passed_necessary_numeric_conditions": true,
+      "checks": {
+        "broad_top1": true,
+        "broad_lower_bound": true,
+        "minimal_pair_accuracy": true,
+        "minimal_pair_lower_bound": true,
+        "enough_independent_pairs": true,
+        "no_target_cap_hits": true
+      }
+    },
+    "image_critic": {
+      "passed_necessary_numeric_conditions": true,
+      "checks": {
+        "within_scene_top1": true,
+        "within_scene_lower_bound": true,
+        "no_rated_gibberish_preferred": true
+      }
+    },
+    "human_reranker_or_continuation_approval": false,
+    "independent_speaker_robustness_verified": false,
+    "neural_training_started": false,
+    "reserved_fresh_access": false
+  },
+  "reranking": {
+    "development_images": 8,
+    "candidates_per_image": 4,
+    "additional_semantic_null_candidates": 4,
+    "blinded_pairs": 28,
+    "max_choice_differs_from_first": 6,
+    "max_choice_changes_with_shuffled_scorer": 4,
+    "image_conditioned_max_beats_null_pool_max": 6,
+    "mean_image_conditioned_max_minus_null_max": 0.016302865264137184,
+    "human_quality_improvement_verified": false
+  },
+  "limits": [
+    "Training teachers are not unseen image generalization.",
+    "Additional confirmation cases can share capture groups with the pilot.",
+    "Fixed-catalog cluster bootstrap does not establish unseen-data error bounds.",
+    "Rated gibberish controls contain only two source images.",
+    "Reference timbre perturbations are not independent speakers.",
+    "Translations are assistant-authored diagnostic references.",
+    "Cumulative audio embeddings do not preserve ordered narrative state.",
+    "Candidate cosine gain is a selection objective, not a human quality result."
+  ],
+  "temporal_reader_training_started": false,
+  "reserved_fresh_access": false,
+  "private_media_uploaded": false,
+  "m2_accepted": false
+}

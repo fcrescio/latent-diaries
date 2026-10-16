@@ -1,0 +1,18 @@
+{
+  "status":"Bounded no-training diagnostic comparison after passing preregistered numeric feasibility; never automatic promotion",
+  "hypothesis":"Among four actual audio candidates from the earlier Italian-stable prior, unimodal frozen image/audio compatibility may select more grounded speech without a transcript. Joint image/audio cosine is not used as a critic.",
+  "reader_run":"artifacts/robust-prior-v8/reader",
+  "adapter":"artifacts/grounding-adapter-v9/adapter/adapter.safetensors",
+  "checkpoint_choice":"Existing E7 blind notes report stable Italian for this prior/adapter; no choice based on new reranking outputs. All weights unchanged.",
+  "development_ids":["p0046","p0055","q0002","q0052","p0176","q0671","p0078","p0061"],
+  "scope":"Four original exposed development cases plus four prespecified cases from the existing55 development images, one per remaining scene category. None of the96 reserved fresh images is accessed or newly annotated.",
+  "seeds":[42,41,43,44],
+  "max_frames":160,
+  "methods":["first_candidate","fixed_random","image_audio_max","shuffled_image_scorer","zero_image_scorer"],
+  "shuffle":[1,0,3,2,5,4,7,6],
+  "random_seed":20261016,
+  "null_generation":"Four additional candidates from exact semantic zero, not affine image zero. Their selection using each real image is an explicit diagnostic, not an accepted image-conditioned generator.",
+  "eligibility":"No extra attempts. Empty or frame-capped candidates are recorded and excluded from semantic selection. First/random baselines retain a failure if their single fixed candidate is invalid. No ASR or text-based quality filter.",
+  "human_review":"Blinded28 pairs: eight images times first/random/image-audio-max, plus shuffled-scorer controls for the four original development cases. Keep duplicate selections; do not select only apparent wins. Scores/narrative quality are human only.",
+  "gates":"No trained critic, temporal corpus or reader training. If all candidates are unintelligible, reranking is not a solution. Internal cosine improvement is tautological and not a quality result. Await blind listening before any promotion."
+}

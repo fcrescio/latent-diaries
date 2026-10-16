@@ -1,5 +1,12 @@
 # V25 proposal — on-policy stability of the existing continuous prior
 
+**2026-10-16 follow-up:** OD review is complete. Exact controls remain clear,
+free-prior controls have gibberish notes, and oracle prefixes retain pronunciation
+errors. The user introduced the separate audio-semantic feedback hypothesis.
+V25 is deferred and unstarted; no expanded prior or temporal training is run.
+See [actual feasibility evidence](AUDIO_SEMANTIC_FEEDBACK_LOOP.md). The original
+proposal below is preserved as a historical option, not the active experiment.
+
 Status: **PROPOSED ONLY, NOT AUTHORIZED OR STARTED.** Read
 `REVIEW_RESPONSE_20261016.md` and its diagnostic listening results first.
 The user review explicitly says: “Non eseguire V25 automaticamente. Presentare

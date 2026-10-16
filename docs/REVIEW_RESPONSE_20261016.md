@@ -1,5 +1,14 @@
 # Independent review response and diagnostic recovery
 
+**Follow-up, 2026-10-16:** all18 OD clips are rated. Exact controls are clear;
+all eight free-prior controls have explicit gibberish notes, and the gold-history
+oracle controls retain pronunciation errors. This supports the prior diagnosis
+but does not establish an intelligible candidate geometry. V25 remains unstarted.
+The new [audio-semantic feedback investigation](AUDIO_SEMANTIC_FEEDBACK_LOOP.md)
+records a separate frozen-encoder hypothesis, actual feasibility evidence and
+an unpromoted28-pair listening comparison. Historical diagnostics below remain
+unchanged; their earlier listening request is now completed.
+
 The reviewed source is `47d304985647e5bc77704b0a5cb29e5e4f740c2e`.
 The user-supplied review has SHA256
 `77859c0d8b36875a5bcb564d2882e39b7e75e7941e15466060d16dc3b67ca3d6`.
