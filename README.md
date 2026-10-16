@@ -35,8 +35,9 @@ still degrades on generated histories.
 
 The next comparison preserves the previously Italian-stable continuous language
 recipe and expands its training-only narrative corpus: 2,927 utterances with
-168 image-specific groups and original-corpus replay. An image adapter is fit
-using training-group cross-validation. Inference reads no captions, linguistic
+168 image-specific groups and original-corpus replay. Training, actual checkpoint resumes and image-only generation complete, but
+auxiliary speech remains fragmented; this candidate is not promoted. The
+Italian-stable reference is retained. Inference reads no captions, linguistic
 labels or teacher files. All private artifacts stay local; all 96 fresh
 candidates remain reserved. M2 remains unaccepted.
 

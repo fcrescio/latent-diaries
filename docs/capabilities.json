@@ -97,5 +97,9 @@
   "student_history_policy_repair_image_inference_exercised": true,
   "student_history_policy_repair_grounding_accepted": false,
   "grounded_narrative_replay_corpus_prepared": true,
-  "grounded_narrative_prior_grounding_accepted": false
+  "grounded_narrative_prior_grounding_accepted": false,
+  "grounded_narrative_prior_training_resume_exercised": true,
+  "grounded_narrative_prior_image_inference_exercised": true,
+  "grounded_narrative_prior_development_review_pending": false,
+  "grounded_narrative_prior_intelligibility_improvement_verified": false
 }

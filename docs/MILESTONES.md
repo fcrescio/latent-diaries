@@ -125,3 +125,9 @@ training-group-CV image adaptation. The prepared corpus has2927 utterances and
 168 usable training-image groups. Its490 language-held-out rows are paraphrases
 of training images, not held-out-image evidence. No quality or grounding gate
 is passed by preparation or loss. All96 reserved images remain untouched.
+
+V24 training/resume and six standalone image-only generations complete.
+Auxiliary results remain fragmented, with1/4 development clips reaching the
+160-frame cap. No gallery or human approval is created; the candidate is not
+promoted. The original Italian-stable baseline is retained. Full CUDA suite
+65passed/2skips; worker CPU62passed/4skips and vision4passed. M2 remains open.

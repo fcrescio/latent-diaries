@@ -572,3 +572,29 @@ source. Exact validation command:
 The first warm build yields image sha256:d55d525a58886fc486f4c08c1ee511a17e74589ab5982b87255d2a878509302b,
 CPU58passed/4skips and vision4passed. This verifies a warm runtime build, not a
 clean-from-scratch dependency installation. No unrelated caches/images deleted.
+
+## 2026-10-16 — Grounded-corpus run completes without an improvement claim
+
+V24 completes causal4000, multi8 4000 and robust32 6000 with real halfway
+resumes; source20c8627 and individual protocol/source/cache/checkpoint hashes
+are recorded locally. Robust reader13,641,377 parameters, peak761,851,392 bytes.
+Image adapter uses168 training images, excludes71 without surviving groups,
+and selects alpha1.0 by training-group CV. All6 numeric-image controls are
+actually generated with no caption, teacher or linguistic labels. Auxiliary
+transcriptions remain fragmented and1/4 development clips reaches160 frames.
+No candidate gallery is ingested and no human scores are manufactured. Retain
+the Italian-stable baseline; do not claim this richer corpus is an improvement.
+Its output subspace grows512→768, a representation change that limits causal
+attribution to vocabulary alone. Stop this set of tuning runs with the negative
+result documented. Fresh96 remain untouched; M2/final narration stay blocked
+on demonstrated intelligibility plus human grounding, not on missing permission.
+
+Final verification: host `make test`21passed/21ML module skips; actual CUDA
+`python -m pytest -q`65passed/2vision-interpreter skips; same Docker worker warm
+build `make test-docker`62passed/4skips plus locked vision4passed. Current image
+sha256:0d7ee55762b08aab0aef1327cc6b96442c460141cdba4245121736d9da3f6ba7.
+Changed-file Ruff, compileall, diff whitespace and tracked-secret/data-path
+checks pass. Private experiment ownership is restored to the workspace user;
+annotation container is exited. No paid jobs, HF uploads or private media
+publication. Public source integration contains only generic code and aggregate
+evidence. These checks establish implementation mechanics, not audible quality.

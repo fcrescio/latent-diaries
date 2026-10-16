@@ -182,3 +182,27 @@ A positive development review is required before exposing the reserved set.
 Losses, adapter fit and ASR cannot establish M2. If intelligibility again fails,
 this richer corpus is not a successful replacement either; preserve the working
 baseline and report that limitation rather than opening another tuning loop.
+
+## V24 outcome and decision
+
+All three stages complete with actual halfway resumes:4000/4000/6000 steps.
+The robust reader has13,641,377 trainable parameters and peak allocated VRAM
+761,851,392 bytes. Training-group CV selects alpha1.0, the strongest tested
+regularization (mean squared semantic error0.182934). This does not establish
+artistic grounding. Six genuine image-only controls are generated; inference
+manifests explicitly record no text, teacher or linguistic-label inputs.
+Auxiliary transcriptions remain fragmented; one of four development clips
+loops to the160-frame cap. No new listening burden or quality approval is
+created. V24 does not replace the earlier Italian-stable baseline.
+
+The reassessment therefore rejects two shortcuts: repairing a speech generator
+from170 paired examples has not transferred, and freely expanding the continuous
+language corpus has not preserved intelligibility. The latter also expands the
+learned word-vector subspace from512 to768 dimensions, so it is not merely a
+vocabulary/adapter change with an invariant output representation. This is a
+material limit of the tested hypothesis, not proof that all continuous readers
+are impossible. A future architecture comparison should first isolate whether
+it can preserve the accepted language function under added content, before
+spending on new images or another gallery. The existing scoped M1 and
+Italian-stable development baseline remain the only relevant positive controls.
+All96 fresh candidates remain reserved; M2 remains unaccepted.

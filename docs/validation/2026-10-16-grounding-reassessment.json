@@ -40,9 +40,10 @@
     "host_ml_skipped": 21,
     "worker_cpu_passed": 62,
     "worker_cpu_skipped": 4,
-    "worker_cuda_passed": 54,
+    "worker_cuda_passed": 65,
     "worker_cuda_skipped": 2,
-    "label_boundary_passed": 4
+    "label_boundary_passed": 4,
+    "vision_runtime_passed": 4
   },
   "v17": {
     "training_images_considered": 239,
@@ -150,7 +151,47 @@
     "reserved_fresh_access": false,
     "private_media_published": false,
     "local_annotation_container_stopped": true,
-    "m2_accepted": false
+    "m2_accepted": false,
+    "training_resume_exercised": true,
+    "image_only_inference_exercised": true,
+    "caption_or_teacher_read_at_inference": false,
+    "generated_clips": 6,
+    "development_frame_cap_hits": 1,
+    "human_review_requested": false,
+    "auxiliary_diagnostic": "Fragmented transcriptions and one looping development clip; no quality approval",
+    "replaces_italian_stable_baseline": false,
+    "causal": {
+      "completed_steps": 4000,
+      "trainable_parameters": 2610049,
+      "peak_allocated_vram_bytes": 477912064,
+      "source_revision": "20c8627944e09fbf779df9b42c882938f0ad43f6",
+      "protocol_sha256": "4490e49e577375e22c2932cac0ed74ce2fe9012f2ae09ce8ca05830611c933fa"
+    },
+    "multi8": {
+      "completed_steps": 4000,
+      "trainable_parameters": 4179593,
+      "peak_allocated_vram_bytes": 517820928,
+      "source_revision": "20c8627944e09fbf779df9b42c882938f0ad43f6",
+      "protocol_sha256": "4490e49e577375e22c2932cac0ed74ce2fe9012f2ae09ce8ca05830611c933fa"
+    },
+    "robust32": {
+      "completed_steps": 6000,
+      "trainable_parameters": 13641377,
+      "peak_allocated_vram_bytes": 761851392,
+      "source_revision": "20c8627944e09fbf779df9b42c882938f0ad43f6",
+      "protocol_sha256": "4490e49e577375e22c2932cac0ed74ce2fe9012f2ae09ce8ca05830611c933fa"
+    },
+    "adapter": {
+      "alpha": 1.0,
+      "train_group_validation": {
+        "0.001": 0.2577051037833804,
+        "0.01": 0.23926047484079996,
+        "0.1": 0.19662154288518996,
+        "1.0": 0.18293447153908865
+      },
+      "training_cases": 168,
+      "training_cases_excluded": 71
+    }
   },
   "worker_runtime_validation": {
     "image_id": "sha256:0d7ee55762b08aab0aef1327cc6b96442c460141cdba4245121736d9da3f6ba7",
