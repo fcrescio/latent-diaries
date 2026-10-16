@@ -15,6 +15,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     for name in ["run-dir", "inputs", "output-dir"]:
         p.add_argument("--" + name, type=Path, required=True)
+    p.add_argument("--codec0-greedy", action="store_true")
     args = p.parse_args()
     if not Path("/.dockerenv").exists() or args.output_dir.exists():
         raise ValueError("Managed worker and fresh output directory required")
@@ -65,7 +66,7 @@ def main():
                 args.output_dir / f"{i:03}.wav",
                 240,
                 42,
-                codec0_greedy=True,
+                codec0_greedy=args.codec0_greedy,
             )
             records.append(
                 {
@@ -85,7 +86,7 @@ def main():
                 "text_used": False,
                 "teacher_targets_read": False,
                 "backbones_frozen": True,
-                "codec0_greedy": True,
+                "codec0_greedy": args.codec0_greedy,
                 "residuals_sampled": True,
                 "seed": 42,
             }
