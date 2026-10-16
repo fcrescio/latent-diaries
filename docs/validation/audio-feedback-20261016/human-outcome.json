@@ -1,0 +1,304 @@
+{
+  "scope": "Completed human no-training pilot; descriptive ordinal scores, no generalization claim",
+  "source_sha256": "30ce9ae834dbb8e593bb1a3e018e08eef10e3412cc9ddce172fc7d75e5f5a71d",
+  "private_ratings_sha256": "b42fd9f3bf79c30b9204555bfdbbd751d2753310bef9e349a4b0956cbfe5d590",
+  "protocol_sha256": "dc87a3927e81b725367418e0fd6af18f88a501b8b250258d91835af65c232667",
+  "rated_pairs": 28,
+  "source_images": 8,
+  "reviewers": 1,
+  "conditions": {
+    "first_candidate": {
+      "rated_pairs": 8,
+      "mean_scores": {
+        "grounding": 1.875,
+        "voice": 2.75,
+        "evocation": 2,
+        "surprise": 2
+      },
+      "grounding_histogram": {
+        "1": 3,
+        "2": 3,
+        "3": 2
+      },
+      "explicit_out_of_context_notes": 3,
+      "note_absence_is_not_positive_grounding": true
+    },
+    "shuffled_image_scorer": {
+      "rated_pairs": 4,
+      "mean_scores": {
+        "grounding": 2.5,
+        "voice": 3,
+        "evocation": 2.5,
+        "surprise": 2.25
+      },
+      "grounding_histogram": {
+        "2": 3,
+        "4": 1
+      },
+      "explicit_out_of_context_notes": 0,
+      "note_absence_is_not_positive_grounding": true
+    },
+    "image_audio_max": {
+      "rated_pairs": 8,
+      "mean_scores": {
+        "grounding": 2.625,
+        "voice": 2.875,
+        "evocation": 2,
+        "surprise": 2
+      },
+      "grounding_histogram": {
+        "1": 1,
+        "2": 1,
+        "3": 6
+      },
+      "explicit_out_of_context_notes": 1,
+      "note_absence_is_not_positive_grounding": true
+    },
+    "fixed_random": {
+      "rated_pairs": 8,
+      "mean_scores": {
+        "grounding": 1.875,
+        "voice": 3,
+        "evocation": 2,
+        "surprise": 2.125
+      },
+      "grounding_histogram": {
+        "1": 4,
+        "2": 1,
+        "3": 3
+      },
+      "explicit_out_of_context_notes": 4,
+      "note_absence_is_not_positive_grounding": true
+    }
+  },
+  "image_audio_max_minus_baseline": {
+    "first_candidate": {
+      "grounding": {
+        "images": 8,
+        "mean_difference": 0.75,
+        "median_difference": 0.5,
+        "wins": 4,
+        "ties": 4,
+        "losses": 0,
+        "descriptive_image_bootstrap95": [
+          0.25,
+          1.375
+        ],
+        "bootstrap_replicates": 20000,
+        "seed": 20261016,
+        "statistical_significance_claimed": false
+      },
+      "voice": {
+        "images": 8,
+        "mean_difference": 0.125,
+        "median_difference": 0.0,
+        "wins": 2,
+        "ties": 5,
+        "losses": 1,
+        "descriptive_image_bootstrap95": [
+          -0.25,
+          0.5
+        ],
+        "bootstrap_replicates": 20000,
+        "seed": 20261016,
+        "statistical_significance_claimed": false
+      },
+      "evocation": {
+        "images": 8,
+        "mean_difference": 0,
+        "median_difference": 0.0,
+        "wins": 0,
+        "ties": 8,
+        "losses": 0,
+        "descriptive_image_bootstrap95": [
+          0,
+          0
+        ],
+        "bootstrap_replicates": 20000,
+        "seed": 20261016,
+        "statistical_significance_claimed": false
+      },
+      "surprise": {
+        "images": 8,
+        "mean_difference": 0,
+        "median_difference": 0.0,
+        "wins": 0,
+        "ties": 8,
+        "losses": 0,
+        "descriptive_image_bootstrap95": [
+          0,
+          0
+        ],
+        "bootstrap_replicates": 20000,
+        "seed": 20261016,
+        "statistical_significance_claimed": false
+      }
+    },
+    "fixed_random": {
+      "grounding": {
+        "images": 8,
+        "mean_difference": 0.75,
+        "median_difference": 0.0,
+        "wins": 3,
+        "ties": 5,
+        "losses": 0,
+        "descriptive_image_bootstrap95": [
+          0.25,
+          1.5
+        ],
+        "bootstrap_replicates": 20000,
+        "seed": 20261016,
+        "statistical_significance_claimed": false
+      },
+      "voice": {
+        "images": 8,
+        "mean_difference": -0.125,
+        "median_difference": 0.0,
+        "wins": 0,
+        "ties": 7,
+        "losses": 1,
+        "descriptive_image_bootstrap95": [
+          -0.375,
+          0
+        ],
+        "bootstrap_replicates": 20000,
+        "seed": 20261016,
+        "statistical_significance_claimed": false
+      },
+      "evocation": {
+        "images": 8,
+        "mean_difference": 0,
+        "median_difference": 0.0,
+        "wins": 1,
+        "ties": 6,
+        "losses": 1,
+        "descriptive_image_bootstrap95": [
+          -0.375,
+          0.375
+        ],
+        "bootstrap_replicates": 20000,
+        "seed": 20261016,
+        "statistical_significance_claimed": false
+      },
+      "surprise": {
+        "images": 8,
+        "mean_difference": -0.125,
+        "median_difference": 0.0,
+        "wins": 0,
+        "ties": 7,
+        "losses": 1,
+        "descriptive_image_bootstrap95": [
+          -0.375,
+          0
+        ],
+        "bootstrap_replicates": 20000,
+        "seed": 20261016,
+        "statistical_significance_claimed": false
+      }
+    },
+    "shuffled_image_scorer": {
+      "grounding": {
+        "images": 4,
+        "mean_difference": 0.25,
+        "median_difference": 0.5,
+        "wins": 2,
+        "ties": 1,
+        "losses": 1,
+        "descriptive_image_bootstrap95": [
+          -0.5,
+          1
+        ],
+        "bootstrap_replicates": 20000,
+        "seed": 20261016,
+        "statistical_significance_claimed": false
+      },
+      "voice": {
+        "images": 4,
+        "mean_difference": -0.25,
+        "median_difference": 0.0,
+        "wins": 0,
+        "ties": 3,
+        "losses": 1,
+        "descriptive_image_bootstrap95": [
+          -0.75,
+          0
+        ],
+        "bootstrap_replicates": 20000,
+        "seed": 20261016,
+        "statistical_significance_claimed": false
+      },
+      "evocation": {
+        "images": 4,
+        "mean_difference": -0.5,
+        "median_difference": 0.0,
+        "wins": 0,
+        "ties": 3,
+        "losses": 1,
+        "descriptive_image_bootstrap95": [
+          -1.5,
+          0
+        ],
+        "bootstrap_replicates": 20000,
+        "seed": 20261016,
+        "statistical_significance_claimed": false
+      },
+      "surprise": {
+        "images": 4,
+        "mean_difference": -0.25,
+        "median_difference": 0.0,
+        "wins": 0,
+        "ties": 3,
+        "losses": 1,
+        "descriptive_image_bootstrap95": [
+          -0.75,
+          0
+        ],
+        "bootstrap_replicates": 20000,
+        "seed": 20261016,
+        "statistical_significance_claimed": false
+      }
+    }
+  },
+  "cohort_grounding_gain_over_first": {
+    "original_four": {
+      "images": 4,
+      "mean_difference": 1.25,
+      "median_difference": 1.5,
+      "wins": 3,
+      "ties": 1,
+      "losses": 0,
+      "descriptive_image_bootstrap95": [
+        0.5,
+        2
+      ],
+      "bootstrap_replicates": 20000,
+      "seed": 20261016,
+      "statistical_significance_claimed": false
+    },
+    "additional_four": {
+      "images": 4,
+      "mean_difference": 0.25,
+      "median_difference": 0.0,
+      "wins": 1,
+      "ties": 3,
+      "losses": 0,
+      "descriptive_image_bootstrap95": [
+        0,
+        0.75
+      ],
+      "bootstrap_replicates": 20000,
+      "seed": 20261016,
+      "statistical_significance_claimed": false
+    }
+  },
+  "identical_media_repeat_groups": 8,
+  "repeat_groups_with_any_score_disagreement": 2,
+  "identical_media_are_not_independent_generations": true,
+  "qualitative_user_feedback": "Little overall change; familiar phrases with rare exceptions and persistent out-of-context cases.",
+  "decision": "Do not promote reranking as the narrator improvement; retain encoder feasibility as separate evidence.",
+  "next_hypothesis": "Test genuinely progressive, image-specific two-fragment supervision before temporal training; audio feedback alone cannot supply missing repertoire.",
+  "temporal_training_started": false,
+  "reranker_promoted": false,
+  "m2_accepted": false,
+  "public_output_has_no_private_notes_media_or_mapping": true
+}

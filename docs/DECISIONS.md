@@ -792,3 +792,39 @@ Docker confirms0.0.0.0:18080 maps to container8080. HTTP verification returns
 401 without credentials and200 with configured credentials. Existing Basic
 authentication, media authorization and ratings are unchanged. This explicit
 user instruction authorizes the binding exception to the loopback default.
+
+
+## 2026-10-16 — completed AF listening and limited reranking outcome
+
+Export actual SQLite ratings for all28 AF clips to the ignored private
+`artifacts/audio-feedback-20261016/human-reranking-ratings.json`. One reviewer,
+eight source images; preserve duplicate media. Add pure-Python descriptive
+analysis with paired image bootstrap, explicit small-sample/ordinal caveats,
+no invented scores, significance claim or per-image public mapping. Reproduce:
+`.venv/bin/python scripts/analyze_audio_feedback_human.py --ratings
+artifacts/audio-feedback-20261016/human-reranking-ratings.json --protocol
+configs/research/audio-feedback-reranking.json --output <fresh-report.json>`.
+
+Maximum compatibility improves mean grounding1.875→2.625/5 against first and
+random, but evocation/surprise remain2/5. Four grounding wins/four ties against
+first, three wins/five ties against random. Against shuffled scoring on four
+matched images, two wins/one tie/one loss. Six selected cases score3/5, two
+score1–2/5; none reaches4/5. User qualitative feedback reports almost unchanged
+familiar phrases and persistent out-of-context cases. A modest selection
+benefit does not constitute the intended artistic improvement. Do not promote
+the reranker or iterate seed/pool/threshold sweeps. Keep audio-encoder semantic
+feasibility as separate evidence, not temporal narrative competence.
+
+Prepare `ASFL_TWO_FRAGMENT_PILOT.md` as a proposed bounded corpus upper-bound
+and history-use control: twelve existing training images, two coherent branches
+per image, genuine second-fragment progression, image-group split frozen before
+generation, human subset validation before training, within-image branch-history
+swap as well as absent/cross-image histories. No corpus, new teacher WAVs, neural
+training or GPU rerun occurs in this assessment. No paid job or private upload.
+The user-owned semantic-loop proposal remains untouched.
+
+Verification: host make test22passed/27 optional ML skips. Analysis executes on
+all28 genuine ratings; score/identity/method counts are checked and repeat groups
+reported. Changed-file Ruff and whitespace checks pass. No dependency changes
+or ML runtime changes; the preceding actual worker CPU/vision/CUDA checks
+remain applicable to the unchanged ML implementation.

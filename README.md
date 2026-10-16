@@ -57,8 +57,12 @@ Confirmation covers170 existing teacher utterances; this does not establish
 new-image generalization. Pooled cumulative audio loses temporal order, so a
 future reader should use the last fragment separately. A bounded comparison
 using unchanged Italian-stable checkpoints produces28 blinded pairs,
-**AF-01–AF-28**, awaiting local human review. No temporal reader is trained and
-no reranker is promoted. M2 remains unaccepted; all private artifacts stay local.
+**AF-01–AF-28**, now fully reviewed. Grounding improves modestly in this eight-image
+pilot (1.875→2.625/5), while evocation and surprise remain2/5. The user reports
+familiar repeated phrases and persistent context failures. The reranker is not
+promoted; no temporal reader is trained. The [next proposed control](docs/ASFL_TWO_FRAGMENT_PILOT.md)
+requires genuinely progressive supervision and teacher-story validation before
+optimization. M2 remains unaccepted; all private artifacts stay local.
 
 ## Artistic brief
 

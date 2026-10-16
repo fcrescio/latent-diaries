@@ -157,3 +157,13 @@ reader/corpus is trained, no reranker is promoted, V25 is unstarted, and M2
 remains unaccepted. All96 fresh images and all private media remain reserved
 or local respectively. See `AUDIO_SEMANTIC_FEEDBACK_LOOP.md` and its aggregate
 validation JSON for evidence and limitations.
+
+
+Completed AF human outcome: all28 pairs rated. Matched max-cosine grounding
+improves descriptively from1.875 to2.625/5 on eight existing development images,
+while evocation/surprise remain2/5. The user reports persistent familiar phrases
+and context failures. The reranker is not promoted and no temporal feedback
+competence is established. Keep encoder feasibility separate from narrative
+quality. `ASFL_TWO_FRAGMENT_PILOT.md` proposes validating genuinely progressive
+teacher stories before optimization; no new sequential corpus or training is
+started. M2 remains unaccepted.

@@ -164,7 +164,7 @@ Error bars are fixed-catalog source-cluster bootstrap intervals. At0/100%, use
 the additional Wilson bounds in the [aggregate JSON](validation/audio-feedback-20261016/summary.json)
 rather than interpreting zero bootstrap width as certainty on unseen cases.
 
-### Bounded no-training comparison, awaiting human assessment
+### Bounded no-training comparison, now fully assessed
 
 The frozen protocol generates four candidates per each of eight existing
 development images, plus four semantic-null candidates:36 genuine WAVs.
@@ -183,9 +183,56 @@ improvements. Improving the optimized cosine is tautological.
 
 All28 prespecified comparison pairs, including duplicate selections, are
 ingested as `asfl-rerank-20261016`, **AF-01–AF-28**, in the existing authenticated
-loopback gallery. No votes or quality judgments are generated. Human listening
-must assess grounding and Italian clarity before any reranker promotion. A bad
-candidate pool cannot be repaired by choosing its highest cosine.
+gallery. The user subsequently requested0.0.0.0 binding explicitly; Basic
+authentication remains active. No votes or quality judgments were generated
+by the agent. All28 real ratings are now complete. A bad candidate pool cannot
+be repaired by choosing its highest cosine.
+
+### Human outcome: limited grounding benefit, no artistic promotion
+
+| Method | Images | Grounding | Voice | Evocation | Surprise |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| First candidate |8 |1.875 |2.750 |2.000 |2.000 |
+| Fixed random |8 |1.875 |3.000 |2.000 |2.125 |
+| Image/audio maximum |8 |2.625 |2.875 |2.000 |2.000 |
+| Shuffled image scorer |4 |2.500 |3.000 |2.500 |2.250 |
+
+These are descriptive1–5 ordinal scores from one reviewer. Shuffled scoring is
+on a four-image subset; compare paired images rather than interpreting its mean
+against all eight matched images. The maximum beats the first candidate on
+four images and ties on four, with no losses; it beats random on three and ties
+on five. Against shuffled scoring on the common four images, grounding wins
+twice, ties once and loses once. Duplicate media presentations are retained and
+are not independent generations. No significance or generalization is claimed.
+
+Six maximum-selected cases have grounding3/5, one1/5 and one2/5; none reaches4/5.
+The user reports little overall change, persistent familiar phrases with rare
+exceptions, and a minority of context failures that remains substantial. This
+qualitative finding matters independently of a modest mean grounding increase.
+Absent negative notes are not positive grounding judgments.
+
+**Decision:** do not promote the reranker as the solution to narration. Retain
+the frozen audio encoder's separate semantic feasibility evidence. Close seed,
+pool-size and cosine tuning as the next research direction: they cannot provide
+content absent from these candidate pools. This result does not test temporal
+feedback or show that the base synthesizer cannot pronounce richer material.
+Before any temporal optimization, test the quality of genuinely progressive
+teacher stories. The [two-fragment proposal](ASFL_TWO_FRAGMENT_PILOT.md) uses two
+branches per image and a within-image history swap to test useful feedback.
+No sequential corpus or training is started automatically by this assessment.
+
+Reproduce the [aggregate human report](validation/audio-feedback-20261016/human-outcome.json):
+
+```bash
+.venv/bin/python scripts/analyze_audio_feedback_human.py \
+  --ratings artifacts/audio-feedback-20261016/human-reranking-ratings.json \
+  --protocol configs/research/audio-feedback-reranking.json \
+  --output artifacts/audio-feedback-20261016/human-outcome-reproduction.json
+```
+
+Private notes, reviewer identity and per-image condition mapping are not
+included in the public report. The earlier `summary.json` remains the frozen
+pre-listening diagnostic report; this separate outcome supplies the new evidence.
 
 ## Reproduction and privacy
 
@@ -228,7 +275,7 @@ is introduced. The local vision-labeling container was not needed and stays off.
 
 V25 remains unstarted. Audio semantic feasibility is positive enough for this
 bounded listening experiment, while sequential narrative competence is unproven.
-After listening, either reject the critic or retain it as a diagnostic; do not
+Listening is now complete: retain the critic only as a diagnostic and do not
 infer continuation quality from its cosine. Before temporal-reader training,
 prepare a genuinely progressive two-fragment corpus and obtain the required
 human subset validation. Compare image-only, image+last-audio, shuffled history
