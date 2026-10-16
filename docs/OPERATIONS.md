@@ -938,3 +938,55 @@ be reused as the runtime base, using the same Dockerfile and both locked syncs:
 `LD_WORKER_BASE_IMAGE=latent-diaries-worker:local make
 DOCKER=.cache/tools/docker test-docker`. This is a warm build; it does not claim
 a fresh dependency installation. The default base remains `python:3.11-slim`.
+
+### Oracle review recovery: diagnostics, no V25 training
+
+Read `docs/REVIEW_RESPONSE_20261016.md` and the frozen
+`configs/research/oracle-audit-20261016.json`. Historical artifacts must not be
+replaced. Use a fresh ignored output directory; the actual run root is
+`artifacts/oracle-audit-20261016`. The complete ladder command is:
+
+```bash
+LD_CODE_REVISION=$(git rev-parse HEAD) DOCKER_CONFIG="$PWD/.cache/docker-config" \
+.cache/tools/docker compose --profile gpu run --rm -e LD_REF_TEXT= \
+  -e LD_CODE_REVISION experiment-gpu python scripts/oracle_ladder.py \
+  --run-dir artifacts/grounded-language-v24/robust32 \
+  --corpus-dir artifacts/grounded-language-v24/corpus \
+  --features-dir artifacts/grounded-language-v24/features \
+  --adapter-dir artifacts/grounded-language-v24/adapter \
+  --dataset artifacts/private-photos-002/targets/dataset-expanded.json \
+  --image-cache artifacts/private-photos-001/features-001 \
+  --image-cache artifacts/private-photos-002/features \
+  --ids p0003 p0006 --development-ids q0052 --seeds 41 42 43 \
+  --max-frames 160 --output-dir artifacts/<fresh-audit>/ladder
+```
+
+Only oracle controls L0–L3 read training linguistic data; L4 and development
+controls remain image-only. All input/checkpoint/cache hashes are checked before
+loading Qwen. Exact executed stage commands are retained as private JSON arrays.
+The mean semantic baseline uses only training-language rows and a corpus-bound
+checksum sidecar. Newly evaluated `null` means exact zero semantics; use
+`--legacy-null` only to reproduce historical zero-image-through-adapter control.
+Image evaluation now requires verified `--image-cache` sources. A text-feature
+diagnostic instead requires its matching `--text-cache`, never an image adapter.
+
+`scripts/diagnose_decoding_policies.py` compares original and two repair readers
+on gold, cached, new sampled and new codec0-greedy histories. It captures actual
+installed processors; finite-score/processed-support replay parity is recorded.
+Compare common first32 positions, and retain batch/seed/stopping caveats.
+`scripts/oracle_prior_controls.py` generates explicitly nondeployable gold-history
+routed/best-candidate controls. These four clips are diagnostic oracle speech.
+
+`scripts/audit_training_narratives.py --vision` uses only six seeded training
+images and existing variants, starts/stops the authorized local vision service
+in `finally`, and never writes training annotations. Do not overlap that service
+with Qwen/EmbeddingGemma GPU workers. `audit_research_sampling.py` reads actual
+historical logs including zero-exposure images.
+
+For the current diagnostic listening set, use the authenticated loopback review
+at `http://localhost:18080/`, run `oracle-diagnostic-20261016`, labelsOD-A–OD-R.
+`scripts/blind_oracle_ladder.py` ingests14 blinded ladder controls plus optional
+four oracle supplements. It creates no votes. The private mapping stays ignored;
+oracle controls must never be advertised as a working image-only candidate.
+V25 is proposal-only and requires the user to review results and explicitly ask
+to execute it. See `docs/PROPOSAL_V25.md`.

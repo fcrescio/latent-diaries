@@ -5,6 +5,26 @@ import torch
 from torch.nn import functional as F
 
 
+def semantic_condition(image, coefficient=None, *, control='image', training_mean=None):
+    """Keep missing image and missing semantics distinct, including affine bias."""
+    if image.ndim != 2 or image.shape[1] != 768 or not torch.isfinite(image).all():
+        raise ValueError('Finite [batch,768] image features required')
+    if control == 'zero_semantic_after_adapter':
+        return torch.zeros_like(image)
+    if control == 'mean_semantic_baseline':
+        if training_mean is None or training_mean.shape != (768,) or not torch.isfinite(training_mean).all():
+            raise ValueError('Verified training semantic mean required')
+        return F.normalize(training_mean[None].expand_as(image), dim=-1)
+    if control not in {'image', 'zero_image_through_adapter'}:
+        raise ValueError('Unknown semantic control')
+    value = torch.zeros_like(image) if control == 'zero_image_through_adapter' else image
+    if coefficient is None:
+        return value
+    if coefficient.shape != (769, 768) or not torch.isfinite(coefficient).all():
+        raise ValueError('Finite [769,768] affine coefficient required')
+    return F.normalize(torch.cat([value.new_ones(len(value), 1), value], -1) @ coefficient, dim=-1)
+
+
 def scale_semantic_deviation(coefficient, target_mean, gain):
     if gain <= 0 or target_mean.shape != coefficient.shape[1:]:
         raise ValueError('Positive semantic gain and aligned training mean required')

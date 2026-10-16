@@ -2,7 +2,28 @@ import pytest
 
 torch = pytest.importorskip('torch')
 
-from latent_diaries.semantic_adapter import fit_coefficient, scale_semantic_deviation, select_alpha
+from latent_diaries.semantic_adapter import (
+    fit_coefficient,
+    scale_semantic_deviation,
+    select_alpha,
+    semantic_condition,
+)
+
+
+def test_missing_image_missing_semantics_and_training_center_are_distinct():
+    coefficient = torch.zeros(769, 768)
+    coefficient[0, 0] = 2
+    mean = torch.zeros(768);mean[1] = 3
+    image = torch.ones(1, 768)
+    through = semantic_condition(image, coefficient, control='zero_image_through_adapter')
+    zero = semantic_condition(image, coefficient, control='zero_semantic_after_adapter')
+    center = semantic_condition(image, coefficient, control='mean_semantic_baseline', training_mean=mean)
+    assert through[0, 0] == 1 and through.count_nonzero() == 1
+    assert zero.count_nonzero() == 0
+    assert center[0, 1] == 1 and center.count_nonzero() == 1
+    torch.testing.assert_close(through, semantic_condition(torch.zeros_like(image), coefficient))
+    with pytest.raises(ValueError):
+        semantic_condition(image, coefficient, control='mean_semantic_baseline')
 
 
 def test_group_validation_and_generalization():

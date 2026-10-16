@@ -416,3 +416,19 @@ caption, stored sentence lookup, teacher or text-feature cache is consulted.
 Language-held-out variants of training images are not image-held-out evidence.
 Direct visual speech-policy and last-attention LoRA controls are implemented
 and exercised but have not established intelligible development transfer.
+
+### Missing image, missing semantics and oracle diagnostics
+
+An affine image adapter maps a zero image to its bias, followed by normalization.
+That is distinct from the exact zero semantic vector used by robust training.
+The current evaluator defaults to semantic zero and names all three diagnostic
+controls explicitly: zero image through adapter, zero semantics after adapter,
+and normalized training-language mean. Historical affine-null behavior remains
+available through `--legacy-null`; old evidence is not rewritten.
+
+Evaluation origin is verified against pinned encoder caches and exact numeric
+vectors rather than inferred from a `--mode` label. Oracle L0–L3 controls remain
+separate from image-only L4/development generation. Actual sampler parity and
+single-position oracle interventions diagnose the continuous prior independently
+of visual adaptation. These diagnostics do not introduce text into the final
+inference path or constitute a trained model release.

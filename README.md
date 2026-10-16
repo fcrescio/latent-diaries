@@ -41,6 +41,14 @@ Italian-stable reference is retained. Inference reads no captions, linguistic
 labels or teacher files. All private artifacts stay local; all 96 fresh
 candidates remain reserved. M2 remains unaccepted.
 
+The [independent-review recovery](docs/REVIEW_RESPONSE_20261016.md) corrects the
+ambiguous null control and verifies numeric feature provenance. A fixed-checkpoint
+oracle ladder produces48 diagnostic WAVs plus four oracle routing controls.
+Exact stock/continuous-prefix controls are byte-identical; the first observed
+numerical/auxiliary breakdown is inside the continuous prior, before the image
+adapter. Eighteen blinded diagnostic clips (OD-A–OD-R) await listening locally.
+[V25](docs/PROPOSAL_V25.md) is proposal-only; no new neural training is started.
+
 ## Artistic brief
 
 Turn opt-in photos from a walk/wearable into an intimate, slightly unreliable oral memory in Italian. Images become a condition for a voice to speak, not an instruction to caption a scene. The work has its own aesthetic judgments (evocation, grounding, voice, surprise), not ASR WER as its aim.

@@ -598,3 +598,77 @@ checks pass. Private experiment ownership is restored to the workspace user;
 annotation container is exited. No paid jobs, HF uploads or private media
 publication. Public source integration contains only generic code and aggregate
 evidence. These checks establish implementation mechanics, not audible quality.
+
+## 2026-10-16 — Apply independent review: fixes and oracle localization, no V25
+
+User-supplied review SHA256
+77859c0d8b36875a5bcb564d2882e39b7e75e7941e15466060d16dc3b67ca3d6
+reviews main47d3049. Preserve all historical artifacts and96 reserved images.
+Confirm two implementation defects: affine zero-image was mislabeled as the
+robust training semantic-null; evaluator mode alone did not establish numeric
+feature origin. Add explicit three-vector controls and legacy reproduction;
+verify image/text inputs against their distinct pinned cache manifests/tensors.
+Regression tests cover exact vectors, cross-modal relabeling, modified inputs,
+real-sampler trace parity, causal resets and post-top-k support loss.
+
+Freeze `configs/research/oracle-audit-20261016.json`; sourcef58d703 launches the
+existing V24 prior/adapter ladder on two already annotated training images and
+one image-only exposed development control. Seeds41/42/43, FP32, fixed speaker,
+160-frame cap. All48 WAVs generated. Six L0/L1 pairs have identical prefill,
+trailing/PAD/mask tensors AND byte-identical WAVs. Per-image/seed mean L2 selected
+prefix error0.1887 gold→1.1947 free; closest-mode agreement86.4%→22.4%. L3 mean
+semantics similarly drift0.1984→1.1639. L4 adds a loss0.4064→1.4390. Single oracle
+vector resets do not restore the whole sequence. These are diagnostics, never
+human quality or grounding scores. Four supplemental gold-history routed/best
+candidate controls retain far more known wording in auxiliary ASR; human
+confirmation remains pending.
+
+Actual V23 logs show811 rollout/789 gold steps in each1600-step phase,18.52
+mean visits for rollout members vs4.45 for the other110 images; one is never
+sampled. V24 rows are1157 image-specific plus1280 replay, not2437 independent
+images. Offline ridge grid through100 confirms alpha1.0 remains preferable;
+no historical adapter is changed. Narrative audit samples six training images,
+30 existing variants through the local user-authorized vision service. Automated
+judge flags12 variants; correlated/fallible AI judgment is not a human error
+rate. Output is not added to training. Container stops in finally.
+
+Source d954b58 compares actual captured decoding processors on the same gold,
+cached and current histories for V22/repair1/repair2. Add current greedy codec0
+histories to match V23's generation protocol; compare first32 positions to avoid
+length/EOS confounds. Final-reader current greedy raw KL1.4603 versus0.0375 on
+its second cache, with7.27% vs0.10% teacher mass outside student top-k support.
+Batch8 cached vsbatch1 new draws limit exclusive causal attribution to staleness.
+Codec0 actual raw replay max5.34e-5, processed finite max6.10e-5/support equal;
+residual max1.34e-4 reported explicitly. Per-frame EOS and cumulative disagreement
+are retained. Clamped processed KL is not presented as finite exact KL when
+supports differ. Original sampled-only exploratory analysis stays private and
+is superseded for the matched-history interpretation, never overwritten.
+
+`docs/REVIEW_RESPONSE_20261016.md` is the finding register/diagnostic report;
+`docs/PROPOSAL_V25.md` proposes only a bounded fresh on-policy continuous-prior
+comparison, conditional on listening and explicit instruction. No neural
+training, cloud spend or upload occurs. A14-clip blinded ladder selection plus
+four oracle supplements is ingested locally as oracle-diagnostic-20261016,
+OD-A–OD-R, zero ratings created. The authenticated loopback UI returns401 without
+credentials and200 with configured credentials, with the run visible. The final
+inference path remains textless and fail-closed pending M2.
+
+Verification: host21passed/24ML module skips; actual CUDA69passed/2vision skips;
+final same-worker warm build CPU66passed/4skips and locked vision4passed.
+Versions unchanged: Torch2.14.1+cu130, Transformers4.57.3 for Qwen and5.19.0
+for the separate vision interpreter, qwen-tts0.1.1; uv0.9.24/locked environments.
+Ladder runtime imagecee45a19706a8c3dfd1c50e8c9aa1dd982b6fbfb1c098e54ec76b32f204df728;
+matched-policy/supplement runtime72f317f78b218b12ff6787bafabd51e30934c755eace364dc3bf8a19ed30aae7.
+Final baked worker87d537b52f97cc1112e3d757ddc94b786213fef137715df299d76db4bed00140.
+All are source rebuilds of the same worker Dockerfile with unchanged locked
+runtime, not claims of clean dependency installation. Rendering-only Matplotlib
+3.10.7 uses its own committed script lock and loads no models. Changed-file Ruff,
+compileall, whitespace and tracked-secret/data-path guards pass. Public plots
+contain only aggregate numerical curves, never private images, words or audio.
+
+Final autonomous-path check uses the baked worker and the provenance-checked
+`evaluate_autoregressive_prior.py` on two training vectors, one exposed
+image-only development vector and semantic-null. All four WAVs match the ladder
+byte-for-byte, while no corpus/text-feature/teacher file is loaded. Private
+`standalone-parity.json` records the comparison. This verifies the isolated L4
+path rather than relying on an oracle-containing process to assert autonomy.
