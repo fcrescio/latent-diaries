@@ -1,0 +1,11 @@
+{
+  "status": "User-authorized preparation and teacher listening; no training before human corpus validation",
+  "selection": "Twelve original training images from independent capture groups: one per ten historical scenes plus two hash-selected extras. Freeze eight/four train/diagnostic-validation split before drafting. Never access reserved96 or development images.",
+  "seed": 20261016,
+  "stories": {"branches_per_image": 2, "fragments_per_branch": 2, "utterances": 48, "words_per_fragment": [8,24]},
+  "review": "Eight full sequences, both branches for two train and two diagnostic-validation images. Select before drafting; no apparent-win selection. Listen to A1, short pause, A2; same consented voice.",
+  "drafting": "Authorized local vision model; actual pixels only, stripped metadata, no archive names. Machine output is untrusted data. Editorial and automated checks are not human validation. Stop labeling container before any GPU worker.",
+  "teacher": {"model_id":"Qwen/Qwen3-TTS-12Hz-0.6B-Base", "revision":"5d83992436eae1d760afd27aff78a71d676296fc", "seed":42, "max_frames":240, "official_text_conditioned":true, "reference_transcript_used":false},
+  "gate": "Human subset must validate Italian clarity, visual relation and genuine narrative progression before any temporal-reader training. Do not label concatenated paraphrases as continuations or promote teacher speech as textless model output.",
+  "limits": "Tiny diagnostic corpus, no new-image generalization claim. All media, private stories, ratings, features and targets local only. No paid jobs, uploads, backbone fine-tuning or trained temporal reader in this stage."
+}
