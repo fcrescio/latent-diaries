@@ -931,3 +931,89 @@ Transformers5.19.0 in its separate interpreter. Final validation: host25passed/
 CUDA80passed/2vision skips. Changed-file Ruff, compileall, whitespace and
 private-data/credential guards pass. M2 remains unaccepted; corpus human review
 is pending and neural training has not started.
+
+
+## 2026-10-16 — Human corpus gate passed; bounded last-audio bridge diagnostic
+
+Read all8 actual TC ratings, preserve the sealed preparation corpus and write
+a separate private validation manifest tied to corpus/teacher/mapping hashes.
+User reports the sequences generally good/coherent; sampled grounding mean
+3.75, voice3, evocation2.75, surprise2.875. This passes the prespecified subset
+gate and is not per-utterance approval of all48 teachers. Public aggregate:
+validation/2026-10-16-asfl-corpus-human.json. No ratings are manufactured.
+
+Preregister a cheap first bridge check: continuation only,16 train/8 internal
+validation sequences, original8/4 image split, no original dev/reserved96.
+T0/T1 have identical4,823,425-parameter1537->128->35*1024 continuous-prefix
+MLPs, separate modality normalizations and learned scalar lengths. T0 masks
+audio/presence after normalization; T1 uses last-fragment audio plus an
+explicit presence bit and permanent image input. No linguistic IDs, retrieval,
+caption, transcript, teacher tensor or textual plan enters student inference.
+Training-only projected supervision uses train-only normalization/capacity,
+masked prefix MSE and normalized length MSE. Two2000-step AdamW schedules
+(seed42,lr0.001 cosine to0.0001), actual1000->2000 checkpoint resumes, no
+backbone/LoRA optimization. Both schedules finish; training peak allocated
+VRAM120,645,120B each. This is not acoustic optimization or a full narrator.
+
+An exact projected training-prefix control caps at240frames under greedy
+codec0. Pause student evaluation; isolate installed official wrapper versus
+continuous conditioning. All prefill tensors and autoregressive codes match
+exactly under both greedy and stock sampled recipes. Greedy caps in both;
+sampled stops at74frames and its waveform is byte-identical to the sealed
+official teacher. Retain original greedy oracles and four paired code tensors,
+record a global amendment to stock sampled codec0/residuals,seed42,max240.
+No per-case retries or candidate selection. Pinned Qwen5d83992436eae1d760afd27aff78a71d676296fc,
+qwen-tts0.1.1/Transformers4.57.3/Torch2.14.1+cu130; unchanged worker/vision locks.
+Frozen media cache remains EmbeddingGemma2 revision914f7f89142e33e77833254d9c9b90c3cef7303b.
+
+All20 predefined student outputs complete;7hit the frame bound,noneempty.
+T1 reproduces training projected targets near precision; first train gold-code
+CE1.095923 matches oracle1.095923. Validation CE1.985238 versus oracle0.725452
+does not improve over T0's1.957204. Four actual gold-code gradient controls
+show finite nonzero reader gradients through frozen Qwen and absent backbone
+gradients; no optimizer steps in this acoustic audit. Peak5,449,949,696B.
+The numeric audit covers all24continuations and both image/history
+interventions: validation normalized prefix MSE1.166274 forT1 versus1.107396
+forT0. Training T0 weighted MSE0.472043 equals the analytical contradictory-
+target floor. MSE therefore averages two valid word sequences for the same
+image: T0's reconstruction failure does not establish a fair artistic T1 win.
+T1 small-set branch reproduction is memorization capacity, not generalization.
+Teacher A1 also identifies an image here; numeric image sensitivity is not
+grounded narration or proof that a permanent image anchor is usefully retained.
+
+Whisper Small973afd24965f72e36ca33b3055d56a652f456b4d runs locally on24WAVs.
+The two T1 matched train cases and two within-image-swapped train cases have
+zero reference word edits; validation reproduction deteriorates. ASR is
+auxiliary, not human intelligibility/art scoring and never a selector. All12
+prespecified T0 matched/T1 matched/T1 within-image-swap listening sequences
+are ingested asTB-01–TB-12, seed2026101605. First fragment is teacher history;
+second fragment is textless student. Human student quality review is pending;
+no generated-A1 rollout, useful feedback improvement or M2 acceptance.
+Do not scale this regression recipe on training fit. Acoustic CE/KL or a
+stochastic continuous reader are alternatives requiring new bounded controls,
+not implemented optimizers or declared solutions.
+
+Reproduction: ASFL_TWO_FRAGMENT_PILOT.md; ignored root
+artifacts/asfl-two-fragment-20261016/bridge-plan.json and each *.command.json,
+source snapshots/manifest hashes. Training command:
+`python scripts/train_temporal_bridge.py --targets artifacts/asfl-two-fragment-20261016/bridge-targets/manifest.json --run-dir <fresh> --steps 1000 --schedule-steps 2000`
+(with separate CLI values `--steps 1000 --schedule-steps 2000`, then strict
+`--resume --steps 2000`; T0 adds `--image-only`). Inference
+`python scripts/evaluate_temporal_bridge.py --run-dir <checkpoint> --inputs <strict-numeric-json> --output-dir <fresh>`.
+All ML uses Compose and the one worker Dockerfile; inference reads neither
+training target files nor original photos. Listening assembly mounts only the
+authorized archive read-only for image-hash checks. An orchestrator handoff
+adds that mount after the active inference job completes, without interrupting
+GPU computation or rerunning any model. Older executed pre-lint numeric-audit
+source is retained by exact hash. The user proposal stays unchanged/untracked.
+
+Verification: make test25passed/28optionalMLskips; final make test-docker
+79CPU passed/4skips and4vision passed; actualCUDA82passed/2vision skips.
+Ruff/format, compileall, whitespace and private-fragment publication guard pass.
+Final warm build uses earlier same-lock Dockerfile runtime base to avoid layer
+depth growth. Final worker image: sha256:ee74e724874053a6cd954ee89db88768f84c05fab71c7b792dabdc179e8ad951. Source/runtime overlays
+during experiments are recorded separately. All private images, stories,
+WAVs, ASR strings, ratings, vectors and weights remain local. Public source
+and aggregate evidence only; no paid jobs, HF upload, V25 or model promotion.
+Gallery auth still401without/200with credentials;0.0.0.0 binding remains the
+user's prior authorized local setting. Labeling container remains stopped.

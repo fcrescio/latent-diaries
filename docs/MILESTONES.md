@@ -178,3 +178,16 @@ for human validation of voice, image relation and genuine continuation. This is
 a teacher-story upper bound, not textless student generation or new-image
 generalization. No reader training is started; human corpus review is pending,
 M2 unaccepted, all96 fresh images untouched and all private media/data local.
+
+
+2026-10-16 temporal pilot follow-up: the user accepts the prespecified eight
+teacher sequences as generally good/coherent (grounding3.75/5, voice3/5).
+This passes the sampled corpus gate, not all48 individual utterances. Two
+equal-capacity continuous-prefix readers complete2000 steps each and strict
+resume; the last-audio reader reconstructs training branches but does not
+show a verified diagnostic-validation advantage. Twenty student outputs and
+twelve blinded teacher-history/student-continuation pairs are retained.
+Gold-code gradients through frozen Qwen and official/continuous decoding
+parity pass; generated-A1 robustness and acoustic optimization are untested.
+Human student review TB-01–TB-12 is pending. No M2/M3 promotion or scaling.
+See ASFL_TWO_FRAGMENT_PILOT.md and validation/2026-10-16-asfl-temporal-bridge.json.

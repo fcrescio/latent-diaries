@@ -1,0 +1,315 @@
+{
+  "scope": "Bounded teacher-history continuous-prefix diagnostic, not an autonomous narrator or M2 success",
+  "source_sha256": "5d6e683f8518b6c797c9a6668b77df928158870333d7b3257ec06053cef68862",
+  "private_evidence_sha256": {
+    "human-validation.json": "6d92e3a7f7c8a7588e35d056522c8249456e4e82102585d5c461de3f9d8fb9d6",
+    "bridge-plan.json": "a374369a442cc716faf2036521b474e8184b26a4d0376adcd493bf1eae54c63e",
+    "bridge-targets/manifest.json": "6e9220ba7066102aef8eef2137f81a7fcee3f01e839179dedc1d077abb0f2965",
+    "bridge-parity-probe/report.json": "f84573cfede01ad88eff80b274886bf008e48d5ba1757dd35f381eb6c26aba3c",
+    "bridge-decode-amendment.json": "ebc9fc0f8a242a5acc04bfcb4a3a8e5fd630b5d9b62497425911474b81bb9f36",
+    "bridge-numeric-diagnostics.json": "a9a9cdde5ad513bee9ab16640b1388a2da220e31f986971efae1643a3f260e7b",
+    "bridge-acoustic-audit.json": "81587aab3a72d441a741c7d60ea43c523050d0690c18bf9cabb37b968fa0c60a",
+    "bridge-asr-small.json": "099134e3a68740698ab8e208f95afe8fd3af887fc281bfd0f245c52ee7c899b9",
+    "bridge-listening/private-mapping.json": "e3848ab55b3f658f08ac74034e734cc7390555edaf68e249a7ff8f5280de19b1"
+  },
+  "training_sequences": 16,
+  "diagnostic_validation_sequences": 8,
+  "training_images": 8,
+  "validation_images": 4,
+  "all_reserved96_images_untouched": true,
+  "models": [
+    {
+      "mode": "t0",
+      "feedback": false,
+      "completed_steps": 2000,
+      "schedule_steps": 2000,
+      "trainable_parameters": 4823425,
+      "maximum_tokens": 35,
+      "seed": 42,
+      "reader_sha256": "80cb1b25332272a40421bc492242d3f12d7233d5b189311d503e6e82c5482bab",
+      "peak_allocated_vram_bytes": 120645120,
+      "final_training_masked_prefix_mse": 0.47204291820526123,
+      "final_training_length_mse": 0.0042091840878129005,
+      "strict_resume_exercised": true
+    },
+    {
+      "mode": "t1",
+      "feedback": true,
+      "completed_steps": 2000,
+      "schedule_steps": 2000,
+      "trainable_parameters": 4823425,
+      "maximum_tokens": 35,
+      "seed": 42,
+      "reader_sha256": "6b2962acd45394b1a5f05d21d3d6a0b03cd98cdd924287c775fe11d4e91d6a8b",
+      "peak_allocated_vram_bytes": 120645120,
+      "final_training_masked_prefix_mse": 6.611885653784802e-14,
+      "final_training_length_mse": 1.4848893082391383e-15,
+      "strict_resume_exercised": true
+    }
+  ],
+  "numeric_diagnostics": [
+    {
+      "feedback": false,
+      "split": "train",
+      "cases": 16,
+      "matched_prefix_mse": 0.473969966173172,
+      "swapped_to_other_branch_mse": 0.473969966173172,
+      "length_absolute_error": 1.9375,
+      "same_image_history_prefix_delta": 0.0,
+      "image_intervention_prefix_delta": 1.0176047012209892,
+      "absent_history_prefix_delta": 0.0
+    },
+    {
+      "feedback": false,
+      "split": "validation",
+      "cases": 8,
+      "matched_prefix_mse": 1.1073963344097137,
+      "swapped_to_other_branch_mse": 1.1073963344097137,
+      "length_absolute_error": 3.375,
+      "same_image_history_prefix_delta": 0.0,
+      "image_intervention_prefix_delta": 0.0854112021625042,
+      "absent_history_prefix_delta": 0.0
+    },
+    {
+      "feedback": true,
+      "split": "train",
+      "cases": 16,
+      "matched_prefix_mse": 2.3351649136089296e-13,
+      "swapped_to_other_branch_mse": 2.3351649136089296e-13,
+      "length_absolute_error": 0.0,
+      "same_image_history_prefix_delta": 1.802827462553978,
+      "image_intervention_prefix_delta": 0.6065119337290525,
+      "absent_history_prefix_delta": 0.5569414906203747
+    },
+    {
+      "feedback": true,
+      "split": "validation",
+      "cases": 8,
+      "matched_prefix_mse": 1.1662737727165222,
+      "swapped_to_other_branch_mse": 1.1662737727165222,
+      "length_absolute_error": 2.5,
+      "same_image_history_prefix_delta": 0.07623815536499023,
+      "image_intervention_prefix_delta": 0.052337119821459055,
+      "absent_history_prefix_delta": 0.12018625065684319
+    }
+  ],
+  "contradictory_target_floors": [
+    {
+      "image_only_masked_prefix_floor": 0.4720429128446722,
+      "image_only_length_floor": 0.004209183673469387
+    }
+  ],
+  "teacher_forced_acoustic_diagnostics": [
+    {
+      "feedback": false,
+      "split": "train",
+      "student": {
+        "codec0_ce": 2.3995728492736816,
+        "residual_ce": 4.1652960777282715
+      },
+      "oracle": {
+        "codec0_ce": 1.0959229469299316,
+        "residual_ce": 3.5158276557922363
+      },
+      "reader_gradient_norm": 13.296985626220703,
+      "backbone_gradients_absent": true
+    },
+    {
+      "feedback": false,
+      "split": "validation",
+      "student": {
+        "codec0_ce": 1.9572041034698486,
+        "residual_ce": 3.849212408065796
+      },
+      "oracle": {
+        "codec0_ce": 0.7254524827003479,
+        "residual_ce": 3.3514862060546875
+      },
+      "reader_gradient_norm": 3.8008055686950684,
+      "backbone_gradients_absent": true
+    },
+    {
+      "feedback": true,
+      "split": "train",
+      "student": {
+        "codec0_ce": 1.095922589302063,
+        "residual_ce": 3.5158276557922363
+      },
+      "oracle": {
+        "codec0_ce": 1.0959229469299316,
+        "residual_ce": 3.5158276557922363
+      },
+      "reader_gradient_norm": 1.008331060409546,
+      "backbone_gradients_absent": true
+    },
+    {
+      "feedback": true,
+      "split": "validation",
+      "student": {
+        "codec0_ce": 1.9852381944656372,
+        "residual_ce": 3.866163492202759
+      },
+      "oracle": {
+        "codec0_ce": 0.7254524827003479,
+        "residual_ce": 3.3514862060546875
+      },
+      "reader_gradient_norm": 8.205527305603027,
+      "backbone_gradients_absent": true
+    }
+  ],
+  "acoustic_audit_peak_vram_bytes": 5449949696,
+  "generation": [
+    {
+      "mode": "t0",
+      "split": "train",
+      "kind": "matched",
+      "cases": 2,
+      "capped": 0,
+      "empty": 0
+    },
+    {
+      "mode": "t0",
+      "split": "validation",
+      "kind": "matched",
+      "cases": 2,
+      "capped": 2,
+      "empty": 0
+    },
+    {
+      "mode": "t1",
+      "split": "train",
+      "kind": "absent",
+      "cases": 2,
+      "capped": 1,
+      "empty": 0
+    },
+    {
+      "mode": "t1",
+      "split": "train",
+      "kind": "cross-image",
+      "cases": 2,
+      "capped": 0,
+      "empty": 0
+    },
+    {
+      "mode": "t1",
+      "split": "train",
+      "kind": "matched",
+      "cases": 2,
+      "capped": 0,
+      "empty": 0
+    },
+    {
+      "mode": "t1",
+      "split": "train",
+      "kind": "same-image",
+      "cases": 2,
+      "capped": 0,
+      "empty": 0
+    },
+    {
+      "mode": "t1",
+      "split": "validation",
+      "kind": "absent",
+      "cases": 2,
+      "capped": 0,
+      "empty": 0
+    },
+    {
+      "mode": "t1",
+      "split": "validation",
+      "kind": "cross-image",
+      "cases": 2,
+      "capped": 0,
+      "empty": 0
+    },
+    {
+      "mode": "t1",
+      "split": "validation",
+      "kind": "matched",
+      "cases": 2,
+      "capped": 2,
+      "empty": 0
+    },
+    {
+      "mode": "t1",
+      "split": "validation",
+      "kind": "same-image",
+      "cases": 2,
+      "capped": 2,
+      "empty": 0
+    }
+  ],
+  "auxiliary_reference_reconstruction": [
+    {
+      "mode": "t0",
+      "split": "train",
+      "kind": "matched",
+      "cases": 2,
+      "micro_reference_word_edit_ratio": 1.1290322580645162
+    },
+    {
+      "mode": "t0",
+      "split": "validation",
+      "kind": "matched",
+      "cases": 2,
+      "micro_reference_word_edit_ratio": 4.433333333333334
+    },
+    {
+      "mode": "t1",
+      "split": "train",
+      "kind": "matched",
+      "cases": 2,
+      "micro_reference_word_edit_ratio": 0.0
+    },
+    {
+      "mode": "t1",
+      "split": "train",
+      "kind": "same-image",
+      "cases": 2,
+      "micro_reference_word_edit_ratio": 0.0
+    },
+    {
+      "mode": "t1",
+      "split": "validation",
+      "kind": "matched",
+      "cases": 2,
+      "micro_reference_word_edit_ratio": 0.9666666666666667
+    },
+    {
+      "mode": "t1",
+      "split": "validation",
+      "kind": "same-image",
+      "cases": 2,
+      "micro_reference_word_edit_ratio": 2.5
+    }
+  ],
+  "asr_is_human_intelligibility_or_art_score": false,
+  "decoding_parity": [
+    {
+      "mode": "greedy",
+      "prefill_exact": true,
+      "codes_exact": true,
+      "frames": 240,
+      "reached_cap": true
+    },
+    {
+      "mode": "sampled",
+      "prefill_exact": true,
+      "codes_exact": true,
+      "frames": 74,
+      "reached_cap": false
+    }
+  ],
+  "blinded_teacher_history_student_continuation_pairs": 12,
+  "review_labels": "TB-01 through TB-12",
+  "first_fragment_is_teacher": true,
+  "second_fragment_is_textless_student": true,
+  "human_student_quality_review_pending": true,
+  "generated_first_fragment_rollout_exercised": false,
+  "acoustic_optimization_exercised": false,
+  "artistic_improvement_verified": false,
+  "m2_accepted": false,
+  "paid_jobs": 0,
+  "private_uploads": 0
+}

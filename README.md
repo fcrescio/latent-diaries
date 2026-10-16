@@ -67,10 +67,15 @@ optimization. M2 remains unaccepted; all private artifacts stay local.
 The user authorized [two-fragment corpus preparation](docs/ASFL_TWO_FRAGMENT_PILOT.md).
 Twelve original training images yield24 two-fragment sequences and48 genuine
 official text-conditioned teacher WAVs. Eight prespecified sequences are in the
-gallery as **TC-01–TC-08**, awaiting validation of Italian, image relation and
-actual progression. These are teacher upper bounds, not a trained textless
+gallery as **TC-01–TC-08**. The user rated all eight and judged them generally
+good and coherent; the sampled corpus gate is passed. These remain teacher upper bounds, not a trained textless
 narrator. Media-only features and codec targets are cached; reader training
-remains gated on the human corpus review.
+has begun with a bounded image-only versus image-plus-last-audio bridge diagnostic.
+Both readers complete2000 steps and checkpoint resumes. The feedback reader
+reconstructs training stories, while diagnostic validation shows no verified
+improvement. The gallery contains **TB-01–TB-12**: teacher history followed by
+a textless student continuation. Student quality review is pending. No
+generated-history robustness or narrative improvement is established.
 
 ## Artistic brief
 
