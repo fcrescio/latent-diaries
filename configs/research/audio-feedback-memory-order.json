@@ -1,0 +1,9 @@
+{
+  "purpose": "Diagnostic only: does a single global audio embedding preserve order or mainly aggregate spoken concepts? Not a narrative corpus and never training supervision.",
+  "scope": "Reuse all30 existing training teacher utterances. Pair within the existing scene triplets with cyclic order. Encode A+pause+B, B+pause+A and A+pause+A; no new text or speech synthesis.",
+  "controls": "Native16kHz arrays, pause0.3 seconds, same30-second explicit bound, full frozen FP32 encoder. Compare last/first segment identity and order-dependent embedding displacement. Do not label concatenations as coherent narrative continuations.",
+  "decision": "No gate threshold is retuned. A direction-insensitive global embedding is not an ordered narrative state; keep last-fragment/history_present/segment-index separation. This diagnostic cannot certify coherence or novel continuation.",
+  "additional_signal_controls": "Three clearly labeled nonspeech arrays: noise,440Hz sine and chirp. They are never presented as genuine speech. Silence is explicitly rejected by the media API.",
+  "no_training":true,
+  "no_fresh_access":true
+}

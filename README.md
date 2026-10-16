@@ -46,8 +46,19 @@ ambiguous null control and verifies numeric feature provenance. A fixed-checkpoi
 oracle ladder produces48 diagnostic WAVs plus four oracle routing controls.
 Exact stock/continuous-prefix controls are byte-identical; the first observed
 numerical/auxiliary breakdown is inside the continuous prior, before the image
-adapter. Eighteen blinded diagnostic clips (OD-A–OD-R) await listening locally.
-[V25](docs/PROPOSAL_V25.md) is proposal-only; no new neural training is started.
+adapter. All18 diagnostic clips are now rated: exact controls remain clear,
+while free-prior controls have explicit gibberish notes. Oracle prefixes also
+have pronunciation problems. [V25](docs/PROPOSAL_V25.md) remains unstarted.
+
+The [audio-semantic feedback investigation](docs/AUDIO_SEMANTIC_FEEDBACK_LOOP.md)
+implements a separate frozen image/audio encoder and passes scoped semantic
+feasibility checks, including changed-detail and cross-language controls.
+Confirmation covers170 existing teacher utterances; this does not establish
+new-image generalization. Pooled cumulative audio loses temporal order, so a
+future reader should use the last fragment separately. A bounded comparison
+using unchanged Italian-stable checkpoints produces28 blinded pairs,
+**AF-01–AF-28**, awaiting local human review. No temporal reader is trained and
+no reranker is promoted. M2 remains unaccepted; all private artifacts stay local.
 
 ## Artistic brief
 

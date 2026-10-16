@@ -672,3 +672,111 @@ image-only development vector and semantic-null. All four WAVs match the ladder
 byte-for-byte, while no corpus/text-feature/teacher file is loaded. Private
 `standalone-parity.json` records the comparison. This verifies the isolated L4
 path rather than relying on an oracle-containing process to assert autonomy.
+
+## 2026-10-16 — isolated audio-semantic feedback feasibility
+
+The user completed OD listening and supplied the new semantic-loop hypothesis,
+requesting autonomous investigation. Consume all18 ratings without inventing
+quality scores: exact controls are clear; all eight free-prior controls have
+gibberish notes; three of four gold-history oracle controls have explicit
+pronunciation-error notes. Defer V25, preserve all historical results and
+weights, and investigate frozen audio semantics before any new neural training.
+No temporal corpus or reader training is started.
+
+Add a separate `FrozenFeedbackEncoder`, leaving historical `FrozenImageEncoder`
+unchanged with its audio tower disabled. Inspect the installed upstream model,
+processor and feature extractor. Full EmbeddingGemma2 revision
+914f7f89142e33e77833254d9c9b90c3cef7303b exposes image, audio and native joint
+features at768D. Both media towers load with744,371,488 frozen parameters.
+Accept FP32/BF16 and reject FP16. No public text parameter; validate fixed
+protocol token IDs. Explicit mono16kHz conversion, bounded0.1–30-second history,
+no silent truncation and no treating silence as absent history. Frozen weights
+alone are not semantic evidence.
+
+Actual FP32 smoke matches live/cached image vectors exactly; audio and joint
+batch error3.38e-6/2.82e-6, peak4.89GB including the legacy parity model.
+BF16 compatibility works, peak1.66GB, but image/batch differences reach about
+0.002; retain FP32 for all quantitative experiments. A separate audio-only
+process blocks unrelated artifact reads: batch vectors match the primary audio
+cache exactly; single-item error is1.83e-5. This scoped Python audit is not an
+OS sandbox. Unit tests cover real resampling frequency, modality separation,
+unknown linguistic IDs, invalid/silent audio, bounded candidate selection,
+duplicate-reference handling and source-cluster uncertainty.
+
+Freeze numeric thresholds before scoring,30 training cases from30 capture
+groups balanced across ten historical scenes. Reuse the genuine historical
+teachers; generate80 fixed diagnostic contrasts with frozen Qwen and the same
+consented voice. Original30 text-projection prefixes match historical tensors
+bit-for-bit; no contrast reaches the frame cap. Cache912 vectors across28
+feature groups. These augmentations are not independent examples. Gates pass
+necessary conditions: audio/text30/30, balanced attribute matching93.33%
+(bootstrap86.67–98.33%), same-scene image/audio27/30 (76.67–100%). Visual
+preference over attribute-changed audio is26/30 in a post-pilot check.
+
+Confirmation on all170 existing teachers gives168/170 audio/text top1 when
+identical reference strings count as positives; strict identity gives166/170.
+The additional140 cases give138/140, with119 capture groups and four groups
+overlapping the pilot. This is training-corpus confirmation, not unseen-image
+generalization. Assistant-authored English references retain30/30 retrieval
+and93.33% attribute matching; references stay private and are not human validated.
+Gain/noise/speed controls retain content while reverse/phase corruption collapses
+retrieval. Synthetic reference perturbations do not certify independent speakers.
+
+Eight previously human-noted failures from two source images are never preferred
+over exact controls, but this cannot establish an intelligibility filter. Report
+Wilson bounds alongside degenerate0/1 bootstraps; two-source cluster failure
+upper bound remains about65.8%. Joint/image cosine remains high with wrong
+audio, so use separate image/audio features as the critic. Pooled AB/BA cosine
+is0.9731 and last-fragment preference15%: cumulative embedding is not ordered
+narrative memory. Start any future temporal design with the separate last
+fragment and a permanent image anchor, not a pooled cumulative history alone.
+
+The auxiliary lexical audit initially recognizes17/30 changed attributes with
+Whisper Tiny. A hypothesis-driven stronger control uses Whisper Small at
+973afd24965f72e36ca33b3055d56a652f456b4d in the same local worker:28/30 changed
+attributes and30/30 negation markers recognized. Two attribute cases remain
+unresolved. No recognizer is an artistic objective or a human judgment; no
+case is filtered and no frozen threshold or candidate choice changes. Add an
+optional allowlisted model-ID argument to the existing ASR diagnostic; its
+default and historical outputs remain unchanged. No private audio is uploaded.
+
+After passing necessary numeric feasibility, prepare a bounded no-training
+comparison with unchanged earlier Italian-stable priorV8/adapterV9. Four fixed
+seeds per each of eight existing development images plus four semantic-null
+controls produce36 real WAVs. Seed42 for the four historical cases is byte-exact
+to earlier V9 audio. First/hash-random/max-cosine/shuffled/zero controls preserve
+failures and forbid adaptive retry. Max choice changes from first in6/8 cases,
+and scorer-image shuffle changes choice in4/8. These internal scores establish
+no human quality improvement. Import all28 prespecified blinded pairs,
+including duplicate selections, as AF-01–AF-28 / asfl-rerank-20261016. Zero votes
+created; authenticated loopback returns401 without credentials and200 with
+configured credentials. Reranker promotion and temporal training remain false.
+
+Private evidence root `artifacts/audio-feedback-20261016/` contains stage argv
+in `*.command.json`, exact source hashes, manifests, sealed feature tensors,
+reports and logs. Preserve failed import/API/permission attempts; completed
+GPU runs are not repeated to recover file ownership. Exact pre-style-refactor
+confirmation/translation sources are recovered locally and hash-checked against
+their sealed manifests. Contrast/translation specs are ignored private inputs,
+not public hardcoded labels. Local development provenance stays local; export
+only sanitized generic source and whitelisted aggregate plots/statistics.
+The user-supplied `SEMANTIC_LOOP.md` is unchanged and not published.
+
+Reproduction: `AUDIO_SEMANTIC_FEEDBACK_LOOP.md`, the three frozen config JSONs,
+and private exact command manifests. `scripts/report_audio_feedback.py` uses
+render-only Matplotlib3.10.7 and a separate committed script lock; it loads no
+model. Core locks stay unchanged: Torch2.14.1+cu130, Qwen Transformers4.57.3,
+vision Transformers5.19.0, qwen-tts0.1.1 and uv0.9.24. All ML runs in the same
+Docker worker, with separate Qwen/vision interpreters. Initial runtime worker
+a77ea166d91ffbede9698de098e50436716824e04a0a751496884578669af6d8;
+final baked workerfc00d282886b12a73c7241f8c54c1a8d207232faa5c8a94fdc6550ed8947378c.
+Both use source-only warm builds from the same Dockerfile and locked runtime;
+this does not claim a clean dependency reinstall.
+
+Final verification: `make test`22passed/27 optional ML skips; warm
+`LD_WORKER_BASE_IMAGE=latent-diaries-worker:local DOCKER_CONFIG="$PWD/.cache/docker-config"
+make DOCKER=.cache/tools/docker test-docker`74passed/4skips plus locked vision
+4passed; baked-image CUDA full suite77passed/2vision skips. Changed Python Ruff,
+compileall and whitespace checks pass. Private media, labels, transcripts,
+ratings, tensors and weights stay local. No cloud spend, HF upload or new
+capture; all96 fresh images untouched, labeling container stopped, M2 unaccepted.

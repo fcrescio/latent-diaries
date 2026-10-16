@@ -1,0 +1,13 @@
+{
+  "hypothesis": "Pinned EmbeddingGemma2 audio vectors retain Italian spoken meaning strongly enough to be useful as numerical narrative memory; shape/cosine alone is insufficient.",
+  "scope": "No new neural training. Phase0 isolated full media encoder with unchanged historical image encoder; Phase1 offline feasibility on30 previously annotated training images, three independent scene groups per each of10 existing categories. No reserved fresh access.",
+  "pins": {"model_id":"google/embeddinggemma-2","revision":"914f7f89142e33e77833254d9c9b90c3cef7303b","dtype":"float32","audio_sample_rate":16000,"maximum_seconds":30},
+  "positive_data": "Reuse existing genuine Qwen teacher WAVs and original Italian annotations, plus their cached image/text supervision where valid. All text is offline diagnostic reference only.",
+  "controls": "Same-scene negatives, one changed attribute where a fixed validated lexical substitution exists, sentence negation as a separate hard test, gain/noise/speed/padding controls, reversed/permuted speech, and actual human-rated gibberish from the oracle review. No transformation is automatically labeled human-intelligible. Synthetic reference-speaker perturbations are stress tests, not independent-person speaker validation.",
+  "statistics": "Retrieval both directions, matched/shuffled ranking, cluster bootstrap over source images2000 replicates seed20261016, hard-pair accuracy and confidence bounds. Cache all vectors and raw similarity matrices locally.",
+  "gate_audio_memory": {"audio_to_text_top1_minimum":0.60,"bootstrap_lower_bound_minimum":0.30,"attribute_hard_pair_accuracy_minimum":0.75,"attribute_bootstrap_lower_bound_must_exceed":0.50,"minimum_independent_attribute_pairs":20},
+  "gate_image_critic": {"same_scene_image_audio_top1_minimum":0.60,"bootstrap_lower_bound_must_exceed":0.3333333333333333,"must_not_prefer_human_rated_gibberish":true},
+  "gate_limits": "A result barely above chance is insufficient. Memory and image-critic gates are separate. Passing retrieval never certifies intelligibility, narrative progression, independent-speaker robustness or artistic quality. No temporal reader/corpus or reranker promotion without the corresponding human gate.",
+  "resources": "Single existing managed local RTX4090 worker, sequential Qwen and full-media encoder jobs. No VLM overlap, remote spending, backbone fine-tuning, private upload or new dependency version changes. Resume/cache reuse permitted with exact provenance checks.",
+  "stop": "On semantic failure stop ASFL before reader training; diagnose alignment/prompt/masking once with isolated controls rather than broad sweeps. Preserve old baselines and the user-authored SEMANTIC_LOOP.md unchanged."
+}

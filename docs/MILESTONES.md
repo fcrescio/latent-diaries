@@ -144,3 +144,16 @@ for limits and processed-policy analysis. Eighteen blinded diagnostic clips
 OD-A–OD-R await human listening; these are not an approved image-only candidate.
 V25 remains a single conditional proposal and is not started. M2 is unaccepted,
 `narrate-image` stays fail-closed and all96 fresh images remain reserved.
+
+
+2026-10-16 audio-semantic follow-up: OD listening is complete. Exact controls
+remain clear; free-prior and oracle-prefix pronunciation problems persist.
+The new isolated frozen media encoder passes FP32 image parity and scoped
+audio semantic feasibility, including an additional140 existing-teacher check
+and cross-language diagnostic. A no-training28-pair comparison using unchanged
+Italian-stable checkpoints is in the loopback gallery as AF-01–AF-28, pending
+human assessment. Cumulative audio embedding loses temporal order. No temporal
+reader/corpus is trained, no reranker is promoted, V25 is unstarted, and M2
+remains unaccepted. All96 fresh images and all private media remain reserved
+or local respectively. See `AUDIO_SEMANTIC_FEEDBACK_LOOP.md` and its aggregate
+validation JSON for evidence and limitations.
