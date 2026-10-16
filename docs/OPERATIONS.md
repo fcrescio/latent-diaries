@@ -20,6 +20,26 @@ The database and media live under `run-data/`, intentionally not tracked. To ing
 
 ### Docker worker
 
+Repeated warm source builds using the current worker as its own base eventually
+reach Docker's layer-depth limit. Reuse an earlier verified image from the same
+Dockerfile and identical locks as the warm runtime base; do not recursively add
+layers forever. A local image ID must first receive a normal tag: `FROM sha256:…`
+is interpreted as a repository/tag rather than a local image ID. The 2026-10-16
+recovery uses the already verified image
+`87d537b52f97cc1112e3d757ddc94b786213fef137715df299d76db4bed00140`:
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker tag \
+  sha256:87d537b52f97cc1112e3d757ddc94b786213fef137715df299d76db4bed00140 \
+  latent-diaries-worker:runtime-20261016
+LD_WORKER_BASE_IMAGE=latent-diaries-worker:runtime-20261016 \
+  DOCKER_CONFIG="$PWD/.cache/docker-config" make DOCKER=.cache/tools/docker test-docker
+```
+
+This is the same locked worker runtime and Dockerfile, with fresh source layers;
+it is not a clean dependency-install claim. The default cold build remains
+available. No unrelated images, containers or build caches need to be pruned.
+
 ```
 make test-docker
 make gpu-doctor    # only if CUDA runtime is configured
