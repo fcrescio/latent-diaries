@@ -1,0 +1,10 @@
+{
+  "scope": "Training-only rank-driven reader correction followed by frozen acoustic development comparison",
+  "reason": "On170 image-specific targets, a width128 linear output bottleneck has a proven normalized masked reconstruction lower bound0.05697 from shared valid positions alone, versus achieved0.08565. Do not spend more optimization trying to cross an algebraic floor.",
+  "amends": "V18 completes its128-width prefix control and genuine teacher cache; cancel its not-yet-started acoustic/evaluation stages. Retain all artifacts. No development outcomes used for width selection.",
+  "data": "Same170 accepted instance-v17 training pairs, same55 existing development vectors, same genuine batch8 codec cache; no fresh96 access",
+  "reader": "Existing global MLP with width256 instead of128; train-only variable length head;1600 prefix steps, actual800 resume; otherwise unchanged initialization objective and schedule",
+  "acoustic": "Frozen backbones,1600 steps actual800 resume, codec0 CE including EOS plus0.1 residual CE, zero prefix MSE, lr2e-5 warm20 seed42",
+  "evaluation": "Both width256 prefix baseline and its acoustic reader on first4 accepted training IDs, the original4 exposed development IDs and null; sampled seed42 max160. No teacher/text/label inputs at inference. Diagnostic oracle/matched/shuffled teacher-forcing separated from human quality.",
+  "limits": "Training reproduction or lower loss does not establish heldout Italian or grounding. Human review required for M2. No source media, labels, codes or weights uploaded. Local Docker4090 only. No LoRA or new visual representation in this control."
+}

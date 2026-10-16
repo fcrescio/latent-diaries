@@ -764,7 +764,7 @@ concurrent blinded baseline or independent replications.
 
 ## Opening-specific robustness and semantic-gain comparison
 
-The current local review is E8-A through E8-J at
+The completed local review is E8-A through E8-J at
 `http://localhost:18080/#m2-semantic-gain-v15-a`. It contains ten pairs from six
 new outputs, with four deliberate shuffled-image repeats. Do not rerate the six
 unchanged v9 baseline clips; any comparison to E7 is descriptive and historical.
@@ -799,3 +799,142 @@ About6.265GB of this project's failed dependency layer was subsequently reclaime
 by pruning its unused children before the parent; no user containers, volumes,
 model caches or data were removed. The existing pinned worker with source overlays
 passes current CPU/CUDA/locked-vision tests; do not claim a newly baked image.
+
+
+## Image-specific acoustic feasibility control
+
+Read `docs/RESEARCH_REASSESSMENT.md` and freeze
+`configs/research/instance-acoustic-v16.json` before preparing data. Select only
+existing training rows with distinct scene groups; `label_private_images.py
+--mode instance-v16` requires training provenance and shuts down the authorized
+local vision container after labeling. Excluded/overlong outputs stay excluded.
+
+In the same pinned GPU worker with read-only source overlays and `LD_REF_TEXT=`:
+
+1. `python scripts/prepare_instance_supervision.py --dataset <existing-development-dataset> --labels <local-training-labels> --output-dir <new-targets>`
+2. `python scripts/image_probe.py train --dataset <new-targets>/dataset.json --run-dir <new-baseline> --evaluation-scope development --steps 800`, then the same command with `--steps 1600 --resume`.
+3. `python scripts/prepare_acoustic_teachers.py --dataset <new-targets>/dataset.json --output-dir <new-teachers>`.
+4. `python scripts/train_acoustic_image_reader.py --dataset <new-targets>/dataset.json --teachers <new-teachers> --initial-run <new-baseline> --run-dir <new-acoustic> --prefix-weight 0 --steps 160`, then `--steps 320 --resume`.
+5. Evaluate both readers with `image_probe.py evaluate` on the frozen numeric-only evaluation inputs and chosen IDs. Retain teacher positive WAVs separately.
+6. `python scripts/diagnose_instance_acoustics.py --dataset <new-targets>/dataset.json --teachers <new-teachers> --baseline-run <new-baseline> --acoustic-run <new-acoustic> --output <new-diagnostic.json>` measures training oracle, matched and cyclically swapped image codec0 likelihood. It is not a human quality score.
+
+Variable prefix lengths use the existing numeric length head fitted exclusively
+to training rows. The acoustic stage trims to each predicted valid length and
+requires teacher length parity. Both frozen backbones, all16 codebooks, EOS and
+the two-path textless conditioning protocol are preserved. No reserved fresh
+images, labels or linguistic strings are loaded at inference. Do not interpret
+successful memorization as held-out grounding.
+
+If an image-specific teacher exceeds the original105-frame cap, keep the
+original comparison and run a separate duration control:
+`python scripts/probe_instance_decoding.py --run-dir <reader> --inputs
+<numeric-inputs> --ids <capped-training-ids> --output-dir <new-duration-control>
+--max-frames 160`. Optional `--codec0-greedy` isolates codec0 sampling. Neither
+control loads teacher files, labels or linguistic strings. Record the reason
+and do not reclassify the original truncated clips as successful complete speech.
+
+For the broader corpus use `--mode instance-v17 --limit 239` on the existing
+training-only inventory. Prepare targets with `prepare_instance_supervision.py`;
+`prepare_acoustic_teachers.py --batch-size 8` caches genuine trajectories for
+variable-length prefixes, with generation-batch membership in the manifest.
+Default batch size remains1. Batch-dependent RNG is expected and recorded.
+
+Before further prefix fitting, check the linear-reader capacity:
+`python scripts/diagnose_reader_rank.py --dataset <targets>/dataset.json
+--run-dir <baseline> --output <new-rank-diagnostic.json>`. It loads only training
+prefixes and verifies their hashes. A bound on reconstruction is not a quality
+metric. `image_probe.py train --width 256` exercises the training-rank correction;
+repeat the same width on resume. Defaults remain128 for historical commands.
+For the longer paired comparison use `train_acoustic_image_reader.py
+--schedule-steps 1600 --steps 800`, then `--steps 1600 --resume`, preserving the
+same schedule. `image_probe.py evaluate --max-frames 160` avoids the shorter
+105-frame cap; historical default remains105. Freeze the exact recipe before
+fitting; do not silently modify a recorded experiment.
+
+For the explicitly frozen V20 control, in the same GPU worker and with
+`LD_REF_TEXT=`:
+
+```
+python scripts/train_lora_image_reader.py --dataset <paired-dataset> --teachers <genuine-teachers> --initial-run <same-prefix-baseline-as-frozen-control> --run-dir <new-lora-run> --prefix-weight 0 --schedule-steps 1600 --steps 800
+python scripts/train_lora_image_reader.py --dataset <paired-dataset> --teachers <genuine-teachers> --initial-run <same-prefix-baseline-as-frozen-control> --run-dir <new-lora-run> --prefix-weight 0 --schedule-steps 1600 --steps 1600 --resume
+python scripts/evaluate_lora_image_reader.py --run-dir <new-lora-run> --inputs <numeric-only-inputs> --ids <fixed-development-and-training-ids> --output-dir <new-results>
+```
+
+The dedicated evaluator verifies BOTH reader and LoRA checksums and the adapter
+source/module layout before generation. Generic backbone loading fails closed
+for LoRA metadata. Optional `--codec0-greedy` is a separate decoding diagnostic;
+residual codebooks remain sampled. Save actual parameter targets, VRAM and
+source revision; never copy original vendor weights into the adapter checkpoint.
+
+## Fixed visual-prefix speech-policy distillation
+
+This path uses no per-image sentence-vector reconstruction or predicted text
+length. Read and freeze `configs/research/direct-visual-v21.json` or the later
+training-only calibrated recipe before fitting. Use the same pinned GPU worker,
+read-only source/script overlays and `LD_REF_TEXT=`:
+
+```
+python scripts/cache_image_teacher_policies.py --teachers <genuine-teachers> --provenance-run <matching-prefix-baseline> --output-dir <new-policy-cache>
+python scripts/train_direct_image_reader.py --dataset <paired-dataset> --teachers <genuine-teachers> --policy-cache <policy-cache> --provenance-run <matching-prefix-baseline> --anchor-run <learned-M1-numeric-prefix> --run-dir <new-direct-run> --lora-rank 0 --schedule-steps 3200 --unit-scale --head-lr-multiplier 10 --steps 1600
+python scripts/train_direct_image_reader.py --dataset <paired-dataset> --teachers <genuine-teachers> --policy-cache <policy-cache> --provenance-run <matching-prefix-baseline> --anchor-run <learned-M1-numeric-prefix> --run-dir <new-direct-run> --lora-rank 0 --schedule-steps 3200 --unit-scale --head-lr-multiplier 10 --steps 3200 --resume
+```
+
+Repeat in a separate fresh directory with `--lora-rank 8` for the matched LoRA
+condition. The provenance run supplies configuration/checksums, never its fitted
+sentence-vector weights. Anchor provenance must match the pinned Qwen/lock.
+Student training does not load training sentence-prefix tensors. The teacher
+cache generator alone reads them to compute frozen audio-code distributions.
+
+For frozen inference use `image_probe.py evaluate --max-frames 160
+--codec0-greedy`; for LoRA use `evaluate_lora_image_reader.py --codec0-greedy`.
+Both accept numeric-only image inputs and generate actual16-codebook audio;
+residual sampling stays enabled. Preserve the initialization fingerprint and
+separate teacher/reader/adapter hashes. Never treat a lower KL, initial anchor
+repetition, waveform difference or auxiliary ASR as artistic approval.
+
+### Grounded language corpus comparison (V24)
+
+Use `configs/research/grounded-language-v24.json` as the frozen protocol. All
+inputs/outputs below are private local artifacts, never publication payloads.
+The local augmentation command starts and stops the authorized annotation
+container; finish it before running a CUDA worker:
+
+```bash
+.venv/bin/python scripts/augment_private_narratives.py \
+  --dataset artifacts/grounded-language-v24/input-dataset.json \
+  --labels artifacts/instance-supervision-v17/labels.jsonl \
+  --output artifacts/grounded-language-v24/narratives.jsonl \
+  --docker "$PWD/.cache/tools/docker"
+```
+
+Inside the same GPU worker, run `prepare_grounded_prior_corpus.py --narratives
+artifacts/grounded-language-v24/narratives.jsonl --dataset
+artifacts/grounded-language-v24/input-dataset.json --replay-corpus
+artifacts/semantic-prior-v5/corpus --output-dir
+artifacts/grounded-language-v24/corpus`. Then use `/opt/vision/.venv/bin/python
+scripts/cache_prior_text_features.py --corpus
+artifacts/grounded-language-v24/corpus/corpus.json --output-dir
+artifacts/grounded-language-v24/features` in that worker image.
+
+Train `scripts/train_autoregressive_prior.py --corpus-dir <corpus> --features-dir
+<features> --protocol configs/research/grounded-language-v24.json` with fresh
+`--run-dir` per stage: causal2000 then4000 `--resume`; `--recipe multihypothesis
+--modes 8 --initial-run <causal>`2000 then4000 resume; `--recipe multihypothesis
+--modes 32 --robust-semantics --initial-run <multi8>`3000 then6000 resume.
+The initial runs must use this same new corpus and feature cache.
+
+Fit `fit_semantic_image_adapter.py` with the existing training image dataset,
+design, new corpus/features, `--caption-groups --select-alpha --protocol
+configs/research/grounded-language-v24.json`. These targets are training-only
+per-image narrative means, not inference labels. Use
+`evaluate_autoregressive_prior.py --run-dir <robust32> --adapter <adapter>
+--inputs artifacts/private-photos-002/targets/eval-expanded.json --ids p0003
+q0052 p0055 p0046 q0002 --mode image --max-frames 160 --output-dir <fresh-output>`.
+Set `LD_REF_TEXT=`. Inference reads none of the corpus/text-feature/teacher files.
+Every executed command is retained privately as a stage `.command.json`.
+
+If dependency-layer disk space is constrained, a verified existing worker can
+be reused as the runtime base, using the same Dockerfile and both locked syncs:
+`LD_WORKER_BASE_IMAGE=latent-diaries-worker:local make
+DOCKER=.cache/tools/docker test-docker`. This is a warm build; it does not claim
+a fresh dependency installation. The default base remains `python:3.11-slim`.

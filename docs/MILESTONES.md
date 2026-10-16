@@ -95,6 +95,39 @@ supervision, prior-aware calibration and bounded guidance controls are exercised
 without fresh access. The opening-robust reader completes3000 steps with real
 resume; a scalar semantic gain selected from training-group validation is folded
 into its frozen image adapter. E8-A through E8-J contains six genuine new WAVs
-in ten matched/shuffled/training/null pairs. Context and Italian review is pending;
+in ten matched/shuffled/training/null pairs. Review is complete; the user finds no significant improvement. Further prior
+calibration is stopped in favor of the image-specific acoustic feasibility
+control specified in `configs/research/instance-acoustic-v16.json`;
 no M2 acceptance or unrestricted narrative-generation claim follows. All 96 fresh
 candidates remain unlabelled/unencoded; private media, labels and weights stay local.
+
+
+The subsequent reassessment prepares170 image-specific training utterances,
+corrects a measured width128 linear-prefix rank restriction, and exercises a
+width256 acoustic comparison with genuine targets and actual resumes. Training
+fits and losses improve while development auxiliary transcriptions still fail.
+Final-attention rank8 LoRA is therefore tested under a separately frozen protocol;
+its original vendor tensors remain frozen. M2 and fresh generalization remain
+unaccepted pending actual speech/grounding evidence and human assessment.
+
+### 2026-10-16 critical reassessment (M2 still incomplete)
+
+E8 human review reports no significant improvement. Repeated development
+exposure does not justify a fresh-test claim. Image-specific acoustic fitting,
+a wider reader, last-attention LoRA, direct frozen policy distillation and two
+student-history repair iterations are exercised without demonstrated quality
+improvement. Actual24-step generation/replay parity passes within3.2e-5; low
+gold-history loss is insufficient evidence for intelligible generated speech.
+
+V24 instead repeats the previously Italian-stable continuous-language curriculum
+on a richer training-only narrative corpus, with original-corpus replay and
+training-group-CV image adaptation. The prepared corpus has2927 utterances and
+168 usable training-image groups. Its490 language-held-out rows are paraphrases
+of training images, not held-out-image evidence. No quality or grounding gate
+is passed by preparation or loss. All96 reserved images remain untouched.
+
+V24 training/resume and six standalone image-only generations complete.
+Auxiliary results remain fragmented, with1/4 development clips reaching the
+160-frame cap. No gallery or human approval is created; the candidate is not
+promoted. The original Italian-stable baseline is retained. Full CUDA suite
+65passed/2skips; worker CPU62passed/4skips and vision4passed. M2 remains open.

@@ -1,0 +1,13 @@
+{
+  "hypothesis": "Image-specific speech targets and direct acoustic loss are a more appropriate alignment test than further template-prior calibration.",
+  "scope": "Development feasibility and memorization control, not M2 acceptance",
+  "selection": "First 24 training rows sorted by ID with distinct scene groups, from existing 239-row training cohort; local vision labels; no heldout labels or reserved fresh access",
+  "teacher": "One 8-18-word Italian sentence grounded in two visible details per accepted image; no prescribed ending. Genuine frozen Qwen audio, seed42 cap160, both variable text paths replaced by cached continuous vectors.",
+  "reader": "Existing global image MLP width128, variable prefix length fitted only on selected training rows; frozen visual and Qwen backbones",
+  "warm_start": "1600 prefix reconstruction steps, actual resume at800; a memorization diagnostic only",
+  "acoustic": "320 steps, actual resume at160, codec0 CE including EOS plus 0.1 residual CE; prefix MSE weight zero; learning rate2e-5",
+  "controls": "Retain exact teacher WAVs; evaluate warm start and acoustic reader on same first4 accepted training IDs, prior exposed4 development IDs, and null; sampled seed42 cap105",
+  "interpretation": "Training failure implicates alignment/optimization; training success alone does not establish heldout grounding. Human assessment required for quality. No LoRA before this bounded control is inspected.",
+  "alternatives": "LoRA on last Talker attention layers if frozen acoustic alignment remains inadequate; image-specific corpus expansion if memorization works; visual token resampling only after global representation insufficiency is demonstrated.",
+  "privacy": "All image labels, per-image evidence, tensors, checkpoints and generated media local; no paid compute"
+}

@@ -1,16 +1,22 @@
 # One reproducible image for CPU smoke tests, local GPU and Hugging Face Docker Jobs.
 # CUDA availability depends on host runtime and PyTorch wheel; validate with 'doctor'.
-FROM python:3.11-slim
+# A previously verified image from this same Dockerfile can supply the installed
+# runtime for source-only rebuilds. The default remains a complete clean build.
+ARG WORKER_BASE_IMAGE=python:3.11-slim
+FROM ${WORKER_BASE_IMAGE}
 ENV PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 HF_HOME=/cache/hf PATH=/workspace/.venv/bin:$PATH
-RUN apt-get update && apt-get install -y --no-install-recommends \
-      ffmpeg libsndfile1 git ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN if ! command -v ffmpeg >/dev/null || ! command -v git >/dev/null || \
+       ! command -v sox >/dev/null || ! command -v gcc >/dev/null; then \
+      apt-get update && apt-get install -y --no-install-recommends \
+      ffmpeg libsndfile1 git ca-certificates sox build-essential && \
+      rm -rf /var/lib/apt/lists/*; fi
 WORKDIR /workspace
-RUN pip install uv==0.9.24
+RUN if ! command -v uv >/dev/null || [ "$(uv --version)" != "uv 0.9.24" ]; then \
+      pip install uv==0.9.24; fi
 COPY pyproject.toml uv.lock README.md ./
 RUN --mount=type=cache,target=/root/.cache/uv uv sync --locked --no-install-project --extra ml --extra test
 COPY src ./src
 RUN --mount=type=cache,target=/root/.cache/uv uv sync --locked --extra ml --extra test
-RUN apt-get update && apt-get install -y --no-install-recommends sox build-essential && rm -rf /var/lib/apt/lists/*
 # Qwen pins Transformers 4; vision requires Transformers 5. Keep separate import
 # paths in this same worker image, sharing the already pinned Torch binary stack.
 COPY environments/vision /opt/vision

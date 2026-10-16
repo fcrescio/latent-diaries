@@ -1,0 +1,9 @@
+{
+  "scope": "Local training-corpus preparation only; no model quality or generalization claim",
+  "motivation": "V16 reproduces distinct training utterances exactly but does not transfer to development; previous canonical/template supervision lacks image-specific coverage",
+  "selection": "All239 preexisting training rows, unchanged capture-group split; no development labels and no reserved fresh access",
+  "labeler": "User-authorized local Qwen vision service, deterministic seed42 temperature0, instance-v17 Italian prompt requests8-12 words and two visible details; strict8-18-word validation, no truncation, no forced acceptance",
+  "privacy": "EXIF-free resized pixels sent only to loopback; labels and provenance stay local; local vision container stops in finally",
+  "ordering": "Start only after all V16 TTS/ASR GPU work completes; never overlap with the local vision service",
+  "next_training_requirement": "Freeze paired teacher/code generation and train-only model-selection protocol separately; verify coverage and genuine teacher speech before expanding acoustic training; do not spend reserved test images"
+}

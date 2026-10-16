@@ -1,0 +1,11 @@
+{
+  "scope": "Broader genuine image-specific acoustic development comparison; M2 remains human-gated",
+  "data": "All accepted instance-v17 annotations from existing239 training rows; strict training provenance; existing55 development vectors, reserved96 untouched",
+  "teacher": "Frozen pinned Qwen genuine16-codebook trajectories; seed42 batch8 sorted cache paths, variable-prefix masks, max160 frames; individual positive WAVs retained; batch membership recorded; no equivalence to single-example RNG claimed",
+  "prefix_initialization": "Global image MLP width128, full selected training corpus,1600 steps with actual800 resume, numeric variable-length head trained only on training data",
+  "acoustic": "Frozen Qwen and visual backbone; codec0 CE including EOS plus0.1 residual CE; zero prefix MSE;1600 fixed schedule with actual800 resume; lr2e-5, warm20, seed42",
+  "inference": "First4 accepted training IDs plus exposed development IDs q0052,p0055,p0046,q0002 and null; both prefix and acoustic readers, seed42 sampled codec0/residuals cap160; no teacher/text/label files read",
+  "checks": "All teachers nonempty below160,16 codebooks24kHz; finite reader gradients and absent backbone gradients; unchanged source/data/teacher fingerprints on resume; matched/shuffled training likelihood diagnostic separated from human artistic acceptance",
+  "interpretation": "Compare actual autoregressive transfer, not just training CE. No claim from template counts or training memorization. If paired-data frozen baseline still fails, this supports a separately bounded late-attention LoRA comparison rather than more semantic calibration.",
+  "resources": "User-authorized local4090 in the same pinned Docker worker; no paid jobs, no uploads; local VLM off before Qwen work"
+}

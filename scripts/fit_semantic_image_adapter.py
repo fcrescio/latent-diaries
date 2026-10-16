@@ -18,12 +18,16 @@ def main():
     parser.add_argument('--corpus', type=Path, required=True)
     parser.add_argument('--features', type=Path, required=True)
     parser.add_argument('--output-dir', type=Path, required=True)
+    parser.add_argument('--caption-groups', action='store_true', help='Fit image IDs to their training narrative means')
+    parser.add_argument('--protocol', type=Path)
     parser.add_argument('--select-alpha', action='store_true', help='Train-group cross-validation only')
     parser.add_argument('--anchor-labels', type=Path, help='Training-only validated visual-anchor labels')
     parser.add_argument('--anchor-protocol', type=Path, default=Path('configs/research/visual-anchors-v10.json'))
     args = parser.parse_args()
     if not Path('/.dockerenv').exists() or args.output_dir.exists():
         raise ValueError('Use managed worker and a new adapter directory')
+    if args.caption_groups and args.anchor_labels:
+        raise ValueError('Use one training-target scheme')
     if args.anchor_labels and not args.select_alpha:
         raise ValueError('Visual-anchor control requires training-group alpha selection')
     rows = json.loads(args.image_dataset.read_text())['rows']
@@ -35,6 +39,8 @@ def main():
     means = {k: torch.nn.functional.normalize(torch.stack([vectors[i] for i, r in enumerate(text)
              if r['split'] == 'train' and keys[i] == k]).mean(0), dim=0) for k in categories}
     targets = {r['id']: design[r['id']]['scene'] for r in rows if r['split'] == 'train'}
+    if args.caption_groups:
+        targets = {r['id']:'image_'+r['id'] for r in rows if r['split']=='train'}
     if args.anchor_labels:
         labels = [json.loads(line) for line in args.anchor_labels.read_text().splitlines() if line]
         targets = training_anchor_targets(labels, set(targets))
@@ -64,6 +70,9 @@ def main():
                                           else 'configs/research/semantic-image-adapter-v6.json')),
             'calibration_source_sha256': digest(Path('src/latent_diaries/semantic_adapter.py')),
             'adapter_sha256': digest(args.output_dir / 'adapter.safetensors')}
+    info['caption_groups'] = args.caption_groups
+    if args.protocol:
+        info['protocol_sha256'] = digest(args.protocol)
     (args.output_dir / 'manifest.json').write_text(json.dumps(info, indent=2) + '\n')
     print(json.dumps({'alpha': alpha, 'train_group_validation': validation,
                       'training_cases': len(training), 'supported_categories': len(info['supported_categories']),

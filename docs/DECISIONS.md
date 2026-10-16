@@ -375,3 +375,226 @@ Important uncertainties remain: Qwen code version/shape invariants, real learnab
 - Standalone v14-reader/v15-adapter inference actually renders all four frozen exposed development images plus training/null, unchanged sampledseed42/cap105 with guidance disabled and empty reference transcript. WAV hashes, nonempty24kHz streams and16-codebook manifests are verified; no text/teacher/linguistic-label inputs are read. Auxiliary transcriptions show changed subject choices and residual pronunciation/continuation uncertainty. Only actual human review may accept Italian/context; no machine artistic scores are assigned.
 - Import ten E8-A through E8-J pairs from six unique new WAVs: four matched, four deliberate shuffled repeats, original training/null. No unchanged baseline rerating and no automatic scores. Existing E7 ratings remain available for descriptive historical comparison. Authenticated gallery/all20 image/audio responses200, unauthenticated page401; zero new ratings at ingestion. Private mappings, resized metadata-free images, individual notes, vectors and all learned weights stay local. All96 fresh candidates remain unlabelled/unencoded. VLM stopped; no paid jobs or private uploads.
 - Final verification: `make test`19 passed/16 ML-module skips; same pinned worker with current read-only overlays CPU50 passed/3 skips, CUDA52 passed/2 vision-runtime skips, locked vision CPU4 passed. Tests include training-only label/schema guards, malformed response exclusion and service shutdown, adapter gradients through frozen prior, causal isolation, controlled FP32 backend agreement, continuous-mode permutation/neutrality and gain center preservation. Decoder-specific adapter mismatch is actually rejected before Qwen loads or an output directory is created. Changed-file Ruff, compile/security/whitespace checks pass. Full worker rebuild is still not claimed after the known disk failure; targeted removal of this project's unused failed layers recovers6.265GB without deleting user data/model caches/containers/volumes. Aggregate evidence: `docs/validation/2026-10-15-visual-anchors.json`. M2 and final image CLI acceptance remain open pending human and later fresh evidence.
+
+## 2026-10-15 — E8 reviewed; stop template-prior calibration, isolate acoustic alignment
+
+All ten E8 pairs are rated. The user reports no significant improvement; M2 is
+not accepted. Four matched pairs average grounding2.75/5, shuffled1/5, with one
+matched gibberish judgment. Repeated development exposure and no concurrent
+E7 comparison prevent an improvement claim. Ratings exported locally only.
+
+`docs/RESEARCH_REASSESSMENT.md` compares supervision, acoustic adaptation, LoRA,
+visual tokens, data scaling and a text-conditioned diagnostic. Chosen next:
+image-specific training utterances and direct frozen-Qwen acoustic supervision,
+first as a bounded fit/memorization control. The prior's 60 openings/40 tails
+and compounded autoregression are a poorly supported direction for further
+M2 tuning. The earlier ten-sentence acoustic control is not a decisive test of
+this alternative. Preserve all previous checkpoints; reserve96 untouched.
+
+Freeze `configs/research/instance-acoustic-v16.json` before labeling/fitting.
+Select first24 existing training IDs with distinct scene groups; user-authorized
+local vision service labels only those images, then stops in finally. No uploads.
+`make test`:19 passed/16 ML skips. Full image rebuild remains disk-limited as
+recorded previously; use the pinned worker with read-only source overlays.
+
+V16 preparation:24 group-distinct existing training candidates,7 accepted local
+vision narrations,16 excluded for length and1 other exclusion. Vision container
+confirmed stopped. Prefix fit completes1600 steps with actual800 resume and
+normalized masked MSE8.81e-15. Seven genuine16-codebook teachers are retained.
+Several teacher utterances exceed the prescribed105-frame generation cap; add
+an explicitly separate160-frame duration control for capped training outputs,
+without changing the original comparison or treating truncation as gibberish.
+`probe_instance_decoding.py` implements that numeric-only control and optional
+codec0-greedy isolation. Seven fitted examples cannot establish generalization.
+Managed CPU suite:52passed/3skipped; host19passed/17MLskips.
+
+## 2026-10-16 — Direct acoustic feasibility completed; broaden actual paired supervision
+
+V16 both fitting stages and midpoint resumes finish. Reader5,119,616 parameters;
+Qwen/vision remain frozen; acoustic peak5,710,023,680 bytes. All four prescribed
+training WAVs match their exact teachers byte-for-byte (two require the separate
+160-frame duration control). This is image-interface reproduction only.
+Training oracle/matched/shuffled codec0CE:0.8075208/0.8075208/2.2839463;
+after acoustic fitting matched0.6842994/shuffled2.2858744. The15.3% reduction
+is not a quality gain. Both readers' four development outputs reach105 frames;
+auxiliary ASR remains fragmented in three cases. No M2 promotion or new human
+approval is inferred. Do not send another broad art-review batch on this basis.
+
+Full managed CUDA suite54passed/2vision-interpreter skips, CPU52passed/3skipped;
+new local-labeler boundary tests4passed, including heldout rejection before
+server startup for both instance modes. The two additional tests were added
+after the full suites; CI will exercise the final source. Existing full worker
+rebake remains disk-limited. Original checkpoints are untouched.
+
+Source-only inspection in the pinned vision interpreter confirms upstream
+`get_image_features` and `image_hidden_states` semantics before LM fusion;
+no tensor-shape/patch ablation is claimed. Source trace remains local.
+
+Proceed with V17: frozen labeling-only protocol over all239 original training
+rows, Italian short-sentence prompt, no authored opening/ending inventory.
+Validation remains8-18 words, no truncation or forced acceptance. Start only
+after V16 GPU work finishes, stop local vision server in finally. This is data
+preparation, not a completed acoustic model or heldout quality claim. Fresh96
+remain untouched; all image-derived artifacts stay local.
+
+## 2026-10-16 — Broader supervision exposes and removes a linear-reader rank floor
+
+V17 labels all239 existing training images locally:170 accepted across all10
+existing categories,2 length exclusions,67 other exclusions. The Italian brief
+asks8-12 words/two concrete details; validation remains8-18 without truncation.
+Labels are training annotations, not human quality judgments. Vision service
+confirmed off before Qwen work. All55 development vectors remain label-free;
+reserved96 are untouched. Full target preparation is exercised in the worker.
+
+V18 width128 prefix fitting completes1600 steps with actual800 resume, but
+stalls at0.085649 normalized masked MSE. A training-only rank calculation on the
+14 positions valid in all170 targets gives a lower bound0.056967 for this final
+linear output head. Centering removes its bias; rank is at most128. Thus simply
+optimizing longer cannot achieve an exact prefix fit. Add a reproducible
+`diagnose_reader_rank.py` and an analytical rank/mask test (1passed).
+
+Amend before the V18 acoustic stages start: suspend only its host dispatcher,
+let the managed Docker teacher-cache worker finish, then terminate the dispatcher
+without launching its planned acoustic/evaluation jobs. Its genuine170-example
+batch8 cache is retained and reused. This is not a failed/finished acoustic run.
+
+Freeze `configs/research/paired-acoustic-v19.json`: increase only reader width
+to256 based on training rank evidence. Fit1600 with actual800 resume reaches
+9.8156e-8 training MSE;8,882,944 parameters,289,692,160 bytes training peak.
+Proceed with the frozen-backbone acoustic comparison over the same paired data,
+1600 steps with actual800 resume, lr2e-5, zero prefix regularization, cap160 for
+both generation controls. Exact source revision fa57a0f plus per-file hashes
+is recorded locally. No result is promoted on training losses alone.
+
+Final-source CPU suite before adding the rank test:54passed/3skipped. The full
+CUDA suite will include the new rank test. No paid resources or media uploads.
+
+## 2026-10-16 — Broader frozen decoder still fails; exercise bounded final-attention LoRA
+
+V19 completes1600 acoustic steps with actual800 resume. Training matched CE
+0.8555162→0.7414681, shuffled2.3669315→2.3575121. Autoregressive development
+auxiliary transcriptions remain fragmented, including loops. A separate
+codec0-greedy control on the same four images also remains fragmented. Neither
+loss improvement nor the corrected prefix rank establishes Italian transfer.
+No new human quality scores are invented, and no failed candidate replaces the
+accepted Italian-prior fallback. Full CUDA suite at this stage59passed/2skips.
+
+Freeze `configs/research/talker-lora-v20.json`. Use the SAME prefix-baseline
+initialization as V19 (not its already acoustic-fitted reader), identical dataset
+and genuine teacher-manifest hashes, same1600-step schedule/seed/reader LR.
+Train reader plus rank8 alpha8 adapters on q_proj/v_proj in Talker layers24–27
+only. Actual q_proj shapes2048×1024, v_proj1024×1024;163,840 additional trainable
+parameters. Vendor tensors, code_predictor, codec, voice and vision stay frozen.
+LoRA LR1e-4, reader2e-5; zero prefix regularizer; common joint norm clip1.
+
+`tests/test_talker_lora.py` exercises exact zero-adapter logits on official tiny
+Qwen, gradients through conditioning/adapters, unchanged original tensors after
+an optimizer step, LoRA-only serialization, and rejection of generic loading
+that would silently omit an adapter. Focused actual CUDA run5passed. Final
+CPU suite57passed/4skips. Save reader and LoRA checksums with optimizer/RNG state;
+real1600-step run resumes at800 and reaches peak5,753,666,560 bytes. Changed
+vendor weights=false; vendor gradients absent. Training results alone are not
+artistic/grounding approval. Source revision5a389fc recorded with file hashes.
+
+## 2026-10-16 — Replace sentence-vector prediction with fixed visual policy distillation
+
+V20 finishes1600 steps and actual800 resume but development ASR remains
+fragmented/looping. Do not promote it or invent artistic failure scores. Preserve
+it as a real matched attention-adaptation control, not a solved image narrator.
+
+Freeze `configs/research/direct-visual-v21.json` before fitting. Its earlier CE
+DRAFT is retained privately; it is amended before any fit after reviewing the
+matched M1 CE/KL ablations. Use fixed32 continuous positions around the mostly
+intelligible learned M1 numeric prefix, zero initial image output weights, and
+no per-image sentence-vector target or predicted text length. Cache170 frozen
+teacher policies on genuine gold audio histories; logits remain detached and
+private. Optimize codec0 KL including EOS plus residual KL weight1, restoring
+the M1 working distribution/mixed-decoding recipe. Compare frozen Talker versus
+rank8 last4 q/v LoRA, with identical fresh reader initialization fingerprints.
+
+V21 both1600-step runs and real800 resumes finish. Reader8,619,776 parameters;
+peak allocated7,422,158,848 bytes frozen /7,426,291,712 LoRA, including policy
+cache. Generated results remain unsuitable by auxiliary diagnostics, including
+training underfit and cap hits. No new quality claim or broad human art request.
+Focused direct/adapter tests6passed; full CUDA61passed/2vision skips.
+
+## 2026-10-16 — Calibrate actual prefix update units before longer fitting
+
+A cheap isolated training-only four-image probe compares the SAME initial prefix
+function and teacher targets. Free-prefix Adam lr0.03 (M1 reference) moves
+0.0299971 RMS; normalized-reader lr1e-4 moves0.000725421. Unit scale at1e-3
+moves0.035667 and decreases mean KL2.044559→1.709363. Unit-scale candidates
+1e-4/3e-4/1e-3/3e-3 are measured once; select the closest-to-M1 physical RMS
+among candidates reducing training KL. This selects output-head multiplier10.
+No development images, captions, scores or ASR enter this selection.
+
+Freeze `configs/research/direct-calibrated-v22.json`: unit output scale, head
+lr1e-3, other reader/optional LoRA1e-4,3200 fixed steps with actual1600 resume,
+same gold-history policy caches, same fresh anchor, same mixed decoding. The
+new parameterization preserves the initial numeric prefix function. Recent
+codec0 KL0.02–0.04 improves fitting; AR and human quality are separate gates.
+A CPU-only input-geometry probe is logged locally and deferred, rather than
+adding another change to the active comparison. No paid jobs or private uploads.
+
+## 2026-10-16 — Test generated-history repair, then stop direct-speech escalation
+
+V22 gold-history fit does not survive autoregressive histories: one training
+control codec0 KL0.0374→1.0851 (LoRA0.0393→1.5078). Actual24-step generation
+and replay differ by at most3.2e-5; teacher-cache logits match exactly when the
+adapter is disabled. Across170 training cases, early/EOS errors do not support
+ad hoc frame weighting. Freeze `configs/research/policy-repair-v23.json` and
+exercise two collection/repair iterations:60 training images balanced across
+10 scene categories, generated histories only, detached teacher distributions,
+50% gold/generated mixing,1600 steps with actual800 resume each. Speech remains
+fragmented in auxiliary diagnostics. Full CUDA suite63passed/2vision skips.
+No new human judgments, quality approval, paid jobs or media publication.
+
+## 2026-10-16 — Expand grounded narratives while preserving the language recipe
+
+Freeze `configs/research/grounded-language-v24.json`. Use the170 existing
+training-only image annotations to request locally varied Italian narratives;
+stop the user-authorized annotation container afterward. Preserve all original
+1440 corpus rows as replay. Reject special tokens, duplicate/unknown/non-training
+IDs and overlong strings. Require at least5 surviving variants per image group.
+Preparation retains168 image groups and2927 utterances (2437 training,
+490 language-held-out); language-held-out paraphrases are not held-out images.
+Train the existing causal→8-mode→robust32-mode curriculum with actual halfway
+resumes, fit a training-group-CV image adapter against per-image narrative means,
+and generate the same exposed development controls without reading text.
+The Italian-stable reference is retained. All96 fresh candidates remain unused.
+
+The Docker daemon lacks space for a fresh dependency layer. The same worker
+Dockerfile now accepts `WORKER_BASE_IMAGE`, defaulting to the original clean
+Python base. Reusing our verified worker runtime skips already satisfied system
+prerequisites but still runs both locked dependency syncs and bakes current
+source. Exact validation command:
+`LD_WORKER_BASE_IMAGE=latent-diaries-worker:local make DOCKER=.cache/tools/docker test-docker`.
+The first warm build yields image sha256:d55d525a58886fc486f4c08c1ee511a17e74589ab5982b87255d2a878509302b,
+CPU58passed/4skips and vision4passed. This verifies a warm runtime build, not a
+clean-from-scratch dependency installation. No unrelated caches/images deleted.
+
+## 2026-10-16 — Grounded-corpus run completes without an improvement claim
+
+V24 completes causal4000, multi8 4000 and robust32 6000 with real halfway
+resumes; source20c8627 and individual protocol/source/cache/checkpoint hashes
+are recorded locally. Robust reader13,641,377 parameters, peak761,851,392 bytes.
+Image adapter uses168 training images, excludes71 without surviving groups,
+and selects alpha1.0 by training-group CV. All6 numeric-image controls are
+actually generated with no caption, teacher or linguistic labels. Auxiliary
+transcriptions remain fragmented and1/4 development clips reaches160 frames.
+No candidate gallery is ingested and no human scores are manufactured. Retain
+the Italian-stable baseline; do not claim this richer corpus is an improvement.
+Its output subspace grows512→768, a representation change that limits causal
+attribution to vocabulary alone. Stop this set of tuning runs with the negative
+result documented. Fresh96 remain untouched; M2/final narration stay blocked
+on demonstrated intelligibility plus human grounding, not on missing permission.
+
+Final verification: host `make test`21passed/21ML module skips; actual CUDA
+`python -m pytest -q`65passed/2vision-interpreter skips; same Docker worker warm
+build `make test-docker`62passed/4skips plus locked vision4passed. Current image
+sha256:0d7ee55762b08aab0aef1327cc6b96442c460141cdba4245121736d9da3f6ba7.
+Changed-file Ruff, compileall, diff whitespace and tracked-secret/data-path
+checks pass. Private experiment ownership is restored to the workspace user;
+annotation container is exited. No paid jobs, HF uploads or private media
+publication. Public source integration contains only generic code and aggregate
+evidence. These checks establish implementation mechanics, not audible quality.

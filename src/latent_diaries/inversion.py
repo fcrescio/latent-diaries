@@ -26,6 +26,8 @@ def digest(path: Path) -> str:
 
 
 def load_backbone(metadata: dict):
+    if metadata.get('talker_lora_rank', 0):
+        raise ValueError('LoRA checkpoint requires explicit matching adapter loading; use evaluate_lora_image_reader.py')
     if not Path("/.dockerenv").exists():
         raise RuntimeError("Use the managed Docker worker for experiments")
     reference = os.environ.get("LD_REF_AUDIO", "")

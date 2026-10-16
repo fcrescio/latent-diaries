@@ -24,12 +24,22 @@ features, audio, ratings and checkpoints stay local.
 E7 review confirms stable Italian and interesting phrases, but weak context:
 matched development grounding averages 1.75/5 for both adapter versions. The
 training control improves, while fresh-image grounding remains unaccepted.
-Work now uses more specific training-only visual anchors and calibrates the
-numeric image adapter through the frozen continuous speech reader. Neither
-captions nor scene labels enter inference. The new **E8-A through E8-J** gallery
-is ready at `http://localhost:18080/#m2-semantic-gain-v15-a`: four matched images,
-four shuffled assignments and training/null controls from six new WAVs. Actual
-review of context and Italian remains pending. All 96 fresh candidates stay reserved.
+E8 is also fully reviewed: the user reports no significant improvement, with
+only a few acceptable cases. Further template-prior calibration is stopped.
+[The reassessment](docs/RESEARCH_REASSESSMENT.md) compares alternatives and
+finds that more precise training fits do not establish useful image-to-speech
+transfer. Wider readers, bounded last-attention LoRA, direct audio-policy
+supervision and generated-history repair are exercised negative controls.
+Actual multistep generation/replay parity passes; training-policy accuracy
+still degrades on generated histories.
+
+The next comparison preserves the previously Italian-stable continuous language
+recipe and expands its training-only narrative corpus: 2,927 utterances with
+168 image-specific groups and original-corpus replay. Training, actual checkpoint resumes and image-only generation complete, but
+auxiliary speech remains fragmented; this candidate is not promoted. The
+Italian-stable reference is retained. Inference reads no captions, linguistic
+labels or teacher files. All private artifacts stay local; all 96 fresh
+candidates remain reserved. M2 remains unaccepted.
 
 ## Artistic brief
 

@@ -28,6 +28,7 @@ def main():
     parser.add_argument('--mode', choices=['image', 'training-text-control'], required=True)
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--adapter', type=Path)
+    parser.add_argument('--max-frames', type=int, default=105)
     parser.add_argument('--greedy-candidates', action='store_true')
     parser.add_argument('--guidance-scale', type=float, default=0.0)
     parser.add_argument('--guidance-steps', type=int, default=12)
@@ -71,7 +72,7 @@ def main():
         prefix, stop_probabilities = model.sample(features, seed=42, **kwargs)
         result = {'id': row['id'], 'split': row['split'], 'predicted_prefix_length': prefix.shape[1],
                   'prefix_stop_probabilities': stop_probabilities, 'human_listening_status': 'pending',
-                  **render(builder, wrapper, prefix, speaker, args.output_dir / f"{row['id']}.wav", 105, 42)}
+                  **render(builder, wrapper, prefix, speaker, args.output_dir / f"{row['id']}.wav", args.max_frames, 42)}
         results.append(result);print(json.dumps(result), flush=True)
     assert digest(file) == info['reader_sha256']
     text_control = args.mode != 'image'

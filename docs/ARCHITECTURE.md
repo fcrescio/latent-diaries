@@ -350,3 +350,69 @@ null-mode indices. The bounded numeric control did not improve opening choices;
 it is disabled in the current audio comparison. Do not present its implementation
 as accepted grounding. Native/cuDNN FP32 tests explicitly disable TF32 for the
 comparison; actual sampled generation retains its previous precision settings.
+
+## Image-specific acoustic alignment reassessment
+
+E8 does not establish a useful grounding improvement. Further calibration of
+the 60-opening/40-tail continuous prior is stopped. A seven-pair control shows
+that four image inputs can reproduce their own genuine teacher WAVs exactly
+through the existing textless interface; this is training reproduction only.
+
+Training supervision now includes170 individually annotated training images
+from the existing239-row cohort, with short concrete Italian sentences rather
+than an authored sentence-choice inventory. Qwen teacher generation supports
+variable-prefix batches (up to8): right-pad continuous vectors, supply their
+boolean mask and expand only the fixed speaker vector; the conditioning builder
+compacts/left-pads the full protocol. Preserve per-example code trajectories,
+positive WAVs and batch membership. A per-batch seed does not reproduce the
+single-example RNG stream, so no cross-batch waveform-parity claim follows.
+
+The global reader has a final linear output head. Across N examples its centered
+output matrix has rank at most the hidden width W. On the new170 training
+prefixes, the width128 control reaches normalized masked MSE0.08565, with a
+numerically computed lower bound0.05697 from the common valid positions alone.
+`reader_rank.py` implements this training-only bound, normalized by all valid
+target scalars, and has an analytical orthogonal-axis/masking test. This is a
+reconstruction bound, never a speech-quality bound.
+
+The selected width256 control removes that particular rank restriction and
+reaches9.82e-8 training MSE after1600 steps with actual800 resume, with8,882,944
+parameters. Its direct acoustic comparison uses genuine gold previous audio
+codes, codec0 CE including EOS plus0.1 residual CE, zero prefix-MSE penalty and
+frozen backbones. Both prefill and trailing conditioning remain textless.
+No development or fresh-image success follows from the near-exact training
+fit. The width128 run's unstarted acoustic/evaluation stages are explicitly
+cancelled; its completed genuine teacher cache is reused, not regenerated.
+
+## Explicit final-attention LoRA control
+
+After the wider paired frozen-decoder control still gives fragmented development
+ASR, V20 adds rank8/alpha8 updates to q_proj and v_proj in Talker layers24–27.
+Their base shapes are2048×1024 and1024×1024:163,840 trainable adapter numbers,
+in addition to the8,882,944-reader parameters. Original weights remain frozen;
+no other attention layers, residual-code predictor, codec or speaker are adapted.
+Zero B matrices preserve the original function before training. Actual tiny-Qwen
+tests verify exact logits, conditioning/adapter gradients and unchanged vendor
+tensors after an optimization step.
+
+The adapter checkpoint contains A/B matrices only, with explicit tensor keys,
+shapes, module manifest and checksums. `load_backbone` rejects LoRA metadata to
+prevent silently evaluating the wrong frozen model. The dedicated loader first
+loads the pinned original backbone explicitly, injects the declared projections,
+validates the matching adapter, then freezes everything for image-only inference.
+No strings, transcript or linguistic labels are introduced. The fixed Italian,
+role/speaker/BOS/EOS/attention protocol and the two-path replacement are preserved.
+This is an experimental adaptation, not an accepted image narrator.
+
+### Grounded continuous-language comparison
+
+V24 retains the Italian-stable continuous autoregressive prior architecture.
+Training-only image-specific narrative variants are combined with original
+corpus replay. A frozen Document encoder supplies semantic training vectors;
+per-image means use only training-language rows. Training-group CV fits the
+numeric image adapter. Inference uses only frozen image features, adapter and
+continuous prior weights, followed by Qwen audio generation. No generated
+caption, stored sentence lookup, teacher or text-feature cache is consulted.
+Language-held-out variants of training images are not image-held-out evidence.
+Direct visual speech-policy and last-attention LoRA controls are implemented
+and exercised but have not established intelligible development transfer.

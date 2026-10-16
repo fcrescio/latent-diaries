@@ -9,7 +9,7 @@ pytest.importorskip("qwen_tts")
 from qwen_tts.core.models.configuration_qwen3_tts import Qwen3TTSTalkerConfig
 from qwen_tts.core.models.modeling_qwen3_tts import Qwen3TTSTalkerForConditionalGeneration
 
-from latent_diaries.acoustic_reader import acoustic_objective
+from latent_diaries.acoustic_reader import acoustic_objective, codec_objective
 from latent_diaries.conditioning import SoftConditioningBuilder, VisualCondition
 from latent_diaries.inversion import aligned_residual_logits
 
@@ -76,10 +76,25 @@ def test_pinned_talker_gradient_and_cache_parity(device):
                                        torch.ones(16, device=device))
     torch.testing.assert_close(loss, metrics['codec0_ce'] + 0.1 * metrics['residual_ce']
                                + 0.1 * metrics['normalized_prefix_mse'])
+    acoustic_only, acoustic_metrics = acoustic_objective(
+        SimpleNamespace(model=parent), builder, predicted,
+        condition.speaker_embedding, gold, target, torch.ones(16, device=device),
+        prefix_weight=0.0)
+    torch.testing.assert_close(acoustic_only, acoustic_metrics['codec0_ce']
+                               + 0.1 * acoustic_metrics['residual_ce'])
+    acoustic_only.backward(retain_graph=True)
+    assert reader.weight.grad.abs().sum() > 0
+    reader.zero_grad(set_to_none=True)
     loss.backward()
     assert reader.weight.grad.abs().sum() > 0
     assert target.grad is None
     assert all(p.grad is None for p in talker.parameters())
+    direct = torch.randn(1, 5, 16, device=device, requires_grad=True)
+    direct_loss, direct_metrics = codec_objective(SimpleNamespace(model=parent), builder,
+        direct, condition.speaker_embedding, gold)
+    assert set(direct_metrics) == {'codec0_ce', 'residual_ce'}
+    direct_loss.backward()
+    assert direct.grad.abs().sum() > 0
     # Verify every residual head against generation's gold-previous-code prefix.
     frame_hidden = torch.randn(2, 16, device=device, requires_grad=True)
     frame_gold = torch.randint(0, 4, (2, 16), device=device)
@@ -135,3 +150,17 @@ def test_pinned_talker_gradient_and_cache_parity(device):
     torch.testing.assert_close(mixed_first[0], mixed_second[0], rtol=0, atol=0)
     assert mixed_first[0].shape[1] == 16
     assert 0 < len(mixed_first[0]) <= 3
+
+    # Replay every actual generate() step, including EOS prediction. This catches
+    # generation-only position/cache differences beyond the first stepped frame.
+    observed = []
+    hook = talker.register_forward_hook(
+        lambda module, args, output: observed.append(output.logits[:, -1].detach().clone()))
+    try:
+        traced = builder.generate_codes(condition, max_frames=3, seed=41, codec0_greedy=True)[0]
+    finally:
+        hook.remove()
+    with torch.no_grad():
+        replayed = talker(**builder.build_teacher_forced(condition, traced[None]))
+    aligned = replayed.logits[:, length-1:length+len(traced)]
+    torch.testing.assert_close(aligned, torch.stack(observed, dim=1), rtol=1e-4, atol=1e-4)
