@@ -12,6 +12,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--results', type=Path, required=True)
     p.add_argument('--design', type=Path, required=True)
+    p.add_argument('--supplement', type=Path)
     p.add_argument('--output-dir', type=Path, required=True)
     p.add_argument('--run-id', required=True)
     args = p.parse_args()
@@ -23,6 +24,14 @@ def main():
               (r['seed'] == 42 or (r['image_id'] == 'p0003' and r['level'] in {'L1', 'L2'}))]
     if len(chosen) != 14:
         raise ValueError('Expected fixed fourteen-clip two-image diagnostic selection')
+    if args.supplement:
+        supplement = json.loads(args.supplement.read_text())
+        if supplement['ladder_results_sha256'] != checksum(args.results):
+            raise ValueError('Oracle supplement belongs to a different ladder')
+        additional = supplement['results']
+        if len(additional) != 4 or any(r.get('deployable_image_inference') is not False for r in additional):
+            raise ValueError('Expected four explicitly offline oracle controls')
+        chosen.extend(additional)
     for r in chosen:
         if design[r['image_id']]['split'] != 'train' or checksum(Path(r['audio'])) != r['audio_sha256']:
             raise ValueError('Verified training-oracle diagnostic audio required')

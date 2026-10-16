@@ -80,8 +80,11 @@ def main():
             finally:
                 for module, original in originals:
                     module._get_logits_processor = original
+            current_greedy = builder.generate_codes(condition(prefixes[-1], speaker), max_frames=64,
+                                                     seed=42, codec0_greedy=True)[0][None]
             save_file({'audio_codes': current.cpu().contiguous()}, str(args.output_dir / f'{image_id}-current.safetensors'))
-            histories = [('gold', gold), ('current_final_reader', current)]
+            save_file({'audio_codes': current_greedy.cpu().contiguous()}, str(args.output_dir / f'{image_id}-current-greedy.safetensors'))
+            histories = [('gold', gold), ('current_final_reader', current), ('current_final_reader_greedy', current_greedy)]
             cache_evidence = []
             for iteration in [0, 1]:
                 manifest_path = args.repair_root / f'histories-{iteration}/manifest.json'
@@ -131,6 +134,10 @@ def main():
                     previous_student = student0[0]
                     result = {'actual_generation_replay_parity': actual_parity, 'student_shift_from_previous_version_raw': drift, 'image_id': image_id, 'history': history_name, 'reader_index': reader_index,
                         'frames': codes.shape[1], 'same_previous_audio_codes_for_teacher_student': True,
+                        'generation_decoding': 'sampled codec0' if history_name == 'current_final_reader' else
+                            ('gold teacher sampled' if history_name == 'gold' else 'greedy codec0; sampled residuals'),
+                        'policy_processing': 'Actual captured sampled-codec0/residual processors on every history',
+                        'final_eos_row': 'Counterfactual next EOS action; not proof the trajectory naturally stopped',
                         'codec0_raw': policy_comparison(student0[0], teacher0[0], labels, eos),
                         'codec0_effective': policy_comparison(effective_student, effective_teacher, labels, eos),
                         'residual_raw': policy_comparison(student_rest.flatten(0, 1), teacher_rest.flatten(0, 1), codes[0, :, 1:].flatten()),

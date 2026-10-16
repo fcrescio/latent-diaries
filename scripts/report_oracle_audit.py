@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--audit-dir', type=Path, required=True)
+    p.add_argument('--policy-dir', default='policy-analysis')
     args = p.parse_args();root = args.audit_dir
     traces = json.loads((root / 'ladder/prior-traces.json').read_text())
     by_level = defaultdict(list)
@@ -53,7 +54,7 @@ def main():
         ax.set_title(title);ax.set_xlabel('Prefix position');ax.legend(fontsize=6);ax.grid(alpha=.2)
     fig.suptitle('V24 fixed-checkpoint diagnostics: two training images × three seeds; no quality scores')
     fig.tight_layout();fig.savefig(root / 'prior-drift.png', dpi=160);fig.savefig(root / 'prior-drift.svg');plt.close(fig)
-    policies_path = root / 'policy-analysis/policies.json'
+    policies_path = root / args.policy_dir / 'policies.json'
     policy_summary = []
     if policies_path.exists():
         policies = json.loads(policies_path.read_text())
@@ -62,6 +63,9 @@ def main():
             for kind in ['codec0_raw', 'codec0_effective', 'residual_raw', 'residual_effective']:
                 data = row[kind]
                 summary[kind] = {'mean_clamped_kl': mean(r['kl_clamped_1e30'] for r in data),
+                    'first32_mean_clamped_kl': mean(r['kl_clamped_1e30'] for r in data[:32]),
+                    'first32_top1_disagreement_rate': mean(r['top1_disagreement'] for r in data[:32]),
+                    'first32_teacher_mass_outside_student_support': mean(r['teacher_mass_outside_student_support'] for r in data[:32]),
                     'top1_disagreement_rate': mean(r['top1_disagreement'] for r in data),
                     'teacher_mass_outside_student_support': mean(r['teacher_mass_outside_student_support'] for r in data),
                     'mean_support_jaccard': mean(r['support_jaccard'] for r in data),
@@ -72,16 +76,18 @@ def main():
             summary['student_version_shift_mean_kl'] = mean(r['kl_clamped_1e30'] for r in shifted) if shifted else None
             policy_summary.append(summary)
         fig, axes = plt.subplots(1, 2, figsize=(10, 4))
-        for history in ['gold', 'cached_iteration_0', 'cached_iteration_1', 'current_final_reader']:
+        current = ('current_final_reader_greedy' if any(r['history'] == 'current_final_reader_greedy'
+                   for r in policy_summary) else 'current_final_reader')
+        for history in ['gold', 'cached_iteration_0', 'cached_iteration_1', current]:
             values = []
             mass = []
             for index in range(3):
                 subset = [r for r in policy_summary if r['history'] == history and r['reader_index'] == index]
-                values.append(mean(r['codec0_raw']['mean_clamped_kl'] for r in subset))
-                mass.append(mean(r['codec0_effective']['teacher_mass_outside_student_support'] for r in subset))
+                values.append(mean(r['codec0_raw']['first32_mean_clamped_kl'] for r in subset))
+                mass.append(mean(r['codec0_effective']['first32_teacher_mass_outside_student_support'] for r in subset))
             axes[0].plot(range(3), values, marker='o', label=history)
             axes[1].plot(range(3), mass, marker='o', label=history)
-        for ax, title in zip(axes, ['Raw codec0 teacher KL', 'Teacher mass removed from student support'], strict=True):
+        for ax, title in zip(axes, ['First32 raw codec0 teacher KL', 'First32 teacher mass outside student support'], strict=True):
             ax.set_title(title);ax.set_xticks([0, 1, 2], ['V22', 'Repair 1', 'Repair 2']);ax.legend(fontsize=7);ax.grid(alpha=.2)
         fig.tight_layout();fig.savefig(root / 'policy-drift.png', dpi=160);fig.savefig(root / 'policy-drift.svg');plt.close(fig)
     representation = json.loads((root / 'ladder/representation.json').read_text())
