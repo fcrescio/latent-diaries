@@ -72,6 +72,9 @@ def main():
                     'selected_probability_mean_absolute_difference': mean(abs(r['selected_probability_difference']) for r in data),
                     'teacher_selected_mean_probability': mean(r['teacher_selected_probability'] for r in data),
                     'student_selected_mean_probability': mean(r['student_selected_probability'] for r in data)}
+                if kind.startswith('codec0'):
+                    summary[kind]['eos_probability_mean_absolute_difference'] = mean(
+                        abs(r['student_eos_probability']-r['teacher_eos_probability']) for r in data)
             shifted = row['student_shift_from_previous_version_raw']
             summary['student_version_shift_mean_kl'] = mean(r['kl_clamped_1e30'] for r in shifted) if shifted else None
             policy_summary.append(summary)
@@ -90,6 +93,26 @@ def main():
         for ax, title in zip(axes, ['First32 raw codec0 teacher KL', 'First32 teacher mass outside student support'], strict=True):
             ax.set_title(title);ax.set_xticks([0, 1, 2], ['V22', 'Repair 1', 'Repair 2']);ax.legend(fontsize=7);ax.grid(alpha=.2)
         fig.tight_layout();fig.savefig(root / 'policy-drift.png', dpi=160);fig.savefig(root / 'policy-drift.svg');plt.close(fig)
+        fig, axes = plt.subplots(1, 3, figsize=(13, 4))
+        current_rows = [r for r in policies['results'] if r['history'] == current]
+        length = min(r['frames'] for r in current_rows)
+        for index in range(3):
+            subset = [r for r in current_rows if r['reader_index'] == index]
+            curve = [mean(r['codec0_raw'][i]['kl_clamped_1e30'] for r in subset) for i in range(length)]
+            disagreement = [mean(r['codec0_effective'][i]['top1_disagreement'] for r in subset) for i in range(length)]
+            cumulative, total = [], 0
+            for value in disagreement:
+                total += value;cumulative.append(total)
+            axes[0].plot(range(length), curve, label=f'Reader {index}')
+            axes[1].plot(range(length), cumulative, label=f'Reader {index}')
+            axes[2].plot(range(length), [mean(r['codec0_effective'][i]['student_eos_probability'] for r in subset)
+                                        for i in range(length)], label=f'Reader {index}')
+        reference = [r for r in current_rows if r['reader_index'] == 2]
+        axes[2].plot(range(length), [mean(r['codec0_effective'][i]['teacher_eos_probability'] for r in reference)
+                                    for i in range(length)], '--', label='Teacher')
+        for ax, title in zip(axes, ['Raw KL on same current history', 'Cumulative top1 disagreement', 'EOS probability (not stopping success)'], strict=True):
+            ax.set_title(title);ax.set_xlabel('Audio frame');ax.legend(fontsize=7);ax.grid(alpha=.2)
+        fig.tight_layout();fig.savefig(root / 'policy-frames.png', dpi=160);fig.savefig(root / 'policy-frames.svg');plt.close(fig)
     representation = json.loads((root / 'ladder/representation.json').read_text())
     rows = representation['rows']
     representation_summary = {'training_images': len(rows), 'extended_alpha_selected': representation['extended_alpha_selected'],

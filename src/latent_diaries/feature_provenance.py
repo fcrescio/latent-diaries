@@ -3,9 +3,6 @@ import hashlib
 import json
 from pathlib import Path
 
-import torch
-from safetensors.torch import load_file
-
 VISION_REVISION = '914f7f89142e33e77833254d9c9b90c3cef7303b'
 
 def checksum(path):
@@ -13,6 +10,9 @@ def checksum(path):
 
 
 def verify_image_features(rows, folders):
+    import torch
+    from safetensors.torch import load_file
+
     indexed, evidence = {}, []
     for folder in map(Path, folders):
         manifest_path, weights = folder / 'manifest.json', folder / 'features.safetensors'
@@ -40,6 +40,9 @@ def verify_image_features(rows, folders):
 
 
 def verify_text_features(rows, folder, corpus_sha256):
+    import torch
+    from safetensors.torch import load_file
+
     folder = Path(folder)
     manifest = json.loads((folder / 'manifest.json').read_text())
     weights = folder / 'features.safetensors'
