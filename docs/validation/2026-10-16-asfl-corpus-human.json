@@ -1,0 +1,15 @@
+{
+  "corpus_sha256": "67b878f46ecbef680ee8c2d43e878c3c2d5ea2d632285fe009e641be89d51ddb",
+  "teacher_manifest_sha256": "ad6f5ae59c99c05dac55a74fdf9a11dda9e18eaae8435d3737e5eaed825145d3",
+  "reviewed_sequences": 8,
+  "human_subset_validated": true,
+  "validation_scope": "Prespecified8-sequence subset only; no individual approval of all48 utterances",
+  "private_validation_sha256": "6d92e3a7f7c8a7588e35d056522c8249456e4e82102585d5c461de3f9d8fb9d6",
+  "rating_means": {
+    "grounding": 3.75,
+    "voice": 3.0,
+    "evocation": 2.75,
+    "surprise": 2.875
+  },
+  "all_48_individually_human_validated": false
+}

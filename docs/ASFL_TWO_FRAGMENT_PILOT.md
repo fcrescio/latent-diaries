@@ -1,4 +1,4 @@
-# Two-fragment pilot: authorized corpus preparation, training gated
+# Two-fragment pilot: corpus subset accepted, bounded bridge diagnostic
 
 The user authorized preparation of this pilot after the AF assessment. The
 selection, drafts and editorial corpus now exist locally. Text-conditioned
@@ -160,8 +160,9 @@ contains verified counts and private-evidence hashes, not the stories or media.
 
 Verification: host25 passed/27 optional ML skips; worker CPU77 passed/4 skips;
 locked vision4 passed; actual CUDA80 passed/2 vision skips. All scripts execute
-in their intended host-or-managed-worker roles. Human corpus validation remains
-pending; no optimizer, reader training or model promotion occurs.
+in their intended host-or-managed-worker roles. At the end of preparation,
+human corpus validation was pending and no reader optimization had occurred.
+The subsequent human outcome and bounded diagnostic are recorded below.
 
 ## Reproduction and privacy
 
@@ -193,3 +194,141 @@ generated audio waveforms; captions, stories and transcripts are absent from
 its input schema. ASR, when run, is auxiliary and cannot select or filter the
 teacher material. Human validation remains a separate gate. No reader training,
 paid job, private upload or final-narrator promotion occurs in this stage.
+
+## Human corpus outcome and first bridge diagnostic
+
+All eight prespecified sequences have actual gallery ratings: image grounding
+3.75/5, voice3/5, evocation2.75/5 and surprise2.875/5. The user states that
+they generally seem good and coherent. This passes the sampled corpus gate;
+it is not individual approval of all48 utterances. The sealed corpus and
+preparation reports remain immutable. A separate local validation record binds
+the exact corpus, teacher and review-mapping hashes. The public
+[human aggregate](validation/2026-10-16-asfl-corpus-human.json) contains no
+private stories, media or individual ratings.
+
+The first bounded bridge check uses only second fragments:16 training and8
+diagnostic-validation continuations from the frozen8/4 image split. Both
+readers have identical architecture, initialization, optimization and capacity;
+T0 zeros the audio/presence channels, T1 uses separate image and last-audio
+vectors with explicit presence. Neither is an autoregressive language prior.
+Training-only exact Qwen projected-prefix supervision supplies a masked MSE
+plus a scalar length loss; no validation target sets capacity or normalization.
+Budget is2000 full-batch AdamW steps per reader, seed42, learning rate0.001
+with cosine decay to0.0001, checkpoint1000 and strict resume2000. Qwen and
+EmbeddingGemma stay frozen. This regression diagnostic is not acoustic
+optimization and does not implement a complete two-fragment narrator.
+
+T0 has contradictory same-image targets under pointwise regression, so its
+expected averaging error is a diagnostic limitation of this objective, not a
+fair test against every possible stochastic image-only narrator. T1 fitting
+the small training set would demonstrate memorization capacity, not useful
+artistic feedback or generalization. No branch identity, caption, transcript,
+textual plan or teacher target is provided to student inference.
+
+Prespecify the first two image identities in lexical order from each split,
+first branch only. Test T0 matched; T1 matched, same-image other-branch history,
+cross-image history retaining the original image, and absent history. Gold
+teacher histories precede actual generated-history evaluation. Training
+controls that fail Italian trigger bridge diagnosis; successful training
+controls with failed validation imply memorization and stop scaling.
+
+An exact projected training-prefix control reaches the240-frame limit under
+greedy first-codebook decoding. Pause student evaluation and isolate official
+versus exact continuous conditioning with identical greedy/sampled recipes.
+Retain failures; do not ascribe them to the reader or silently select seeds.
+
+The isolated control confirms exact prefill and full autoregressive-code parity
+with the official wrapper in both modes: greedy reaches240 frames in both;
+sampled ends at74 frames and its waveform is byte-identical to the sealed
+teacher. A recorded global recipe amendment uses stock codec0/residual
+sampling for all student conditions, seed42, with the failed greedy controls
+preserved. No per-case seed or waveform selection occurs.
+
+Both4,823,425-parameter readers actually complete2000 steps including strict
+checkpoint resumes. T1 training prefix reconstruction is near numerical
+precision; the first training gold-code acoustic loss matches the oracle.
+Both readers have nonzero gradients through frozen Qwen, with absent backbone
+gradients. This does not establish autoregressive speech quality or feedback
+benefit. The first validation gold-code loss does not improve with feedback.
+
+There are two additional identification limits: last-audio features can carry
+visual-category information, and each A1 in this tiny corpus identifies just
+one image. Keeping the image tensor present does not prove that T1 uses it.
+History swaps, explicit image interventions and eventually shared/ambiguous
+histories across different images are required before attributing a
+continuation gain to a permanent visual anchor. Generated-A1 rollout remains
+a later, separate gate; these teacher-history results cannot stand in for it.
+
+### Executed student comparison
+
+All20 prespecified outputs are retained:4 T0 matched controls and16 T1
+matched/same-image/cross-image/absent-history controls. Seven reach the240-frame
+bound, including all four T1 validation matched/within-image-swap cases and
+both T0 validation cases. There are no empty outputs or per-case replacements.
+Two train/two validation images are diagnostic exposures, not fresh tests.
+
+The numeric audit covers all16/8 train/validation continuations. T1 fits
+training prefixes near numerical precision, including the alternative branch
+when only history changes. Validation normalized prefix MSE averages1.166
+versus1.107 for T0; this is reconstruction, not an artistic metric. T0's
+weighted training MSE0.472043 matches the analytically computed unavoidable
+floor for two different targets with the same deterministic input. This
+confirms why MSE averaging is an inadequate image-only generative objective;
+it cannot establish a fair artistic advantage for T1. Image interventions
+change the numeric prefix, but do not prove visually grounded narration.
+
+Local Whisper Small reports zero reference word edits for the two matched
+training T1 cases and their two swapped-branch counterparts. T1 validation
+matched/swapped reference reconstruction deteriorates sharply. These are
+auxiliary reproduction checks, never human intelligibility scores or a
+requirement that artistic output quote a teacher verbatim. Cross-image and
+absent-history outputs have no unique reference sentence and receive no such
+text reconstruction score. ASR does not filter the listening cohort.
+
+The gallery run `asfl-bridge-20261016`, **TB-01–TB-12**, includes all twelve
+prespecified T0 matched/T1 matched/T1 same-image-history-swap sequences across
+four images, blinded by seed2026101605. The first fragment is genuine teacher
+history; only the second is textless student generation. Listen after the
+0.45-second pause for Italian, image connection and actual progression.
+No ratings are created by the pipeline. Human student review remains pending.
+The [public aggregate](validation/2026-10-16-asfl-temporal-bridge.json) records
+counts and hashes without source identities, media, stories or ASR strings.
+
+Interpretation: this pilot establishes small-set conditional reconstruction
+and a mechanically working feedback path, not a usable memory narrator. Do
+not enlarge the corpus/model or train longer on the strength of its training
+fit. A future comparison must address the averaging objective and distinguish
+image use from semantic information already present in teacher history.
+Frozen-Talker acoustic CE/KL is an available alternative to projected-prefix
+regression; nonzero gradients are exercised here, but acoustic optimization
+is not. A stochastic continuous-prefix model is another possible alternative,
+with prior free-generation failures retained as contrary evidence. Neither
+alternative is claimed operational or authorized as an unbounded sweep.
+Generated-A1 feedback remains untested. M2 remains unaccepted.
+
+Exact bounded training command (repeat for T0 with `--image-only`; then resume
+from1000 to2000 steps using the same2000-step schedule):
+
+```bash
+DOCKER_CONFIG="$PWD/.cache/docker-config" .cache/tools/docker compose --profile gpu run --rm \
+  -e LD_REF_TEXT= -v "$PWD/src:/workspace/src:ro" -v "$PWD/scripts:/workspace/scripts:ro" \
+  experiment-gpu python scripts/train_temporal_bridge.py \
+  --targets artifacts/asfl-two-fragment-20261016/bridge-targets/manifest.json \
+  --run-dir artifacts/asfl-two-fragment-20261016/bridge-t1-reproduction \
+  --steps 1000 --schedule-steps 2000
+```
+
+Standalone inference uses `scripts/evaluate_temporal_bridge.py --run-dir …
+--inputs … --output-dir …`. Inputs accept only numeric image/audio vectors,
+a boolean presence mask and opaque output IDs. Teacher targets are not read;
+there are no captions, transcripts, textual plans or branch labels. Default
+decoding is globally stock sampled; `--codec0-greedy` explicitly selects the
+retained diagnostic alternative. All exact argv arrays, source revisions,
+model hashes, private input hashes and source snapshots remain in the ignored
+pilot root. Listening assembly needs the authorized photo archive mounted
+read-only (`-v /mnt/d/backup:/mnt/d/backup:ro`) for image-hash verification;
+training/inference do not read raw photos.
+
+Verification: host25passed/28optional-ML-skips; actual CUDA82passed/2vision
+skips. CPU/vision final-image checks and GitHub checks are recorded in DECISIONS.
+No paid jobs, HF uploads or private publication. The labeling container is off.
