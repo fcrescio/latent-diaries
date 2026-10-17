@@ -1,0 +1,109 @@
+{
+  "experiment": "OMX-01",
+  "date": "2026-10-17",
+  "scope": "Frozen local feasibility comparator only; not M1/M2 or a backbone replacement",
+  "source_repository": "https://github.com/k2-fsa/OmniVoice",
+  "source_commit": "08be0b4ccbac3e13e374e86fbfead4b4cac343e2",
+  "model_id": "k2-fsa/OmniVoice",
+  "model_revision": "c5fdb5ccb189668d56333f77ba2629f4cd7535f4",
+  "worker_image": "sha256:ef437169811f3fb35c3e31a66119a5115009b940adb73b3ac3b0d07f9fc49fd6",
+  "source_revision_at_execution": "2308535",
+  "source_overlays": "src/scripts/tests mounted readonly; harness and protocol fingerprints retained privately",
+  "snapshot_files_verified": 13,
+  "snapshot_bytes": 3267470260,
+  "packages": {
+    "torch": "2.14.1",
+    "torchaudio": "2.11.0",
+    "transformers": "5.19.0",
+    "huggingface-hub": "1.31.0",
+    "omnivoice": "0.2.1",
+    "numpy": "2.3.5",
+    "safetensors": "0.8.0"
+  },
+  "facts": {
+    "generated_cases": 20,
+    "unique_waveforms": 20,
+    "modes": {
+      "positive": 2,
+      "voice-empty": 6,
+      "lang-empty": 6,
+      "mask-only": 6
+    },
+    "smoke_cases_reused": 4,
+    "gpu": "NVIDIA GeForce RTX 4090",
+    "dtype": "float16",
+    "network_disabled": true,
+    "all_weights_frozen": true,
+    "no_training": true,
+    "no_images_accessed": true,
+    "no_asr_used": true,
+    "all_waveforms_finite_nonempty": true,
+    "all_codes_valid_before_decode": true,
+    "mask_only_cfg_inputs_identical_all_steps": true,
+    "sample_rate": 24000,
+    "codebooks": 8,
+    "codec_frames_per_second": 25,
+    "requested_seconds": [
+      4,
+      6
+    ],
+    "actual_seconds": [
+      4.2,
+      6.2
+    ],
+    "actual_duration_note": "Official postprocess_output=False retains default fade/pad, adding 0.2 seconds.",
+    "peak_allocated_vram_bytes": 2126612992,
+    "generation_elapsed_seconds_sum": 20.45903381102835,
+    "generation_timing_excludes": "Model loading, fixed reference preparation and file writing",
+    "acoustic_silence_candidates_rms_below_1e_5": 0,
+    "max_clipped_sample_fraction": 0.0
+  },
+  "generation": {
+    "num_step": 32,
+    "guidance_scale": 2.0,
+    "position_temperature": 5.0,
+    "class_temperature": 0.0,
+    "postprocess_output": false,
+    "seeds": [
+      41,
+      42,
+      43
+    ]
+  },
+  "conditioning": {
+    "positive": "Official TTS targets; two fixed public control sentences",
+    "voice-empty": "Empty target, Italian marker, immutable consented WAV plus exact reference transcript",
+    "lang-empty": "Empty target, Italian marker, no voice reference",
+    "mask-only": "Only 8 acoustic MASK streams; no text, language or reference"
+  },
+  "human": {
+    "ratings": 0,
+    "baseline_intelligibility": "pending",
+    "H1_gate": "pending",
+    "quality_success_claimed": false
+  },
+  "decision": "Pending human assessment; technical execution succeeded. Neither GO nor model-quality NO-GO is established.",
+  "inferences": [
+    "Finite non-silent audio and distinct file hashes do not demonstrate Italian, novelty or narrative coherence."
+  ],
+  "operational_failures": [],
+  "implementation_corrections": [
+    "Tiny random-weight test vocabulary was initially too small for the acoustic MASK ID; fixture corrected before GPU inference."
+  ],
+  "licenses": {
+    "repository_code": "Apache-2.0",
+    "main_weights": "Model card declares CC-BY-NC without a version; do not infer repository license covers weights",
+    "bundled_audio_tokenizer": "Boson Higgs Audio 2 Community License; retained and reviewed separately",
+    "usage": "Local research only, no vendor weights or private media redistributed; no generated outputs used for training another model"
+  },
+  "private_evidence": "artifacts/omnivoice-feasibility-20261017/ (ignored): inputs, checksums, logs, codes, WAVs, exact mapping and run provenance",
+  "next_authorized_step": "Human blinded assessment only. A passing H1 permits a semantic-oracle proposal, not adapter training.",
+  "verification": {
+    "host": "31 passed / 29 skipped",
+    "worker_primary_cpu": "85 passed / 5 skipped",
+    "worker_vision_cpu": "4 passed",
+    "worker_omnivoice_cpu": "4 passed",
+    "live_authenticated_gallery": "HTTP 200, 20 labels, staged voice fields absent before votes",
+    "source_complete_worker_image": "sha256:d1dfad52978ab6123e858797abba3a53e0f12e5a0c2a41f6e5f84e30db5bc419"
+  }
+}

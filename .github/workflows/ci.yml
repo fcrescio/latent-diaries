@@ -34,3 +34,16 @@ jobs:
       # CPU equivalent of the worker's locked Torch binary, no model downloads.
       - run: uv pip install --python environments/vision/.venv/bin/python 'torch==2.14.1+cpu' 'torchvision==0.29.1+cpu' --reinstall-package torchvision --index-url https://download.pytorch.org/whl/cpu
       - run: PYTHONPATH=src environments/vision/.venv/bin/python -m pytest -q tests/test_vision.py tests/test_vision_runtime.py
+  omnivoice-runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install uv==0.9.24
+      - run: uv sync --project environments/omnivoice --locked
+      # Same shared binary pair as the worker; model weights are never downloaded.
+      - run: uv pip install --python environments/omnivoice/.venv/bin/python 'torch==2.14.1+cpu' --index-url https://download.pytorch.org/whl/cpu
+      - run: uv pip install --python environments/omnivoice/.venv/bin/python 'torchaudio==2.11.0+cpu' --no-deps --index-url https://download.pytorch.org/whl/cpu
+      - run: PYTHONPATH=src environments/omnivoice/.venv/bin/python -m pytest -q tests/test_omnivoice_protocol.py tests/test_omnivoice_runtime.py

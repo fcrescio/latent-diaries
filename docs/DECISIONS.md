@@ -1091,3 +1091,60 @@ JSON/relative-report-links, reviewed-base hashes, aggregate reproduction,
 private-fragment guard and whitespace checks pass. Both locks unchanged.
 Final worker warm build uses the established same-lock runtime base:
 sha256:d234bfce9ce042640cee1429a663d5bbe039e8431fb1b39e800a5d36c63af58f. No new runtime dependencies.
+
+## 2026-10-17 — OMX-01 isolated frozen OmniVoice probe
+
+The user explicitly requested executing the protocol in `/tmp/omnivoice_probe`.
+Its scoped exception authorizes the immutable consented reference WAV plus its
+exact transcript; variable target narration text remains forbidden in textless
+arms. This does not amend the general mission or promote a new backbone.
+
+Created a third locked interpreter inside the existing worker Dockerfile:
+OmniVoice 0.2.1 at source 08be0b4ccbac3e13e374e86fbfead4b4cac343e2,
+Transformers 5.19.0 / Hub 1.31.0. It shares only the already exercised primary
+Torch 2.14.1+cu130 / torchaudio 2.11.0+cu130 binary stack. Qwen and vision locks
+are unchanged. Added CPU API/raw-MASK tests and a tiny actual 32-step sampler;
+its initial fixture vocabulary was too small for ID 1024 and was corrected
+before any GPU run. Four isolated tests, py_compile and --help passed.
+
+Explicitly downloaded pinned model c5fdb5ccb189668d56333f77ba2629f4cd7535f4,
+verified 13 files (3,267,470,260 bytes), kept it outside Docker's near-full
+internal disk and ran inference with network disabled and readonly
+snapshot/reference/source. No caches were deleted, no images were mounted,
+no ASR used, no paid resources or training. Reviewed Apache code, the model
+card's unversioned CC-BY-NC declaration and the separately licensed bundled
+Boson tokenizer. No weight/media publication or commercial clearance claimed.
+
+Commands and exact pins are in docs/OMNIVOICE_FROZEN_20261017.md. Source execution
+revision 2308535; worker ef437169811f3fb35c3e31a66119a5115009b940adb73b3ac3b0d07f9fc49fd6
+with readonly source overlays. Smoke four passed, then full grid reused those
+four after provenance/hash checks and generated sixteen more. Twenty distinct
+waveforms, valid complete codes, no NaNs, clipping or RMS silence candidates;
+2,126,612,992-byte peak allocated VRAM; ~20.46 seconds summed generation calls.
+These measurements say nothing yet about Italian or novelty. Official padding
+explains actual 4.2/6.2-second outputs for requested 4/6 seconds.
+
+Added a separate audio-only review page and additive tables; historical ratings
+remain untouched. Twenty hash-fixed OMX labels are ingested with zero votes.
+Language, intelligibility 0–4, novelty and optional coherence are collected
+blind first. Speaker-similarity fields appear only after all core judgments,
+and only for reference-conditioned cases. Basic auth, CSRF, safe asset paths,
+missing scores and staged blinding have regression coverage. Private mapping,
+reference transcript, voice, output/code hashes and media stay ignored.
+
+Technical execution succeeded; H1/H2/H3 and official positive intelligibility
+await human assessment. No GO or model-quality NO-GO is established. H1 requires
+4/6 fluent/coherent Italian outputs, success at both durations, at least two
+novel distinct contents, and intelligible positive controls. A pass authorizes
+only a semantic-oracle proposal; a failure stops this frozen hypothesis.
+No adapter or reader training, sampling search, M2 promotion or narrate-image
+change is included. Machine-readable aggregate evidence is recorded separately.
+
+Final verification: `make test` 31 passed / 29 optional-ML skips;
+`make test-docker` 85 primary CPU passed / 5 skips, 4 vision and 4 OmniVoice
+passed. Added a CI CPU-only OmniVoice runtime check (no model downloads).
+Authenticated live `/audio-probe` returned HTTP 200 with 20 labels and no
+voice-applicability forms before voting. Ruff, compileall, secret-path scan
+and whitespace checks passed. Source-complete worker warm build:
+sha256:d1dfad52978ab6123e858797abba3a53e0f12e5a0c2a41f6e5f84e30db5bc419.
+The executed-generation image remains recorded separately above.
