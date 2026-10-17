@@ -191,3 +191,13 @@ Gold-code gradients through frozen Qwen and official/continuous decoding
 parity pass; generated-A1 robustness and acoustic optimization are untested.
 Human student review TB-01–TB-12 is pending. No M2/M3 promotion or scaling.
 See ASFL_TWO_FRAGMENT_PILOT.md and validation/2026-10-16-asfl-temporal-bridge.json.
+
+
+2026-10-17 completed temporal student review: all12 TB presentations have real
+ratings. Eight contain explicit gibberish notes; all6 validation presentations
+across2 images fail. Four T1 training outputs match teacher WAVs byte-for-byte.
+This confirms memorization, not accepted generalization or temporal narration.
+The temporal regression recipe is stopped. M2 remains unaccepted; M0 and scoped
+M1 remain unchanged. No new training, V25, backbone replacement or fresh-image
+access is performed. See RESEARCH_REVIEW_20261017.md and the separate dated
+human-outcome aggregate; frozen pre-listening reports are preserved.
