@@ -3,9 +3,10 @@
 **Research prototype — no accepted image-conditioned narrator.** Local research training/inference paths and checkpoints exist, alongside the review service and reproducibility infrastructure. Generalizing, image-grounded Italian narration remains unvalidated.
 
 **OMX-01:** the [frozen OmniVoice feasibility probe](docs/OMNIVOICE_FROZEN_20261017.md)
-has generated twenty local audio controls with technical checks passed. Human
-Italian/novelty assessment is pending in the authenticated gallery at
-`/audio-probe`. No backbone replacement or new training is claimed.
+is **NO-GO after all twenty human judgments**: both text-conditioned controls
+are fluent Italian, but none of the eighteen empty-target cases meets the
+fluent-Italian criterion. This frozen hypothesis is stopped; no adapter
+training or backbone replacement follows.
 
 **2026-10-17: [critical situation report](docs/RESEARCH_REVIEW_20261017.md).** All12 TB clips are reviewed:8 have explicit incomprehensibility notes; all6 validation presentations fail. The4 training positives reproduce teacher WAVs exactly. The temporal regression recipe is stopped; no new training is launched by the review.
 

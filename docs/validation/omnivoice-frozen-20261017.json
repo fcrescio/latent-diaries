@@ -77,14 +77,77 @@
     "mask-only": "Only 8 acoustic MASK streams; no text, language or reference"
   },
   "human": {
-    "ratings": 0,
-    "baseline_intelligibility": "pending",
-    "H1_gate": "pending",
+    "ratings": 20,
+    "reviewers": 1,
+    "baseline_intelligibility": "Both official text-conditioned controls rated Italian, 4/4 intelligibility",
+    "H1_gate": "FAIL: 0/6 at intelligibility 4; no output marked novel",
+    "groups": {
+      "positive": {
+        "rated": 2,
+        "intelligibility_counts": {
+          "4": 2
+        },
+        "language_counts": {
+          "it": 2
+        },
+        "novelty_counts": {
+          "undecidable": 2
+        }
+      },
+      "voice-empty": {
+        "rated": 6,
+        "intelligibility_counts": {
+          "0": 1,
+          "2": 1,
+          "3": 4
+        },
+        "language_counts": {
+          "undecidable": 1,
+          "mixed": 4,
+          "other": 1
+        },
+        "novelty_counts": {
+          "undecidable": 2,
+          "repeat": 4
+        }
+      },
+      "lang-empty": {
+        "rated": 6,
+        "intelligibility_counts": {
+          "0": 6
+        },
+        "language_counts": {
+          "undecidable": 6
+        },
+        "novelty_counts": {
+          "undecidable": 6
+        }
+      },
+      "mask-only": {
+        "rated": 6,
+        "intelligibility_counts": {
+          "0": 6
+        },
+        "language_counts": {
+          "undecidable": 6
+        },
+        "novelty_counts": {
+          "undecidable": 6
+        }
+      }
+    },
+    "voice_similarity_ratings": 0,
+    "optional_coherence_ratings": 0,
+    "missing_optional_fields_not_imputed": true,
     "quality_success_claimed": false
   },
-  "decision": "Pending human assessment; technical execution succeeded. Neither GO nor model-quality NO-GO is established.",
+  "decision": "NO-GO on frozen textless-target OmniVoice under the prespecified OMX-01 protocol. Positive TTS controls pass; no adapter training or seed/CFG/temperature tuning.",
   "inferences": [
-    "Finite non-silent audio and distinct file hashes do not demonstrate Italian, novelty or narrative coherence."
+    "Finite non-silent audio and distinct file hashes do not demonstrate Italian, novelty or narrative coherence.",
+    "Official target-conditioned Italian succeeds while all 18 empty-target cases fail the fluent-Italian criterion. This isolates the failure to the tested empty-target setup rather than a universal Italian TTS failure.",
+    "Human silence/nonvoice judgments coexist with RMS above 1e-5: nonzero energy is not evidence of speech.",
+    "Four voice-empty cases are rated partial mixed-language repetitions; none are rated novel. A causal explanation for the echo is not established.",
+    "This result does not establish impossibility of retraining OmniVoice, or comparative TTS superiority of Qwen."
   ],
   "operational_failures": [],
   "implementation_corrections": [
@@ -97,7 +160,7 @@
     "usage": "Local research only, no vendor weights or private media redistributed; no generated outputs used for training another model"
   },
   "private_evidence": "artifacts/omnivoice-feasibility-20261017/ (ignored): inputs, checksums, logs, codes, WAVs, exact mapping and run provenance",
-  "next_authorized_step": "Human blinded assessment only. A passing H1 permits a semantic-oracle proposal, not adapter training.",
+  "next_authorized_step": "Stop this frozen hypothesis and preserve evidence. No semantic-oracle adapter or image reader is authorized by the failed gate.",
   "verification": {
     "host": "31 passed / 29 skipped",
     "worker_primary_cpu": "85 passed / 5 skipped",

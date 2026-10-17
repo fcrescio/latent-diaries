@@ -1148,3 +1148,22 @@ voice-applicability forms before voting. Ruff, compileall, secret-path scan
 and whitespace checks passed. Source-complete worker warm build:
 sha256:d1dfad52978ab6123e858797abba3a53e0f12e5a0c2a41f6e5f84e30db5bc419.
 The executed-generation image remains recorded separately above.
+
+## 2026-10-17 — OMX-01 human gate failed; frozen hypothesis stopped
+
+Read all 20 actual core votes and preserved a private snapshot. Both official
+text-target controls are Italian with intelligibility 4/4. Voice-empty: one
+score 0, one score 2, four score 3, zero score 4; four repeats, two undecidable,
+zero marked new. Lang-empty and mask-only each have six score-0 silence/nonvoice
+judgments. Overall 13 score 0, five partial, two fluent positive controls.
+Optional voice/coherence fields are absent, not imputed; no additional listening
+is needed to decide H1. No scores or historical pair ratings were changed.
+
+H1 fails 0/6 versus >=4/6 required; no successes at either duration and no novel
+contents established. Decision: NO-GO on this specific frozen textless-target
+OmniVoice setup. Positive controls pass, so this is not an operational failure.
+Stop per supplied protocol: no adapter/image reader, semantic-oracle progression,
+seed tuning, sampling search or scaling. Do not generalize to impossibility of
+retraining OmniVoice or a TTS ranking versus Qwen. Nonzero waveform RMS was only
+an energy check, never a speech/intelligibility test. Updated report, aggregate
+JSON, README and capabilities; private mapping/media/comments stay local.
