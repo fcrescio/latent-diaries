@@ -1017,3 +1017,77 @@ WAVs, ASR strings, ratings, vectors and weights remain local. Public source
 and aggregate evidence only; no paid jobs, HF upload, V25 or model promotion.
 Gallery auth still401without/200with credentials;0.0.0.0 binding remains the
 user's prior authorized local setting. Labeling container remains stopped.
+
+
+## 2026-10-17 — Completed TB rejection and whole-project situation review
+
+User reports many incomprehensible second fragments and explicitly requests
+a critical review/report of the entire work before further experimentation.
+No research training, new audio synthesis, VLM startup, paid job, private
+upload or reserved-image access is performed. Reviewed base: db4cba97e5b31c99d03632e7fdabe54c3759cf8d.
+The user-owned SEMANTIC_LOOP.md and independent16October review remain local,
+unchanged and untracked; only hashes and aggregate findings are published.
+
+Export all12 actual TB ratings to the ignored review root and join the original
+blind mapping. Eight have explicit gibberish notes; all6 validation presentations
+on2 images fail. The4 non-flagged T1 training clips have voice3/5 and grounding
+3–4/5; their student WAVs independently match the sealed teacher audio bytes.
+No note absence is converted into a human approval. The voice field remains
+an ordinal voice judgment, not a newly invented intelligibility scale.
+All4 T0 clips fail, including2 training clips that do not hit the duration cap.
+Six gallery clips cap; the seventh cap among all20 outputs is an unreviewed
+absent-history control. Repeated conditions on2 validation images are not6
+independent images or an estimate of population failure rate.
+
+New pure-Python analysis: src/latent_diaries/temporal_review.py and
+scripts/analyze_temporal_bridge_human.py validate complete unique real ratings,
+common reviewer, bounded scores, comparable images/cells, teacher provenance
+and actual audio checksums. They emit aggregate counts only. Tests reject
+missing/duplicate/improperly paired ratings and ensure notes/identities are
+not published or imputed. Reproduction with the same sealed inputs is byte-
+identical to docs/validation/2026-10-17-temporal-human-outcome.json. Exact CLI
+is in RESEARCH_REVIEW_20261017.md; private export/mapping/notes remain under
+artifacts/research-review-20261017 and the earlier ignored pilot root.
+
+Offline word coverage, not tokenizer OOV: A2training257word occurrences/166
+forms; validation123occurrences/92forms.62validation forms(64occurrences) do
+not appear in A2training;48remain absent even including trainingA1. Unicode
+alphabetic casefolded words are counted without publishing any strings. This
+identifies an additional simultaneous content/lexical change, not a proven
+single cause or a claim that the Qwen tokenizer lacks those words.
+
+The critical Italian report reviews M0/scopedM1, initial image regression,
+canonical/acoustic controls, V5–V15 priors/adapters, V16–V24 image-specific
+CE/KL/LoRA/history repair, OD oracle diagnosis, AF semantic feasibility and
+reranking, and TC/TB. Findings: correct interfaces and good teachers do not
+establish generalizing language generation; the first supported V24 failure
+is before visual adaptation; TBfails even with clean teacher history. T0's
+deterministic two-target MSE is a confounded generative baseline; T1 memorizes.
+Whole-prefix/causal flow, multimodal priors, CE/KL, LoRA and audio-policy
+repair have already been exercised and are not presented as untried cures.
+
+Stop the TBregression recipe under the training-only-success stop criterion;
+do not invalidate the separate encoder/corpus evidence or claim the whole
+ASFLconcept impossible. Preserve M0/M1 and the stable restricted fallback.
+The report recommends a clearly specified compositional competence gate if
+the compact frozen-backbone contract is retained; alternative speech-language
+backbones would require an explicit architecture decision and separate
+feasibility/license/resource review, not an automatic substitution. The
+text-conditioned baseline is useful but does not satisfy final inference.
+V25 remains unstarted. No additional TB listening is requested.
+
+README/capabilities/milestone status close the human review, record8negative
+notes and a stopped temporal recipe, and link the report. Historical manifests
+are preserved rather than rewriting their pre-listening pending fields.
+Capability umbrella flags are clarified as released-CLI status, distinct from
+exercised research scripts. Gallery inventory:133pairs,132rated,85distinct
+audio files; none of these is claimed to count independent generations.
+
+Verification: make test28passed/28optionalMLskips; final same-worker
+make test-docker82CPU passed/4skips and4locked-vision passed. No new CUDA
+research inference/training is needed for this pure-Python evidence analysis;
+the earlier82CUDA/2skips record remains historical. Ruff/format/compileall,
+JSON/relative-report-links, reviewed-base hashes, aggregate reproduction,
+private-fragment guard and whitespace checks pass. Both locks unchanged.
+Final worker warm build uses the established same-lock runtime base:
+sha256:d234bfce9ce042640cee1429a663d5bbe039e8431fb1b39e800a5d36c63af58f. No new runtime dependencies.

@@ -1,5 +1,7 @@
 # Two-fragment pilot: corpus subset accepted, bounded bridge diagnostic
 
+**2026-10-17 outcome:** all12 student clips are rated;8 have explicit gibberish notes, including all6 validation presentations. The4 non-flagged training outputs exactly reproduce teachers. Stop this regression recipe. The corpus/encoder evidence remains valid; see [the critical review](RESEARCH_REVIEW_20261017.md) and [human aggregates](validation/2026-10-17-temporal-human-outcome.json). Earlier pending statements below are dated pre-review snapshots.
+
 The user authorized preparation of this pilot after the AF assessment. The
 selection, drafts and editorial corpus now exist locally. Text-conditioned
 teacher synthesis and the prespecified eight-sequence listening subset implement

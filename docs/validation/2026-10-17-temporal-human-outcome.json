@@ -1,0 +1,130 @@
+{
+  "scope": "Human assessment of the SECOND fragment; teacher first fragments are not student successes",
+  "source_sha256": "c9633a7ab8148d1b1ccc6a6a439b8371cafcddde235ef1e04de3182eb77d015e",
+  "analysis_source_sha256": "b7c3a86a05792262ecf4af7c81d208242ca41b8fe5a134cbb653b606bba2de7b",
+  "private_input_sha256": {
+    "ratings": "11b6a2b8336d5e114b4620c798d7c2a89e72f501d9cc3c92de6562500911f6a0",
+    "mapping": "e3848ab55b3f658f08ac74034e734cc7390555edaf68e249a7ff8f5280de19b1",
+    "teachers": "ad6f5ae59c99c05dac55a74fdf9a11dda9e18eaae8435d3737e5eaed825145d3",
+    "corpus": "67b878f46ecbef680ee8c2d43e878c3c2d5ea2d632285fe009e641be89d51ddb"
+  },
+  "rated_clips": 12,
+  "source_images": 4,
+  "reviewers": 1,
+  "explicit_gibberish_notes": 8,
+  "note_absence_is_not_approval": true,
+  "voice_score_is_not_dedicated_intelligibility_scale": true,
+  "groups": [
+    {
+      "mode": "t0",
+      "split": "train",
+      "kind": "matched",
+      "rated_clips": 2,
+      "source_images": 2,
+      "explicit_gibberish_notes": 2,
+      "voice_at_one": 2,
+      "teacher_waveform_byte_exact": 0,
+      "duration_caps": 0,
+      "mean_scores": {
+        "grounding": 1,
+        "voice": 1,
+        "evocation": 1,
+        "surprise": 1
+      }
+    },
+    {
+      "mode": "t0",
+      "split": "validation",
+      "kind": "matched",
+      "rated_clips": 2,
+      "source_images": 2,
+      "explicit_gibberish_notes": 2,
+      "voice_at_one": 2,
+      "teacher_waveform_byte_exact": 0,
+      "duration_caps": 2,
+      "mean_scores": {
+        "grounding": 1,
+        "voice": 1,
+        "evocation": 1,
+        "surprise": 1
+      }
+    },
+    {
+      "mode": "t1",
+      "split": "train",
+      "kind": "matched",
+      "rated_clips": 2,
+      "source_images": 2,
+      "explicit_gibberish_notes": 0,
+      "voice_at_one": 0,
+      "teacher_waveform_byte_exact": 2,
+      "duration_caps": 0,
+      "mean_scores": {
+        "grounding": 4,
+        "voice": 3,
+        "evocation": 3,
+        "surprise": 3
+      }
+    },
+    {
+      "mode": "t1",
+      "split": "train",
+      "kind": "same-image",
+      "rated_clips": 2,
+      "source_images": 2,
+      "explicit_gibberish_notes": 0,
+      "voice_at_one": 0,
+      "teacher_waveform_byte_exact": 2,
+      "duration_caps": 0,
+      "mean_scores": {
+        "grounding": 3.5,
+        "voice": 3,
+        "evocation": 3,
+        "surprise": 2.5
+      }
+    },
+    {
+      "mode": "t1",
+      "split": "validation",
+      "kind": "matched",
+      "rated_clips": 2,
+      "source_images": 2,
+      "explicit_gibberish_notes": 2,
+      "voice_at_one": 2,
+      "teacher_waveform_byte_exact": 0,
+      "duration_caps": 2,
+      "mean_scores": {
+        "grounding": 1,
+        "voice": 1,
+        "evocation": 1,
+        "surprise": 1
+      }
+    },
+    {
+      "mode": "t1",
+      "split": "validation",
+      "kind": "same-image",
+      "rated_clips": 2,
+      "source_images": 2,
+      "explicit_gibberish_notes": 2,
+      "voice_at_one": 2,
+      "teacher_waveform_byte_exact": 0,
+      "duration_caps": 2,
+      "mean_scores": {
+        "grounding": 1,
+        "voice": 1,
+        "evocation": 1,
+        "surprise": 1
+      }
+    }
+  ],
+  "population_failure_rate_estimated": false,
+  "independent_image_generalization_verified": false,
+  "human_quality_improvement_accepted": false,
+  "training_teacher_waveform_reproductions": 4,
+  "validation_explicit_gibberish_notes": 6,
+  "validation_reviewed_presentations": 6,
+  "decision": "Stop this temporal regression recipe; retain encoder/corpus evidence separately.",
+  "new_training_performed": false,
+  "m2_accepted": false
+}

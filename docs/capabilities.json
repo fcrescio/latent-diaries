@@ -152,6 +152,14 @@
   "temporal_reader_training_reconstruction_exercised": true,
   "temporal_reader_generalization_accepted": false,
   "temporal_reader_blinded_student_pairs": 12,
-  "temporal_reader_human_student_review_pending": true,
-  "temporal_reader_acoustic_optimization_exercised": false
+  "temporal_reader_human_student_review_pending": false,
+  "temporal_reader_acoustic_optimization_exercised": false,
+  "temporal_reader_human_student_review_completed": true,
+  "temporal_reader_human_rated_clips": 12,
+  "temporal_reader_explicit_gibberish_notes": 8,
+  "temporal_reader_validation_reviewed_images": 2,
+  "temporal_reader_validation_gibberish_presentations": 6,
+  "temporal_reader_regression_recipe_stopped": true,
+  "current_research_status": "Temporal regression rejected after completed human review; research reassessment dated2026-10-17, no model promotion.",
+  "top_level_implementation_flags_scope": "Released CLI pipeline; granular exercised research capabilities do not imply a validated narrator."
 }

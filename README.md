@@ -1,6 +1,8 @@
 # Latent Diaries — image → narrative speech in Italian, no text at inference
 
-**Research bootstrap — not yet a trained image-to-speech model.** Intended for an autonomous coding agent (e.g. Codex) to implement and experimentally validate stage by stage. The local listening service, mock gallery, import/export, GitHub repo bootstrap, HF private upload and safe HF Job launcher exist; actual textless training and image-to-speech generation remain research milestones.
+**Research prototype — no accepted image-conditioned narrator.** Local research training/inference paths and checkpoints exist, alongside the review service and reproducibility infrastructure. Generalizing, image-grounded Italian narration remains unvalidated.
+
+**2026-10-17: [critical situation report](docs/RESEARCH_REVIEW_20261017.md).** All12 TB clips are reviewed:8 have explicit incomprehensibility notes; all6 validation presentations fail. The4 training positives reproduce teacher WAVs exactly. The temporal regression recipe is stopped; no new training is launched by the review.
 
 M0 and scoped M1 are accepted: genuine Italian baseline/codec reconstruction,
 continuous-conditioning parity, and intelligible speech on two prespecified
@@ -74,8 +76,9 @@ has begun with a bounded image-only versus image-plus-last-audio bridge diagnost
 Both readers complete2000 steps and checkpoint resumes. The feedback reader
 reconstructs training stories, while diagnostic validation shows no verified
 improvement. The gallery contains **TB-01–TB-12**: teacher history followed by
-a textless student continuation. Student quality review is pending. No
-generated-history robustness or narrative improvement is established.
+a textless student continuation. Human review is complete and rejects the
+recipe as a generalizing narrator. No generated-history robustness or narrative
+improvement is established.
 
 ## Artistic brief
 
