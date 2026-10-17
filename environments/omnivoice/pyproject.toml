@@ -1,0 +1,18 @@
+[project]
+name = "latent-diaries-omnivoice-runtime"
+version = "0.1.0"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "omnivoice @ git+https://github.com/k2-fsa/OmniVoice.git@08be0b4ccbac3e13e374e86fbfead4b4cac343e2",
+  "transformers==5.19.0",
+  "huggingface-hub==1.31.0",
+  "safetensors==0.8.0",
+  "numpy==2.3.5",
+  "pytest>=8,<10",
+]
+
+[tool.uv]
+package = false
+# Reuse only the locked primary worker's CUDA binary stack. This interpreter
+# installs its own Python dependencies; neither existing interpreter is changed.
+exclude-dependencies = ["torch", "torchaudio"]

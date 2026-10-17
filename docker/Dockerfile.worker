@@ -22,6 +22,14 @@ RUN --mount=type=cache,target=/root/.cache/uv uv sync --locked --extra ml --extr
 COPY environments/vision /opt/vision
 RUN --mount=type=cache,target=/root/.cache/uv uv sync --project /opt/vision --locked && \
     /opt/vision/.venv/bin/python -c "import site; from pathlib import Path; Path(site.getsitepackages()[0], 'worker-stack.pth').write_text('/workspace/.venv/lib/python3.11/site-packages\n/workspace/src\n')"
+# Isolated frozen OmniVoice comparator. The primary and vision locks are intact.
+# No model weights enter the image. Keep a real pinned checkout for source/API
+# verification, independently of uv's installed wheel from the same Git commit.
+COPY environments/omnivoice /opt/omnivoice
+RUN git clone https://github.com/k2-fsa/OmniVoice.git /opt/omnivoice/upstream && \
+    git -C /opt/omnivoice/upstream checkout --detach 08be0b4ccbac3e13e374e86fbfead4b4cac343e2 && \
+    uv sync --no-cache --project /opt/omnivoice --locked && \
+    /opt/omnivoice/.venv/bin/python -c "import site; from pathlib import Path; Path(site.getsitepackages()[0], 'worker-stack.pth').write_text('/workspace/.venv/lib/python3.11/site-packages\n/workspace/src\n')"
 COPY configs ./configs
 COPY scripts ./scripts
 COPY docs ./docs
