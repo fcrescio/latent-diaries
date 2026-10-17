@@ -161,5 +161,8 @@
   "temporal_reader_validation_gibberish_presentations": 6,
   "temporal_reader_regression_recipe_stopped": true,
   "current_research_status": "Temporal regression rejected after completed human review; research reassessment dated2026-10-17, no model promotion.",
-  "top_level_implementation_flags_scope": "Released CLI pipeline; granular exercised research capabilities do not imply a validated narrator."
+  "top_level_implementation_flags_scope": "Released CLI pipeline; granular exercised research capabilities do not imply a validated narrator.",
+  "omnivoice_frozen_probe_exercised": true,
+  "omnivoice_frozen_textless_target_italian_human_verified": false,
+  "omnivoice_backbone_adopted": false
 }

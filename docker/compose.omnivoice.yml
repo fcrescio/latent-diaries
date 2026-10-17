@@ -1,0 +1,20 @@
+# Use with the root compose file. Only this comparator loses network access;
+# existing Qwen/vision services and their configured environments are unchanged.
+services:
+  experiment-gpu:
+    network_mode: none
+    environment:
+      HF_HOME: /cache/omnivoice
+      HF_TOKEN: ""
+      HF_NAMESPACE: ""
+      HF_MODEL_REPO: ""
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      LD_REF_TEXT: ""
+    volumes: !override
+      - ./artifacts/omnivoice-feasibility-20261017/model-cache:/cache/omnivoice:ro
+      - ./run-data/voices:/workspace/run-data/voices:ro
+      - ./artifacts/omnivoice-feasibility-20261017/outputs:/workspace/artifacts/omnivoice-feasibility-20261017/outputs
+      - ./src:/workspace/src:ro
+      - ./scripts:/workspace/scripts:ro
+      - ./tests:/workspace/tests:ro

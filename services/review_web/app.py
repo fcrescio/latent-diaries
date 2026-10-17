@@ -115,6 +115,8 @@ def create_app(db_path: str | None = None, assets_dir: str | None = None,
         return Response(output.getvalue(), media_type="text/csv; charset=utf-8",
                         headers={"Content-Disposition": "attachment; filename=ratings.csv", "Cache-Control": "no-store"})
 
+    from services.review_web.audio_probe import install
+    install(app, db_path, assets, authorize, csrf, TEMPLATES)
     return app
 
 
